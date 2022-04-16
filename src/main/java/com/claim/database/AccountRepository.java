@@ -9,4 +9,6 @@ import com.claim.model.Account;
 */
 @Repository
 public interface AccountRepository extends CrudRepository<Account, Integer> {
+	boolean existsByUsername(String username);
+	boolean existsByEmail(String email);
 }

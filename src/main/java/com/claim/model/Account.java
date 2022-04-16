@@ -23,7 +23,7 @@ public class Account {
 	
 	public Account() {}
 	
-	public Account(Integer id, String username, String email, String passwordHash, Date birthDate, int ranking) {
+	public Account(Integer id, String username, String email, String passwordHash, Date birthDate, Integer ranking) {
 		this.id = id;
 		this.username = username;
 		this.email = email;
