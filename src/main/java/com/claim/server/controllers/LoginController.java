@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 /** Provides login-related endpoints.
- * @author Rocco Saracino
+ * @author Rocco Saracino & Valentina Caldana
  */
 
 @Controller
