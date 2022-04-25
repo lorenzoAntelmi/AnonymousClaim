@@ -1,4 +1,4 @@
-package com.claim.server;
+package com.claim;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
