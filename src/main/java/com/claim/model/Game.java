@@ -17,6 +17,8 @@ public class Game {
 	private Integer playerA;
 	private Integer playerB;
 	private Integer phase;
+	
+	public Game() {}
 
 	public Game(Integer id, Integer playerA, Integer playerB, Integer phase) {
 		super();
@@ -34,11 +36,23 @@ public class Game {
 		return playerA;
 	}
 	
+	public void setPlayerA(Integer playerA) {
+		this.playerA = playerA;
+	}
+	
+	public void setPlayerB(Integer playerB) {
+		this.playerB = playerB;
+	}
+	
 	public Integer getPlayerB() {
 		return playerB;
 	}
 	
 	public Integer getPhase() {
 		return phase;
+	}
+	
+	public void setPhase(int phase) {
+		this.phase = phase;
 	}
 }

@@ -1,5 +1,6 @@
 package com.claim.database;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import com.claim.model.Account;
@@ -8,7 +9,7 @@ import com.claim.model.Account;
  * @author Deborah Vanzin
 */
 @Repository
-public interface AccountRepository extends CrudRepository<Account, Integer> {
+public interface AccountRepository extends JpaRepository<Account, Integer> {
 	boolean existsByUsername(String username);
 	boolean existsByEmail(String email);
 }

@@ -29,15 +29,15 @@ public class HandCards {
 		return id;
 	}
 
-	public Integer getAccountid() {
+	public Integer getAccountId() {
 		return accountId;
 	}
 
-	public Integer getCardid() {
+	public Integer getCardId() {
 		return cardId;
 	}
 
-	public Integer getGameid() {
+	public Integer getGameId() {
 		return gameId;
 	}
 }
