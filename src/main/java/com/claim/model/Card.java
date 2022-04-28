@@ -3,6 +3,8 @@ package com.claim.model;
 import java.sql.Blob;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,20 +24,20 @@ public class Card {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id;
+	// This annotation specifies an Enumeration Property is being mapped to database
+	@Enumerated(EnumType.STRING)
 	private Fraction fraction;
 	private Integer value;
 	private Blob image;
+
 	
-	@ManyToOne
-	private CardDeck cardDeck;
+	protected Card() {}
 	
-	
-	public Card (Integer id, Fraction fraction, Integer value, Blob image, CardDeck cardDeck) {
+	public Card (Integer id, Fraction fraction, Integer value, Blob image) {
 		this.id = id;
 		this.fraction = fraction;
 		this.value = value;
 		this.image = image;
-		this.cardDeck = cardDeck;
 	}
 
 	public Integer getId() {

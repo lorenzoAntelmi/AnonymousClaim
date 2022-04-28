@@ -1,5 +1,8 @@
 package com.claim.server.controllers;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.claim.database.GameRepository;
 import com.claim.model.Game;
+import com.claim.service.GameService;
 
 /** Provides game-related endpoints.
  * @author Deborah Vanzin
@@ -23,6 +27,8 @@ public class GameController {
 	
 	  @Autowired
 	  public GameRepository repository;
+	  @Autowired
+	  private GameService gameService;
 
 	
 	  /**
@@ -32,11 +38,6 @@ public class GameController {
 	  public List<Game> getListOfOpenGames() {
 		  return repository.findByPhase(0);
 	  }
-	  /*
-	  @GetMapping(path = "/games", produces = "application/json")
-	  public List<Game> getListOfGamesForAccount(@RequestParam int accountId){
-		  return null;
-	  }*/
 	  
 	  /**
 	   * Lists all games
@@ -48,12 +49,15 @@ public class GameController {
 	  
 	  /**
 	   * Create a new game with the data passed in the request body
+	 * @throws URISyntaxException 
 	   */
-	  @PostMapping(path = "/games", produces = "application/json")
-	  public ResponseEntity<Game> createNewGame(@RequestBody Game game) {
-		  repository.save(game);
-		  Game response = repository.findById(game.getId()).get();
-		  return ResponseEntity.status(HttpStatus.CREATED).body(response);
+	  @PostMapping(path = "/games", produces = "application/json", consumes="text/plain")
+	  public ResponseEntity<Game> createNewGame(@RequestBody String playerIdAsString) throws URISyntaxException {
+		  Integer playerId = Integer.valueOf(playerIdAsString);
+		  Game game = gameService.initializeGame(playerId);
+		  // Create an URI which identifies the resource created
+		  URI location = new URI("http://localhost:8080/games/"+ game.getId());
+		  return ResponseEntity.created(location).build();
 	  }
 	  
 	  /**
@@ -73,6 +77,8 @@ public class GameController {
 	   */
 	  @PostMapping(path = "/games/{gameId}/join/{playerId}", produces = "application/json")
 	  public ResponseEntity<Game> joinGame(@PathVariable("gameId") Integer gameId, @PathVariable("playerId") Integer playerId) {
+		  gameService.initializeGame(gameId);
+		  
 		  Game gameToJoin = repository.findById(gameId).get();
 		  // 1. Retrieve user id from token (over UserDetails)
 		  // 2. Check if game has already one player, then add me as second player
@@ -89,4 +95,6 @@ public class GameController {
 		  repository.save(gameToJoin);
 		  return ResponseEntity.ok(repository.findById(gameId).get());
 	  }
+	  
+	  
 }

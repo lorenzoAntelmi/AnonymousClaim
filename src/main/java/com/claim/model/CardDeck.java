@@ -8,6 +8,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /** Represents a CardDeck.
  * @author Deborah Vanzin
@@ -23,24 +27,44 @@ public class CardDeck {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id;
-	
-	private Integer gameId;	
+	@OneToOne
+	@JsonIgnore //Declares the game property to be ignored when serializing to JSON
+	private Game game;	
 	
 	@OneToMany
-	private List<Card> cards;
+	@OrderColumn
+	private List<Card> cards = new ArrayList<>();
+	
+	protected CardDeck() {}
 	
 	
-	public CardDeck(Integer id, Integer gameId) {
-		this.id = id;
-		this.gameId = gameId;
+	public CardDeck(Game game) {
+		this.game = game;
 	}
 
 	public Integer getId() {
 		return id;
 	}
 
-	public Integer getGameId() {
-		return gameId;
+	protected void setId(Integer id)  {
+		this.id = id;
 	}
 
+	public Game getGame() {
+		return game;
+	}
+
+	public List<Card> getCards() {
+		return cards;
+	}
+
+	public void setGame(Game game) {
+		this.game = game;
+	}
+
+	public void setCards(List<Card> cards) {
+		this.cards = cards;
+	}
+	
+	
 }
