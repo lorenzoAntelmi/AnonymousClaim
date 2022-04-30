@@ -2,20 +2,19 @@ package com.claim.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-/** Represents the CardService, which generates
- * Cards once 
- * @author Rocco Saracino und Valentina Caldana
-*/
-
-
 import com.claim.database.CardRepository;
 import com.claim.model.Card;
-import com.claim.model.CardDeck;
 import com.claim.model.Fraction;
+
+/** Represents services for Card (generates Cards for once)
+ * @author Rocco Saracino und Valentina Caldana
+ * -Added repository (card)
+ * -Method generateCards() to generate a cardDeck
+*/
 
 @Service
 public class CardService {
+	
 	@Autowired
 	private CardRepository cardRepository;
 
@@ -30,12 +29,10 @@ public class CardService {
 			Card dwarf = new Card(null, Fraction.DWARF, i, null);
 			Card undead = new Card(null, Fraction.UNDEAD, i, null);
 			Card doppelganger = new Card(null, Fraction.DOPPELGANGER, i, null);
-			Card goblin = new Card(null, Fraction.GOBLIN, i, null);
 
 			cardRepository.save(dwarf);
 			cardRepository.save(undead);
 			cardRepository.save(doppelganger);
-			//cardRepository.save(goblin);
 		}
 
 		/**

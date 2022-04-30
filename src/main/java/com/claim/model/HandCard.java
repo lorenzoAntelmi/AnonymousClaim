@@ -5,7 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /** Represents the Cards of every Players hands.
@@ -14,26 +13,42 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class HandCard {
+	
+	/** Generates a handCardID
+	*/
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
+	
+	/** "Integer id" refers to accountId
+	*/
 	private Integer id;
-	//private Integer accountId;
+
+	/**@ManyToOne association = !!!!!!!! One HandCard to many Cards? 
+	*/
 	@ManyToOne
 	private Card card;
+	
+	/**@ManyToOne association = many HandCards to one Game
+	 * @JsonIgnore = Declares the game property to be ignored when serializing to JSON
+	*/
 	@ManyToOne
-	@JsonIgnore //Declares the game property to be ignored when serializing to JSON
+	@JsonIgnore 
 	private Game game;
 	
-	//Default Constructor. Objektrelationalermapper ist ein Framework das Objekte in die Datenbank mappt. Damit der Mapper ein Objekt erstellen kann braucht es einen
-	protected HandCard() {
-		
-	}
+	/**Default Constructor: Object relational mapper (ORM) is a Framework, which
+	 * mapps objects in database. In order for the mapper to create an object,
+	 * it needs a default constructor
+	*/
+	protected HandCard() {}
 	
 	public HandCard(Game game, Card card) {
 		this.card = card;
 		this.game = game;
 	}
 
+	
+	/**@Getter & @Setter
+	*/
 	public void setId(Integer id) {
 		this.id = id;
 	}

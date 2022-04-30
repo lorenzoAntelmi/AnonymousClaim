@@ -1,6 +1,6 @@
 package com.claim.model;
 
-/**Represents a fraction
+/**Represents a fraction.
  * @author Valentina Caldana
  */
 

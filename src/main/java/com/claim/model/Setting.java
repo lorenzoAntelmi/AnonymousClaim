@@ -13,6 +13,9 @@ import javax.persistence.Id;
 
 @Entity
 public class Setting {
+	
+	/** Generates a settingID
+	*/
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id;
@@ -21,7 +24,17 @@ public class Setting {
 	private Integer valueInt;
 	private Integer valueString;
 	private Blob valueBlob;
+	
+	/**Default Constructor: Object relational mapper (ORM) is a Framework, which
+	 * mapps objects in database. In order for the mapper to create an object,
+	 * it needs a default constructor
+	*/
+	protected Setting() {}
+	
 	public Setting(Integer id, Integer accountId, String settingKey, Integer valueInt, Integer valueString, Blob valueBlob) {
+		
+		/**Account
+		*/
 		super();
 		this.id = id;
 		this.accountId = accountId;
@@ -30,13 +43,15 @@ public class Setting {
 		this.valueString = valueString;
 		this.valueBlob = valueBlob;
 	}
-
+	
+	/**@Getter & @Setter 
+	*/
 	public Integer getId() {
 		return id;
 	}
 
 	public void setId(Integer settingId) {
-		this.id = id;
+		this.id = settingId ;
 	}
 
 	public Integer getAccountId() {

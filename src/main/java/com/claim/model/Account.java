@@ -11,14 +11,20 @@ import javax.persistence.Table;
 
 /** Represents an account.
  * @author Deborah Vanzin
+ * -basic structure
 */
 @Entity
 @Table(name = "account")
 public class Account {
+	
+	/** Generates an accountID
+	*/
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id;
 	
+	/** mapping corresponding column for variable
+	*/
 	@Column(name = "username")
 	private String username;
 	
@@ -32,7 +38,11 @@ public class Account {
 	private Date birthDate;
 	private Integer ranking;
 	
-	public Account() {}
+	/**Default Constructor: Object relational mapper (ORM) is a Framework, which
+	 * mapps objects in database. In order for the mapper to create an object,
+	 * it needs a default constructor
+	*/
+	protected Account() {}
 	
 	public Account(Integer id, String username, String email, String passwordHash, Date birthDate, Integer ranking) {
 		this.id = id;
@@ -42,7 +52,9 @@ public class Account {
 		this.birthDate = birthDate;
 		this.ranking = ranking;
 	}
-
+	
+	/**@Getter & @Setter
+	*/
 	public Integer getId() {
 		return id;
 	}

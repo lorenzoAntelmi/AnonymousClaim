@@ -1,36 +1,38 @@
 package com.claim.model;
 
 import java.sql.Blob;
-
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
-/** Represents a Card.
+/** Represents a card.
  * @author Deborah Vanzin
- * -Creation of class (basic structure)
- * 
- * @author Rocco Saracino und Valentina Caldana
- * 	-ManyToOne annotation
- *  -Extention Constructor (Fraction & CardDeck)
+ * -basic structure
 */
 
 @Entity
 public class Card {
+	
+	/** Generates a cardID
+	*/
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id;
-	// This annotation specifies an Enumeration Property is being mapped to database
+	
+	/** This annotation specifies an Enumeration Property is being mapped to database
+	*/
 	@Enumerated(EnumType.STRING)
 	private Fraction fraction;
 	private Integer value;
 	private Blob image;
 
-	
+	/**Default Constructor: Object relational mapper (ORM) is a Framework, which
+	 * mapps objects in database. In order for the mapper to create an object,
+	 * it needs a default constructor
+	*/
 	protected Card() {}
 	
 	public Card (Integer id, Fraction fraction, Integer value, Blob image) {
@@ -40,6 +42,8 @@ public class Card {
 		this.image = image;
 	}
 
+	/**@Getter & @Setter
+	*/
 	public Integer getId() {
 		return id;
 	}

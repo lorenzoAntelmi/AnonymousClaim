@@ -4,12 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.claim.model.Card;
-import com.claim.model.CardDeck;
 import com.claim.service.CardDeckService;
 
-/** Represents the CardDeckController, which provides
+/**Represents the CardDeckController, which provides
  * Endpoints to get the topcard of a deck and to remove the topcard of a deck
  * @author Deborah Vanzin
 */

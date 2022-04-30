@@ -11,16 +11,27 @@ import javax.persistence.Id;
 
 @Entity
 public class Move {
+	
+	/** Generates a moveID
+	*/
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id;
 	private Integer handCardsId;
+	
+	/**Default Constructor: Object relational mapper (ORM) is a Framework, which
+	 * mapps objects in database. In order for the mapper to create an object,
+	 * it needs a default constructor
+	*/
+	protected Move() {}
 	
 	public Move(Integer id, Integer handCardsId) {
 		this.id = id;
 		this.handCardsId = handCardsId;
 	}
 
+	/**@Getter
+	*/
 	public Integer getId() {
 		return id;
 	}

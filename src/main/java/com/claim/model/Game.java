@@ -2,7 +2,6 @@ package com.claim.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,13 +16,22 @@ import javax.persistence.OneToOne;
 
 @Entity
 public class Game {
+	
+	/** Generates a gameID
+	*/
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id;
 	private Integer playerA;
 	private Integer playerB;
 	private Integer phase;
-	//Cascade tells the ORM to propagate all Operation
+	
+	/**@OneToMany association = one Game to many handCards &
+	 * one Game to one CardDeck
+	 * @cascadeType.ALL = persistence gives/passes on, all EntityManager-operations (= PERSIST, REMOVE, REFRESH, MERGE, DETACH) 
+	 * to the corresponding entities. So "cascade" tells the ORM to propagate all operations
+	 * source: https://stackoverflow.com/questions/13027214/what-is-the-meaning-of-the-cascadetype-all-for-a-manytoone-jpa-association
+	*/
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<HandCard> cardsPlayerA = new ArrayList<>();
 	
@@ -33,38 +41,11 @@ public class Game {
 	@OneToOne(cascade = CascadeType.ALL)
 	private CardDeck cardDeck;
 	
-	public CardDeck getCardDeck() {
-		return cardDeck;
-	}
 
-	public void setCardDeck(CardDeck cardDeck) {
-		this.cardDeck = cardDeck;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public void setPhase(Integer phase) {
-		this.phase = phase;
-	}
-
-	public void setCardsPlayerA(List<HandCard> cardsPlayerA) {
-		this.cardsPlayerA = cardsPlayerA;
-	}
-
-	public void setCardsPlayerB(List<HandCard> cardsPlayerB) {
-		this.cardsPlayerB = cardsPlayerB;
-	}
-
-	public List<HandCard> getCardsPlayerA() {
-		return cardsPlayerA;
-	}
-
-	public List<HandCard> getCardsPlayerB() {
-		return cardsPlayerB;
-	}
-
+	/**Default Constructor: Object relational mapper (ORM) is a Framework, which
+	 * mapps objects in database. In order for the mapper to create an object,
+	 * it needs a default constructor
+	*/
 	public Game() {}
 
 	public Game(Integer id, Integer playerA, Integer playerB, Integer phase) {
@@ -75,8 +56,15 @@ public class Game {
 		this.phase = phase;
 	}
 	
+
+	/**@Getter & @Setter (parameters Game)
+	*/
 	public Integer getId() {
 		return id;
+	}
+	
+	public void setId(Integer id) {
+		this.id = id;
 	}
 	
 	public Integer getPlayerA() {
@@ -101,5 +89,38 @@ public class Game {
 	
 	public void setPhase(int phase) {
 		this.phase = phase;
+	}
+	
+	public void setPhase(Integer phase) {
+		this.phase = phase;
+	}
+	
+	/**@Getter & @Setter "CardDeck"
+	*/
+	public CardDeck getCardDeck() {
+		return cardDeck;
+	}
+
+	public void setCardDeck(CardDeck cardDeck) {
+		this.cardDeck = cardDeck;
+	}
+
+	/**@Getter & @Setter "HandCards" & "Cards of Players"
+	*/
+
+	public void setCardsPlayerA(List<HandCard> cardsPlayerA) {
+		this.cardsPlayerA = cardsPlayerA;
+	}
+
+	public void setCardsPlayerB(List<HandCard> cardsPlayerB) {
+		this.cardsPlayerB = cardsPlayerB;
+	}
+
+	public List<HandCard> getCardsPlayerA() {
+		return cardsPlayerA;
+	}
+
+	public List<HandCard> getCardsPlayerB() {
+		return cardsPlayerB;
 	}
 }

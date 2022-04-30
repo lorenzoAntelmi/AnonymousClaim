@@ -2,16 +2,18 @@ package com.claim.service;
 
 import java.util.Collections;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.claim.database.CardRepository;
 import com.claim.database.GameRepository;
 import com.claim.model.Card;
 import com.claim.model.CardDeck;
 import com.claim.model.Game;
 import com.claim.model.HandCard;
+
+/** Represents services for Game
+ * @author Deborah Vanzin
+*/
 
 @Service
 public class GameService {
@@ -23,15 +25,18 @@ public class GameService {
 
 	public Game initializeGame(Integer playerAId) {
 		
-		// Erstelle ein neues Spiel
+		/** Generate a new game
+		*/
 		Game game = new Game();
 		game.setPlayerA(playerAId);
 		
-		// Wir holen uns alle Karten (52) aus der Datenbank und verteilen sie.
+		/** Get all cards (52) from database and shuffle
+		*/
 		List<Card> cards = cardRepository.findAll();
 		Collections.shuffle(cards);
 
-		// Verteilung der Karten an die Spiele
+		/** Distribute cards to player to generate HandCard
+		*/
 		for (int i = 0 ; i  < 13; i++) {
 			Card nextCardA = cards.remove(cards.size()-1);
 			Card nextCardB = cards.remove(cards.size() -1);
@@ -39,7 +44,9 @@ public class GameService {
 			game.getCardsPlayerB().add(new HandCard(game, nextCardB));
 		}
 		
-		// Übrig gebliebene Karten, werden auf das Deck gegeben.
+		/**Create a CardDeck to give it
+		 * remaining cards (26 cards to CardDeck) 
+		*/
 		CardDeck deck = new CardDeck(game);
 		for (Card card : cards) {
 			deck.getCards().add(card);

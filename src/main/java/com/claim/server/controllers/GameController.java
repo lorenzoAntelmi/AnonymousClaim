@@ -2,10 +2,8 @@ package com.claim.server.controllers;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.claim.database.GameRepository;
 import com.claim.model.Game;
 import com.claim.service.GameService;
@@ -32,7 +29,7 @@ public class GameController {
 
 	
 	  /**
-	   * Represents the endpoint to list all open games
+	   * Represents the endpoint to list of all open games
 	   */
 	  @GetMapping(path = "/games/open", produces = "application/json")
 	  public List<Game> getListOfOpenGames() {
@@ -49,7 +46,7 @@ public class GameController {
 	  
 	  /**
 	   * Create a new game with the data passed in the request body
-	 * @throws URISyntaxException 
+	   * @throws URISyntaxException 
 	   */
 	  @PostMapping(path = "/games", produces = "application/json", consumes="text/plain")
 	  public ResponseEntity<Game> createNewGame(@RequestBody String playerIdAsString) throws URISyntaxException {

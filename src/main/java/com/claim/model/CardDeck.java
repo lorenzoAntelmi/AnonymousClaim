@@ -15,26 +15,37 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /** Represents a CardDeck.
  * @author Deborah Vanzin
- * -Creation of class (basic structure)
- * 
-@author Rocco Saracino und Valentina Caldana
- * 	-OneToMany annotation
- *  -Adjustion Constructor (cardID removed)
+ * -basic structure
 */
 
 @Entity
 public class CardDeck {
+	
+	/** Generates a cardDeckID
+	*/
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id;
+	
+	/**@OneToOne association = one CardDeck to one Game
+	 * @JsonIgnore = Declares the game property to be ignored when serializing to JSON
+	*/
 	@OneToOne
-	@JsonIgnore //Declares the game property to be ignored when serializing to JSON
+	@JsonIgnore 
 	private Game game;	
 	
+	/**@OneToOne association = one CardDeck to many Cards
+	 * @OrderColumn = to maintain the persistent order of a list
+	 * source: https://www.concretepage.com/hibernate/example-ordercolumn-hibernate
+	*/
 	@OneToMany
 	@OrderColumn
 	private List<Card> cards = new ArrayList<>();
 	
+	/**Default Constructor: Object relational mapper (ORM) is a Framework, which
+	 * mapps objects in database. In order for the mapper to create an object,
+	 * it needs a default constructor
+	*/
 	protected CardDeck() {}
 	
 	
@@ -42,6 +53,8 @@ public class CardDeck {
 		this.game = game;
 	}
 
+	/**@Getter & @Setter
+	*/
 	public Integer getId() {
 		return id;
 	}
