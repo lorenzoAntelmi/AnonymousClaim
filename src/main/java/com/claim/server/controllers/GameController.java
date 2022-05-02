@@ -10,10 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.claim.database.GameRepository;
 import com.claim.model.Game;
+import com.claim.model.Player;
 import com.claim.service.GameService;
 
 /** Provides game-related endpoints.
@@ -58,7 +60,7 @@ public class GameController {
 	  }
 	  
 	  /**
-	   * Get a game with a speficic id
+	   * Get a game with a specific id
 	   */
 	  @GetMapping(path = "/games/{id}", produces = "application/json")
 	  public ResponseEntity<Game> readGame(@PathVariable("id") Integer id) {
@@ -67,6 +69,23 @@ public class GameController {
 			  return ResponseEntity.ok(optional.get());
 		  }
 		  return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	  }
+	  
+	  /**
+	   * To enable to see the played cards of each round per player
+	   * @author: Rocco Saracino
+	   */
+	  @PutMapping (path = "/makeMove/{gameId}/{playerA}/{playerB}/{cardIdA}/{cardIdB}", produces = "application/jason")
+	  public ResponseEntity<Game> makeMove(@PathVariable("gameId") Integer gameId, 
+			  @PathVariable("playerA") Integer playerA, 
+			  @PathVariable("playerB") Integer playerB,
+			  @PathVariable("cardIdA") Integer cardIdA,
+			  @PathVariable("cardIdB") Integer cardIdB) {
+		
+		  gameService.makeMovePlayerA(gameId, playerA, cardIdA);
+		  gameService.makeMovePlayerB(gameId, playerB, cardIdB);
+		  
+		  return ResponseEntity.status(HttpStatus.CREATED).build();
 	  }
 	  
 	  /**
@@ -79,11 +98,11 @@ public class GameController {
 		  Game gameToJoin = repository.findById(gameId).get();
 		  // 1. Retrieve user id from token (over UserDetails)
 		  // 2. Check if game has already one player, then add me as second player
-		  if(gameToJoin.getPlayerA() <= 0) {
-			  gameToJoin.setPlayerA(playerId);
+		  if(gameToJoin.getPlayerA().getId() <= 0) {
+			  gameToJoin.setPlayerA(new Player(gameId, playerId, gameToJoin));
 		  }
-		  else if(gameToJoin.getPlayerB() <= 0) {
-			  gameToJoin.setPlayerB(playerId);
+		  else if(gameToJoin.getPlayerB().getId() <= 0) {
+			  gameToJoin.setPlayerB(new Player(gameId, playerId, gameToJoin));
 			  gameToJoin.setPhase(1);
 		  }
 		  else {

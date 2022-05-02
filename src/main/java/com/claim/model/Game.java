@@ -22,22 +22,25 @@ public class Game {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id;
-	private Integer playerA;
-	private Integer playerB;
 	private Integer phase;
 	
-	/**@OneToMany association = one Game to many handCards &
-	 * one Game to one CardDeck
+	/**@OneToOne association = one Game to one Player 
 	 * @cascadeType.ALL = persistence gives/passes on, all EntityManager-operations (= PERSIST, REMOVE, REFRESH, MERGE, DETACH) 
 	 * to the corresponding entities. So "cascade" tells the ORM to propagate all operations
 	 * source: https://stackoverflow.com/questions/13027214/what-is-the-meaning-of-the-cascadetype-all-for-a-manytoone-jpa-association
 	*/
-	@OneToMany(cascade = CascadeType.ALL)
-	private List<HandCard> cardsPlayerA = new ArrayList<>();
+	@OneToOne(cascade = CascadeType.ALL)
+	private Player playerA;
+	@OneToOne(cascade = CascadeType.ALL)
+	private Player playerB;
 	
+	/**@OneToMany association = one Game to many playedCards 
+	*/
 	@OneToMany(cascade = CascadeType.ALL)
-	private List<HandCard> cardsPlayerB = new ArrayList<>();
+	private List<Card> playedCards = new ArrayList<>();
 	
+	/**@OneToOne association = one Game to one CardDeck 
+	*/
 	@OneToOne(cascade = CascadeType.ALL)
 	private CardDeck cardDeck;
 	
@@ -48,7 +51,7 @@ public class Game {
 	*/
 	public Game() {}
 
-	public Game(Integer id, Integer playerA, Integer playerB, Integer phase) {
+	public Game(Integer id, Player playerA, Player playerB, Integer phase) {
 		super();
 		this.id = id;
 		this.playerA = playerA;
@@ -67,19 +70,19 @@ public class Game {
 		this.id = id;
 	}
 	
-	public Integer getPlayerA() {
+	public Player getPlayerA() {
 		return playerA;
 	}
 	
-	public void setPlayerA(Integer playerA) {
+	public void setPlayerA(Player playerA) {
 		this.playerA = playerA;
 	}
 	
-	public void setPlayerB(Integer playerB) {
+	public void setPlayerB(Player playerB) {
 		this.playerB = playerB;
 	}
 	
-	public Integer getPlayerB() {
+	public Player getPlayerB() {
 		return playerB;
 	}
 	
@@ -95,6 +98,19 @@ public class Game {
 		this.phase = phase;
 	}
 	
+	/**@Getter & @Setter
+	 * List of played cards from PlayerA & PlayerB
+	 * (List should have only 2 cards per round)
+	*/
+	
+	public List<Card> getPlayedCards() {
+		return playedCards;
+	}
+
+	public void setPlayedCards(List<Card> playedCards) {
+		this.playedCards = playedCards;
+	}
+	
 	/**@Getter & @Setter "CardDeck"
 	*/
 	public CardDeck getCardDeck() {
@@ -105,22 +121,4 @@ public class Game {
 		this.cardDeck = cardDeck;
 	}
 
-	/**@Getter & @Setter "HandCards" & "Cards of Players"
-	*/
-
-	public void setCardsPlayerA(List<HandCard> cardsPlayerA) {
-		this.cardsPlayerA = cardsPlayerA;
-	}
-
-	public void setCardsPlayerB(List<HandCard> cardsPlayerB) {
-		this.cardsPlayerB = cardsPlayerB;
-	}
-
-	public List<HandCard> getCardsPlayerA() {
-		return cardsPlayerA;
-	}
-
-	public List<HandCard> getCardsPlayerB() {
-		return cardsPlayerB;
-	}
 }

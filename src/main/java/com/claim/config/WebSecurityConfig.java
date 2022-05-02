@@ -67,7 +67,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				// dont authenticate this particular request
 				.authorizeRequests().antMatchers("/login-de", "/login-en", "/registration-de", 
 						"/registration-en", "/css/login_stylesheet.css", "/static/js", "/authenticate", 
-						"/image/claim-background-image.png", "/css/registration_stylesheet.css").permitAll().
+						"/image/claim-background-image.png", "/css/registration_stylesheet.css", 
+						"/makeMove/{gameId}/{playerA}/{playerB}/{cardIdA}/{cardIdB}",
+						"/games").permitAll().
 				// all other requests need to be authenticated
 				anyRequest().authenticated().and().
 				// make sure we use stateless session; session won't be used to

@@ -7,6 +7,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 /** Represents a card.
  * @author Deborah Vanzin
@@ -22,6 +24,14 @@ public class Card {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id;
 	
+	/**@ManyToOne association = Many Cards to one Player/Game
+	*/
+	@ManyToOne
+	private Player player;
+	
+	@ManyToOne
+	private Game game;
+	
 	/** This annotation specifies an Enumeration Property is being mapped to database
 	*/
 	@Enumerated(EnumType.STRING)
@@ -33,7 +43,7 @@ public class Card {
 	 * mapps objects in database. In order for the mapper to create an object,
 	 * it needs a default constructor
 	*/
-	protected Card() {}
+	public Card() {}
 	
 	public Card (Integer id, Fraction fraction, Integer value, Blob image) {
 		this.id = id;
