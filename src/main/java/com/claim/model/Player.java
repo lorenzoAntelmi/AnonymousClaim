@@ -30,7 +30,7 @@ public class Player {
 	 * source: https://stackoverflow.com/questions/13027214/what-is-the-meaning-of-the-cascadetype-all-for-a-manytoone-jpa-association
 	*/
 	@OneToMany(cascade = CascadeType.ALL)
-	private List<Card> hand = new ArrayList<>();
+	private List<Card> hand;
 	
 	/**@ManyToOne association = Many Player to one Game
 	*/

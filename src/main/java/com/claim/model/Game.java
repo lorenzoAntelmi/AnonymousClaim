@@ -37,7 +37,7 @@ public class Game {
 	/**@OneToMany association = one Game to many playedCards 
 	*/
 	@OneToMany(cascade = CascadeType.ALL)
-	private List<Card> playedCards = new ArrayList<>();
+	private List<Card> playedCards;
 	
 	/**@OneToOne association = one Game to one CardDeck 
 	*/
@@ -57,6 +57,7 @@ public class Game {
 		this.playerA = playerA;
 		this.playerB = playerB;
 		this.phase = phase;
+		this.playedCards = new ArrayList<>();
 	}
 	
 
