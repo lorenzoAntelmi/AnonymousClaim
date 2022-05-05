@@ -2,7 +2,6 @@ package com.claim.database;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import com.claim.model.Card;
 import com.claim.model.Player;
 
 /** Represents the PlayerRepository for database

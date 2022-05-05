@@ -1,16 +1,16 @@
 package com.claim.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.claim.database.CardRepository;
 import com.claim.model.Card;
 import com.claim.model.Fraction;
 
-/** Represents services for Card (generates Cards for once)
- * @author Rocco Saracino und Valentina Caldana
- * -Added repository (card)
- * -Method generateCards() to generate a cardDeck
-*/
+/** Represents services for Card (generates 52 Cards)
+ * @author Rocco Saracino und Valentina Caldana*/
 
 @Service
 public class CardService {
@@ -18,10 +18,9 @@ public class CardService {
 	@Autowired
 	private CardRepository cardRepository;
 
+	public List<Card> generateCards() {
 
-
-	public void generateCards() {
-
+		List<Card> initialCards = new ArrayList<Card>();
 		/**
 		 * Each of them 10 cards with value 0 - 9
 		 */
@@ -30,6 +29,9 @@ public class CardService {
 			Card undead = new Card(null, Fraction.UNDEAD, i, null);
 			Card doppelganger = new Card(null, Fraction.DOPPELGANGER, i, null);
 
+			initialCards.add(dwarf);
+			initialCards.add(undead);
+			initialCards.add(doppelganger);
 			cardRepository.save(dwarf);
 			cardRepository.save(undead);
 			cardRepository.save(doppelganger);
@@ -41,10 +43,12 @@ public class CardService {
 		for (int i = 1; i < 15; i++) {
 			if (i < 10) {
 				Card goblin = new Card(null, Fraction.GOBLIN, i, null);
+				initialCards.add(goblin);
 				cardRepository.save(goblin);
 
 			} else {
 				Card goblin = new Card(null, Fraction.GOBLIN, 0, null);
+				initialCards.add(goblin);
 				cardRepository.save(goblin);
 			}
 
@@ -55,10 +59,11 @@ public class CardService {
 		 */
 		for (int i = 2; i < 10; i++) {
 			Card knight = new Card(null, Fraction.KNIGHT, i, null);
-
+			
+			initialCards.add(knight);
 			cardRepository.save(knight);
 		}
-
+		return initialCards;
 
 	}
 

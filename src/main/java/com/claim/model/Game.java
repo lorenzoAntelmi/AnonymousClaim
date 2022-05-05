@@ -31,6 +31,7 @@ public class Game {
 	*/
 	@OneToOne(cascade = CascadeType.ALL)
 	private Player playerA;
+	
 	@OneToOne(cascade = CascadeType.ALL)
 	private Player playerB;
 	
@@ -38,7 +39,7 @@ public class Game {
 	*/
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Card> playedCards;
-	
+
 	/**@OneToOne association = one Game to one CardDeck 
 	*/
 	@OneToOne(cascade = CascadeType.ALL)
@@ -51,13 +52,14 @@ public class Game {
 	*/
 	public Game() {}
 
-	public Game(Integer id, Player playerA, Player playerB, Integer phase) {
-		super();
+	//REMOVE PHASE IN EVERY CLASS
+	public Game(Integer id, Player playerA, Player playerB, CardDeck cardDeck) {
+		super(); //WIESO
 		this.id = id;
 		this.playerA = playerA;
 		this.playerB = playerB;
-		this.phase = phase;
-		this.playedCards = new ArrayList<>();
+		this.cardDeck = cardDeck;
+		this.playedCards = new ArrayList<Card>(); 
 	}
 	
 
@@ -99,6 +101,7 @@ public class Game {
 		this.phase = phase;
 	}
 	
+	
 	/**@Getter & @Setter
 	 * List of played cards from PlayerA & PlayerB
 	 * (List should have only 2 cards per round)
@@ -112,8 +115,7 @@ public class Game {
 		this.playedCards = playedCards;
 	}
 	
-	/**@Getter & @Setter "CardDeck"
-	*/
+	/**@Getter & @Setter "CardDeck"	*/
 	public CardDeck getCardDeck() {
 		return cardDeck;
 	}
@@ -121,5 +123,6 @@ public class Game {
 	public void setCardDeck(CardDeck cardDeck) {
 		this.cardDeck = cardDeck;
 	}
+	
 
 }
