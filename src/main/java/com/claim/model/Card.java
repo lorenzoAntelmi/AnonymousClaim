@@ -191,11 +191,24 @@ public class Card {
 	public boolean isWinner(Card otherCard) {
 		boolean bo = false;
 		if (this.doppelgangerValueRule(otherCard) == true
-			 || this.effectlessMoveRule(otherCard) == false
+			 || this.effectlessMoveRule(otherCard) == true
 				|| this.ruleKnight(otherCard) == true
-					|| this.draw(otherCard) == true) { //DRAW MUSS GETESTET WERDEN
+					|| this.draw(otherCard) == true//DRAW MUSS GETESTET WERDEN
+						|| this.isHigherValueBySameFraction(otherCard) == true) { 			
 			bo = true;
 		}
+		return bo;
+	}
+	
+	public boolean ruleUndead(Card otherCard) {
+		boolean bo = false;
+		if (this.getFraction().name() == "UNDEAD" && otherCard.getFraction().name() == "UNDEAD") {
+			bo = true;
+		} else if (this.getFraction().name() == "UNDEAD" || otherCard.getFraction().name() == "UNDEAD"){
+			bo = true;
+		}
+		
+		
 		return bo;
 	}
 

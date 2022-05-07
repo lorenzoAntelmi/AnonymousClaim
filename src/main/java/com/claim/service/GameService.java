@@ -89,7 +89,7 @@ public class GameService {
 		
 		return game;
 	}
-
+	
 	/**Method handles 13 rounds of
 	 * phase 1*/
 	public void phase1(Integer gameId, Integer playerA, Integer playerB, Integer cardIdA, Integer cardIdB) {
@@ -154,11 +154,51 @@ public class GameService {
 		pB.setCardsPhase2(handPhase2B);
 		playerRepository.save(pB);
 
+		List<Card> pointsUndead = new ArrayList<Card>();
+		
+		// vergleicht ob die beiden gespielten Karten "UNDEAD" sind und speichert diese in pointStack
+		if (cardA.isWinner(cardB) && (playedCards.get(1).getFraction().name() == "UNDEAD"
+				&& playedCards.get(0).getFraction().name() == "UNDEAD")) {
+			pointsUndead.add(playedCards.get(0));
+			pointsUndead.add(playedCards.get(1));
+			pA.setPointStack(pointsUndead);
+		} else if (cardB.isWinner(cardA) && (playedCards.get(1).getFraction().name() == "UNDEAD"
+				&& playedCards.get(0).getFraction().name() == "UNDEAD")) {
+			pointsUndead.add(playedCards.get(0));
+			pointsUndead.add(playedCards.get(1));
+			pB.setPointStack(pointsUndead);
+		} else {
+			// vergleicht ob EINEN der BEIDEN gespielten Karten "UNDEAD" ist und speichert diese in pointStack
+			int i = playedCards.size() - 2;
+			for (Card c : playedCards) {
+				switch (i) {
+				case (0): 
+					if (cardA.isWinner(cardB) && c.getFraction().name() == "UNDEAD") {
+						pointsUndead.add(playedCards.get(0));
+						pA.setPointStack(pointsUndead);
+					} else if (cardB.isWinner(cardA) && c.getFraction().name() == "UNDEAD") {
+						pointsUndead.add(playedCards.get(0));
+						pB.setPointStack(pointsUndead);
+					}
+				break;
+				case (1): 
+					if (cardA.isWinner(cardB) && c.getFraction().name() == "UNDEAD") {
+						pointsUndead.add(playedCards.get(0));
+						pA.setPointStack(pointsUndead);
+					} else if (cardB.isWinner(cardA) && c.getFraction().name() == "UNDEAD") {
+						pointsUndead.add(playedCards.get(0));
+						pB.setPointStack(pointsUndead);
+					}
+				break;
+				}
+				i++;
+			}
+		}
+
 		/**Get List of playedCards from database
 		 * and remove its cards in Card objects
 		 * (List should be empty per round) */
-		playedCards.remove(1);
-		playedCards.remove(0);
+		playedCards.remove(1); playedCards.remove(0);
 		game.setPlayedCards(playedCards);
 		gameRepository.save(game);
 	}

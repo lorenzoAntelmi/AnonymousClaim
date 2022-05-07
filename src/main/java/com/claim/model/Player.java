@@ -88,11 +88,11 @@ public class Player {
 	}
 	
 	public List<Card> getPointStack() {
-		return cardsPhase2;
+		return pointStack;
 	}
 
 	public void setPointStack(List<Card> pointStack) {
-		this.cardsPhase2 = pointStack;
+		this.pointStack = pointStack;
 	}
 
 	public List<Card> getCardsForPhase2() {
