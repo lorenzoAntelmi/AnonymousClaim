@@ -200,16 +200,6 @@ public class Card {
 		return bo;
 	}
 	
-	public boolean ruleUndead(Card otherCard) {
-		boolean bo = false;
-		if (this.getFraction().name() == "UNDEAD" && otherCard.getFraction().name() == "UNDEAD") {
-			bo = true;
-		} else if (this.getFraction().name() == "UNDEAD" || otherCard.getFraction().name() == "UNDEAD"){
-			bo = true;
-		}
-		
-		
-		return bo;
-	}
+	
 
 }

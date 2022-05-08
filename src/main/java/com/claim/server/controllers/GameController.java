@@ -97,6 +97,36 @@ public class GameController {
 		  return ResponseEntity.status(HttpStatus.CREATED).build();
 		  
 	  }
+	  
+	// Phase2
+	  @GetMapping (path = "/phase2/{gameId}/{playerA}/{playerB}/{cardIdA}/{cardIdB}",
+				  produces = "application/jason")
+		  public ResponseEntity<Game> phase2(@PathVariable("gameId") Integer gameId,
+				  @PathVariable("playerA") Integer playerA, 
+				  @PathVariable("playerB") Integer playerB,
+				  @PathVariable("cardIdA") Integer cardIdA,
+				  @PathVariable("cardIdB") Integer cardIdB) {
+			  
+			  gameService.phase2(gameId, playerA, playerB, cardIdA, cardIdB);
+			  
+			  return ResponseEntity.status(HttpStatus.CREATED).build();
+			  
+		  }
+	  
+	  // Ranking
+	  @GetMapping (path = "/calcScore/{playerA}/{playerB}",
+			  produces = "application/jason")
+	  public ResponseEntity<Game> calcScore(
+			  @PathVariable("playerA") Integer playerA, 
+			  @PathVariable("playerB") Integer playerB)
+			  {
+		  
+		  gameService.calcScore(playerA, playerB);
+		  
+		  return ResponseEntity.status(HttpStatus.CREATED).build();
+		  
+	  }
+	  
 	 
 	  /**
 	   * To join a game with an id (playerId will be removed later)

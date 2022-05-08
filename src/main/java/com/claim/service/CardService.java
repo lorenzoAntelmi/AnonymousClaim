@@ -51,7 +51,6 @@ public class CardService {
 				initialCards.add(goblin);
 				cardRepository.save(goblin);
 			}
-
 		}
 
 		/**
@@ -64,7 +63,5 @@ public class CardService {
 			cardRepository.save(knight);
 		}
 		return initialCards;
-
 	}
-
 }
