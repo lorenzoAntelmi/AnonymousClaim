@@ -1,0 +1,443 @@
+/*	authors: Valentina Caldana*/
+
+
+body {
+	
+  /* only background-image (table) */
+  background-image: url("/image/game_background.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  width: 100%;
+  height:100%;
+  margin: 0;
+  padding: 0;
+  
+  /* for all text in body */
+  font-family: Century Gothic, Verdana, sans-serif;
+  color: black; 
+  font-size: 11px;
+  
+ 
+}
+
+.display-area{
+	width: 300px;
+	height: 460px;
+	position: absolute; /*to overlap elements*/
+	background-color:rgba(128,128,128,0.3);
+	border: solid 3px black;
+	border-radius:20px;
+	
+	/*position on screen*/
+	top:100px;
+	left: 38%;
+	margin: 0 0 0 -700px; /* left = -700px */
+}
+
+.displayed-card{
+	width:220px;
+	height: 340px;
+	margin:34px; /* border space */
+	border-radius: 10px;
+	border: solid 3px black;
+	position: absolute; /*to overlap elements*/
+	
+	/*only card picture*/
+	background-image: url("/image/Untot_0.png"); /*TEMPORÄR ZU TESTZWECKEN*/
+	background-size: cover;
+	background-position: center;
+ 	background-repeat: no-repeat;
+}
+
+.make-move{
+	width:220px;
+	height: 50px;
+	top: 360px;
+	margin:35px; /* border space of hand */
+	font-size: 15px;
+	font-weight: bold; 
+	border-radius: 30px;
+	border: solid 3px black;
+	position: absolute; /*to overlap elements*/
+	background-color: white;
+}
+
+
+.make-move:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.hand{
+	width: 1370px;
+	position: absolute; /*to overlap elements*/
+	top:600px;
+	left: 38%;
+	margin: 0 0 0 -700px; /* right = -700px */
+	border: solid 3px black;
+	border-radius:20px;
+	height: 300px;
+	background-color:rgba(128,128,128,0.3)
+}
+
+
+.hand .card0{
+	width:150px;
+	height: 230px;
+	left: 0;
+	margin:35px; /* border space of hand */
+	border-radius: 10px;
+	border: solid 3px black;
+	position: absolute;	
+	z-index: 1; /*layer or level of element*/
+	
+	/*only card picture*/
+	background-image: url("/image/Kobold_0.png"); /*TEMPORÄR ZU TESTZWECKEN*/
+	background-size: cover;
+	background-position: center;
+ 	background-repeat: no-repeat;
+}
+
+ .hand .card0:hover {
+    transform: translateY(-20px);
+ }
+ 
+.hand .card1{
+	width:150px;
+	height: 230px;
+	left: 2.5cm;
+	margin:35px; /* border space of hand */
+	border-radius: 10px;
+	border: solid 3px black;
+	position: absolute;
+	z-index: 2; /*layer or level of element*/
+	
+	/*only card picture*/
+	background-image: url("/image/Doppel_0.png"); /*TEMPORÄR ZU TESTZWECKEN*/
+	background-size: cover;
+	background-position: center;
+ 	background-repeat: no-repeat;
+}
+
+ .hand .card1:hover {
+    transform: translateY(-20px);
+ }
+
+.hand .card2{
+	width:150px;
+	height: 230px;
+	left: 5cm;
+	margin:35px; /* border space of hand */
+	border-radius: 10px;
+	border: solid 3px black;
+	position: absolute;
+	z-index: 3; /*layer or level of element*/
+	
+	/*only card picture*/
+	background-image: url("/image/Ritter_2.png"); /*TEMPORÄR ZU TESTZWECKEN*/
+	background-size: cover;
+	background-position: center;
+ 	background-repeat: no-repeat;
+}
+
+ .hand .card2:hover {
+    transform: translateY(-20px);
+ }
+
+.hand .card3{
+	width:150px;
+	height: 230px;
+	left: 7.5cm;
+	margin:35px; /* border space of hand */
+	border-radius: 10px;
+	border: solid 3px black;
+	position: absolute;
+	z-index: 4; /*layer or level of element*/
+	
+	/*only card picture*/
+	background-image: url("/image/Untot_0.png"); /*TEMPORÄR ZU TESTZWECKEN*/
+	background-size: cover;
+	background-position: center;
+ 	background-repeat: no-repeat;
+}
+
+ .hand .card3:hover {
+    transform: translateY(-20px);
+ }
+
+.hand .card4{
+	width:150px;
+	height: 230px;
+	left: 10cm;
+	margin:35px; /* border space of hand */
+	border-radius: 10px;
+	border: solid 3px black;
+	position: absolute;
+	background-color: grey;
+	z-index: 5; /*layer or level of element*/
+}
+
+ .hand .card4:hover {
+    transform: translateY(-20px);
+ }
+
+.hand .card5{
+	width:150px;
+	height: 230px;
+	left: 12.5cm;
+	margin:35px; /* border space of hand */
+	border-radius: 10px;
+	border: solid 3px black;
+	position: absolute;
+	background-color: grey;
+	z-index: 6; /*layer or level of element*/
+}
+
+ .hand .card5:hover {
+    transform: translateY(-20px);
+ }
+
+.hand .card6{
+	width:150px;
+	height: 230px;
+	left: 15cm;
+	margin:35px; /* border space of hand */
+	border-radius: 10px;
+	border: solid 3px black;
+	position: absolute;
+	background-color: grey;
+	z-index: 7; /*layer or level of element*/
+}
+
+ .hand .card6:hover {
+    transform: translateY(-20px);
+ }
+
+.hand .card7{
+	width:150px;
+	height: 230px;
+	left: 17.5cm;
+	margin:35px; /* border space of hand */
+	border-radius: 10px;
+	border: solid 3px black;
+	position: absolute;
+	background-color: grey;
+	z-index: 8; /*layer or level of element*/
+}
+
+ .hand .card7:hover {
+    transform: translateY(-20px);
+ }
+
+.hand .card8{
+	width:150px;
+	height: 230px;
+	left: 20cm;
+	margin:35px; /* border space of hand */
+	border-radius: 10px;
+	border: solid 3px black;
+	position: absolute;
+	background-color: grey;
+	z-index: 9; /*layer or level of element*/
+}
+
+ .hand .card8:hover {
+    transform: translateY(-20px);
+ }
+
+.hand .card9{
+	width:150px;
+	height: 230px;
+	left: 22.5cm;
+	margin:35px; /* border space of hand */
+	border-radius: 10px;
+	border: solid 3px black;
+	position: absolute;
+	background-color: grey;
+	z-index: 10; /*layer or level of element*/
+}
+
+ .hand .card9:hover {
+    transform: translateY(-20px);
+ }
+
+.hand .card10{
+	width:150px;
+	height: 230px;
+	left: 25cm;
+	margin:35px; /* border space of hand */
+	border-radius: 10px;
+	border: solid 3px black;
+	position: absolute;
+	background-color: grey;
+	z-index: 11; /*layer or level of element*/
+}
+
+ .hand .card10:hover {
+    transform: translateY(-20px);
+ }
+
+.hand .card11{
+	width:150px;
+	height: 230px;
+	left: 27.5cm;
+	margin:35px; /* border space of hand */
+	border-radius: 10px;
+	border: solid 3px black;
+	position: absolute;
+	background-color: grey;
+	z-index: 12; /*layer or level of element*/
+}
+
+ .hand .card11:hover {
+    transform: translateY(-20px);
+ }
+
+.hand .card12{
+	width:150px;
+	height: 230px;
+	left: 30cm;
+	margin:35px; /* border space of hand */
+	border-radius: 10px;
+	border: solid 3px black;
+	position: absolute;
+	background-color: grey;
+	z-index: 13; /*layer or level of element*/
+}
+
+ .hand .card12:hover {
+    transform: translateY(-20px);
+ }
+
+.pointStackTitle{
+	width:150px;
+	height: 43px;
+	top:820px;
+	right: 7cm;
+	margin:35px; /* border space of hand */
+	border-radius: 10px;
+	border: solid 3px black;
+	position: absolute;
+	background-color: white;
+	text-align: center;
+	font-weight: 700;
+	font-size: 14px;
+}
+
+.pointStack{
+	width:150px;
+	height: 230px;
+	top:570px;
+	right: 7cm;
+	margin:35px; /* border space of hand */
+	border-radius: 10px;
+	border: solid 3px black;
+	position: absolute;
+	
+	/*only card backside picture*/
+	background-image: url("/image/backside_cards.png");
+	background-size: cover;
+	background-position: center;
+ 	background-repeat: no-repeat;
+}
+
+.depositStack{
+	width:150px;
+	height: 230px;
+	top:570px;
+	right: 2cm;
+	margin:35px; /* border space of hand */
+	border-radius: 10px;
+	border: solid 3px black;
+	position: absolute;
+	
+	/*only card backside picture*/
+	background-image: url("/image/backside_cards.png");
+	background-size: cover;
+	background-position: center;
+ 	background-repeat: no-repeat;
+}
+
+.depositStackTitle{
+	width:150px;
+	height: 43px;
+	top:820px;
+	right: 2cm;
+	margin:35px; /* border space of hand */
+	border-radius: 10px;
+	border: solid 3px black;
+	position: absolute;
+	background-color: white;
+	text-align: center;
+	font-weight: 700;
+	font-size: 14px;
+}
+
+.deck{
+	width:150px;
+	height: 230px;
+	top:100px;
+	right: 2cm;
+	margin:35px; /* border space of hand */
+	border-radius: 10px;
+	border: solid 3px black;
+	position: absolute;
+	
+	/*only card backside picture*/
+	background-image: url("/image/backside_cards.png");
+	background-size: cover;
+	background-position: center;
+ 	background-repeat: no-repeat;
+}
+
+.deckTitle{
+	width:150px;
+	height: 43px;
+	top:350px;
+	right: 2cm;
+	margin:35px; /* border space of hand */
+	border-radius: 10px;
+	border: solid 3px black;
+	position: absolute;
+	background-color: white;
+	text-align: center;
+	font-weight: 700;
+	font-size: 14px;
+}
+
+.revealedCard{
+	width:150px;
+	height: 230px;
+	top:100px;
+	right: 7cm;
+	margin:35px; /* border space of hand */
+	border-radius: 10px;
+	border: dashed 3px black;
+	position: absolute;
+	background-color: grey;
+	opacity:0.7;
+
+}
+
+.oponentsCard{
+	width:220px;
+	height: 340px;
+	top:140px;
+	right:940px; /* border space of hand */
+	border-radius: 10px;
+	border: solid 3px black;
+	position: absolute; /*to overlap elements*/
+	background-color: grey;	
+}
+
+
+
+
+
+
+
+
+
+
+
