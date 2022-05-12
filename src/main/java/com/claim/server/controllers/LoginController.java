@@ -29,11 +29,11 @@ public class LoginController {
 	public String getRegistrationEN() {
 		return "registration-EN";
 	}
-	
-	/** Provides login-related endpoints.
-	 * @author Deborah Vanzin
-	 */
-	
-	
+
+	//PROVISORISCH HIER PLATZIERT ZU TESTZWECKEN
+	@GetMapping("/gameSurface-DE")
+	public String getGameSurface() {
+		return "gameSurface-DE";
+	}
 
 }

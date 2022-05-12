@@ -100,8 +100,8 @@ public class Player {
 		return cardsPhase2;
 	}
 
-	public void setCardsPhase2(List<Card> wonStack) {
-		this.cardsPhase2 = wonStack;
+	public void setCardsPhase2(List<Card> cardsPhase2) {
+		this.cardsPhase2 = cardsPhase2;
 	}
 
 }

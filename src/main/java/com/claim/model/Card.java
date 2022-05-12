@@ -201,6 +201,7 @@ public class Card {
 		return bo;
 	}
 
+	// Kann meoglicherweise geloescht werden.
 	public boolean ruleUndead(Card otherCard) {
 		boolean bo = false;
 		if (this.getFraction().name() == "UNDEAD" && otherCard.getFraction().name() == "UNDEAD") {
@@ -212,5 +213,6 @@ public class Card {
 
 		return bo;
 	}
+
 
 }
