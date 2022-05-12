@@ -51,18 +51,12 @@ public class GameController {
 	   * Create a new game with the data passed in the request body
 	   * @throws URISyntaxException
 	   */
-	  @PostMapping(path = "/games/{playerId}")
+	  @PostMapping(path = "/games/")
 	  public ResponseEntity<Game> createNewGame(@PathVariable Integer playerId) throws URISyntaxException {
 		  
-		  /*Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		  String username;
-		  if (principal instanceof UserDetails) {
-		     username = ((UserDetails)principal).getUsername();
-		  } else {
-		     username = principal.toString();
-		  } */
+
 		  
-		  Game game = gameService.initializeGame(playerId);
+		  Game game = gameService.initializeGame();
 		  // Create an URI which identifies the resource created
 		  URI location = new URI("http://localhost:8080/games/"+ game.getId());
 		  return ResponseEntity.created(location).build();

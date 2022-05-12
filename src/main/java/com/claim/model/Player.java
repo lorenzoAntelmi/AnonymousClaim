@@ -22,7 +22,8 @@ public class Player {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 
-	private Integer accountId;
+	@OneToOne
+	private Account account;
 
 	/**@ManyToMany association = many Player to many hand*/
 	@ManyToMany(cascade = CascadeType.ALL)
@@ -45,10 +46,9 @@ public class Player {
 	protected Player() {
 	}
 
-	public Player(Integer id, Integer accountId, List<Card> hand, Game game, List<Card> cardsPhase2,
+	public Player(Account account, List<Card> hand, Game game, List<Card> cardsPhase2,
 			List<Card> pointStack) {
-		this.id = id;
-		this.accountId = accountId;
+		this.account = account;
 		this.game = game;
 		this.hand = hand;
 		this.cardsPhase2 = cardsPhase2;
@@ -64,12 +64,12 @@ public class Player {
 		this.id = id;
 	}
 
-	public Integer getAccountId() {
-		return accountId;
+	public Account getAccount() {
+		return account;
 	}
 
-	public void setAccountId(Integer accountId) {
-		this.accountId = accountId;
+	public void setAccountId(Account account) {
+		this.account = account;
 	}
 
 	public Game getGame() {

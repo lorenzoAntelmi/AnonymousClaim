@@ -53,9 +53,7 @@ public class CardDeck {
 	 */
 	public CardDeck() {	}
 
-	public CardDeck(Integer id, Game game, List<Card> cards) {
-		super(); //WIESO
-		this.id = id;
+	public CardDeck(Game game, List<Card> cards) {
 		this.game = game;
 		this.cards = cards;
 		/**List is not instantiated yet

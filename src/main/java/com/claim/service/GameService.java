@@ -3,14 +3,19 @@ package com.claim.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.claim.database.AccountRepository;
 import com.claim.database.CardDeckRepository;
 import com.claim.database.CardRepository;
 import com.claim.database.GameRepository;
 import com.claim.database.PlayerRepository;
+import com.claim.model.Account;
 import com.claim.model.Card;
 import com.claim.model.CardDeck;
 import com.claim.model.Game;
@@ -34,14 +39,32 @@ public class GameService {
 	private CardDeckService cardDeckService;
 	@Autowired
 	private CardService cardService;
+	@Autowired
+	private AccountRepository accountRepository;
 
 	private Card removedCard;
 	private List<Card> tempPlayedCards = new ArrayList<>();
 	private List<Card> handPhase2A;
 	private List<Card> handPhase2B;
 
-	public Game initializeGame(Integer playerAId) {
-
+	public Game initializeGame() {
+		/** Wir holen uns den Context aus dem SecurityContextHolder.
+		* In diesem Context wird das Principal (aka eingeloggter User) geholt.
+		* Mit dem Principal Objekt können wir den Account aus der Datenbank laden.
+		* @author Lorenzo Antelmi*/
+		  Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		  String email;
+		  if (principal instanceof UserDetails) {
+		     email = ((UserDetails)principal).getUsername();
+		  } else {
+		     email = principal.toString();
+		  } 
+		  
+		  Optional<Account> maybeAccount = accountRepository.findByEmail(email);
+		  
+		  Account account = maybeAccount.get();
+		
+		  
 		/**Every Game has its own card set (52 cards)
 		 * If Game-List has Game objects, 52 cards
 		 * are generated (incl. stored in database)
@@ -70,19 +93,19 @@ public class GameService {
 		List<Card> handPlayerB = cards.subList(14, 27);
 
 		/**Generate PlayerA and save in repository*/
-		Player playerA = new Player(null, playerAId, handPlayerA, game, null, null);
+		Player playerA = new Player(account, handPlayerA, game, null, null);
 		game.setPlayerA(playerA);
 		playerRepository.save(playerA);
 
 		/**Generate PlayerB and save in repository*/
-		Player playerB = new Player(null, null, handPlayerB, game, null, null);
+		Player playerB = new Player(null, handPlayerB, game, null, null);
 		game.setPlayerB(playerB);
 		playerRepository.save(playerB);
 
 		/**Take remaining cards and
 		 *create a CardDeck (26 cards to CardDeck)*/
 		List<Card> cardsForDeck = cards.subList(27, 52);
-		CardDeck deck = new CardDeck(null, game, cardsForDeck);
+		CardDeck deck = new CardDeck(game, cardsForDeck);
 
 		game.setCardDeck(deck);
 		deck.setGame(game);
