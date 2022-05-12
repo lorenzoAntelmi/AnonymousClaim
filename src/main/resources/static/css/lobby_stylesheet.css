@@ -1,0 +1,193 @@
+
+		table, th, td  {
+			border: 1px solid black;
+			border-collapse: collapse;
+			border-style: groove;
+		}
+		
+		li {
+			text-align:center;
+		}
+			 
+		body {
+ 			background-image: linear-gradient(135deg, rgb(136, 127, 50) 20%,#a0522d 60% ,rgb(115, 92, 43) 100%);
+ 			background-size: cover;
+  			background-repeat: no-repeat;
+  			background-attachment: fixed;
+		}
+		
+		
+		div lobby-area {
+	      margin: 0 auto; /* 0 = top & bottom, auto = horizontal center */
+		  background: #FFFFFF;
+		  border-radius: 10px;
+		  overflow: hidden; /* specifies what happens when content overflows the box (content would be invisible)*/
+		  display: flex; /* Positioning "right" & "left" in a row with same height */
+		  flex: 1 1 100%; /* allows lobby-area to grow (proportion 1), shrink (proportion 1) if necessary & 100% default size (regardless content) */
+		  align-items: stretch; /* stretch to fill the lobby-area */
+		  box-shadow: 0 0 20px 6px #090b6f85;		
+		}
+		
+		div .containerLeft   {
+			background-image: linear-gradient(135deg, rgb(195, 138, 76) 20%,rgb(96, 49, 27) 60% ,rgb(95, 76, 36) 100%);
+			background-color:burlywood;
+			width: 420px;
+			height: 90vh;
+			border: 5px;
+			display: inline-block;
+			text-align:center;
+			overflow: hidden; 
+			padding: 40px;
+			font-family: Century Gothic, Verdana, sans-serif;
+			
+		}
+		
+		div .containerMiddle {
+			background-image: linear-gradient(135deg, rgb(195, 138, 76) 20%,rgb(96, 49, 27) 60% ,rgb(95, 76, 36) 100%);
+			background-color:burlywood;
+			width: 420px;
+			height: 90vh;
+			border: 5px;
+			display: inline-block;
+			text-align:center;
+			overflow: hidden; 
+			padding: 40px;
+			font-family: Century Gothic, Verdana, sans-serif;
+  			
+		}
+		
+		div .containerRight {
+			background-image: linear-gradient(135deg, rgb(195, 138, 76) 20%,rgb(96, 49, 27) 60% ,rgb(95, 76, 36) 100%);
+			background-color:burlywood;
+			width: 320px;
+			height: 90vh;
+			border: 5px;
+			overflow: hidden; 
+			font-family: Century Gothic, Verdana, sans-serif; 
+  			display: inline-block;
+  			padding: 40px;
+			}
+			
+			
+		input[type=button] {
+		  	color: #fff;
+  			font-size: 10px;
+  			font-family: Century Gothic, Verdana, sans-serif;
+	  		padding: 12px 35px;
+	  		border-radius: 25px;
+	  		display: inline-block;
+  			border: 0;
+  			outline: 0;
+  			background-color: gray;
+  			width: 160px;
+  			text-align:center;
+  			}
+	
+	
+		input .containerRight [type=button] {
+			color: #fff;
+  			font-size: 20px;
+  			font-family: Century Gothic, Verdana, sans-serif;
+	  		padding: 12px 35px;
+	  		border-radius: 50px;
+  			border: 0;
+  			outline: 0;
+  			background-color: gray;
+  			width: 180px;
+  			text-align:center;
+  			position: relative;
+ 
+			}
+			
+		  .textalignleft {
+			display: inline-block;
+			position: relative;
+			width: 70%;
+		}
+		
+		h3 {
+			font-size: 3vh;
+  			font-family: Century Gothic, Verdana, sans-serif;
+		}
+		
+		h5 {
+			font-size: 2vh;
+  			font-family: Century Gothic, Verdana, sans-serif;
+  			text-align:left;
+		}
+		
+		h6 {
+			font-size: 1.6vh;
+  			font-family: Century Gothic, Verdana, sans-serif;
+  			border-style:outset;
+		}
+		
+		
+		.modal {
+	  display: none; /* Hidden by default */
+	  position: fixed; /* Stay in place */
+	  z-index: 1; /* Sit on top */
+	  left: 0;
+	  top: 0;
+	  width: 100%; /* Full width */
+	  height: 100%; /* Full height */
+	  overflow: auto; /* Enable scroll if needed */
+	  background-color: rgb(0,0,0); /* Fallback color */
+	  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+	}
+	
+	/* Modal Content/Box */
+	.modal-content {
+	  background-color: #fefefe;
+	  margin: 15% auto; /* 15% from the top and centered */
+	  padding: 20px;
+	  border: 1px solid #888;
+	  width: 16%; /* Could be more or less, depending on screen size */
+	}
+	
+	/* The Close Button */
+	.close {
+	  color: #aaa;
+	  float: right;
+	  font-size: 28px;
+	  font-weight: bold;
+	}
+	
+	.close:hover,
+	.close:focus {
+	  color: black;
+	  text-decoration: none;
+	  cursor: pointer;
+	}
+		
+	.myBtn, .SettingButton, .MenuBtn {
+			color: #fff;
+  			font-size: 13px;
+  			font-family: Century Gothic, Verdana, sans-serif;
+	  		padding: 12px 35px;
+	  		border-radius: 50px;
+  			border: 0;
+  			outline: 0;
+  			background-color: gray;
+  			width: 180px;
+  			text-align:center;
+	}
+	
+	.MenuBtn {
+	position: relative;
+	width: 25%;
+	display:inline-block;
+	}
+	
+	.SettingButton {
+		display: block;
+		margin: 20px;
+	}
+			
+			
+
+
+		
+	
+
+	

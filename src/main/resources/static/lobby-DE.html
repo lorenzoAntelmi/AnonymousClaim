@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+
+<html lang="DE" xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta charset="UFT-8">
+		<title>Lobby-CLAIM</title>
+		<link rel="stylesheet" type="text/css" href="lobby_stylesheet.css"/>
+	
+	</head>
+
+
+	<body> 
+	<!-- Containers Lobby -->
+	<div class="lobby-area"> 
+
+		<!-- Container links -->
+		<div class="containerLeft">
+		<h3>Top Spieler</h3>
+		<table style="width:100%">
+			<tr>
+				<th style="width: 100%">Rang</th>
+				<th style="width: 100%">Benutzername</th>
+				<th style="width: 100%">Score</th>
+			</tr>
+			
+			<tr>
+				<td>Rang1</td>
+				<td>Username1</td>
+				<td>Score1</td>
+			</tr>
+			
+			 <!-- macht für jedes Ranking eine neue Reihe mit den 3 Werten rank, username, score) --> 
+			 <!--
+			<tr th:each="ranking:"${href="/ranking}">    
+					<td th:text="${ranking.rank}"/>
+					<td th:text="${ranking.username}"/>
+					<td th:text="${ranking.score}"/>
+			</tr>
+			--> 
+			
+			
+		</table>
+		</div>
+				
+
+		
+		<!-- Container mitte --> 
+		<div class="containerMiddle">
+		
+		<h3>Ready to be the next King?</h3>
+		
+		<h5>Spiel starten mit einem Human Player</h5>
+		
+		
+		<h6>Einem laufenden Spiel beitreten</h6>
+		<div class="ButtonsSpielStarten">
+		<!-- Todo: Listenelemente generieren in For-Loop in JavaScript-->
+			<ul> 
+				<li>Game1</li> <input type="button" onclick="joinGame(1,1)" value="Spiel beitreten">
+				<li>Game2</li> <input type="button" onclick="joinGame(2,2)" value="Spiel beitreten">
+				<li>Game3</li> <input type="button" onclick="joinGame(3,3)" value="Spiel beitreten">
+				<li>Game4</li> <input type="button" onclick="joinGame(4,4)" value="Spiel beitreten">
+				<li>Game5</li> <input type="button" onclick="joinGame(5,5)" value="Spiel beitreten">
+				
+		</div>
+			<!-- Auflistung der laufenden Spiele & Möglichkeit einem dieser Spiele beizutreten
+				List<Game> games = getOpenGames();
+				for(int i = 0; i++; i <5) {
+				gameId = games[i].game.id;
+				playerId = games[i].playerA.id;
+				// create <li><input ...> entry a la
+				// <li>Game ${game.id}<input type="button" onclick="joinGame(gameId, playerId)" ....
+}
+			-->  
+			
+			
+		<h6>Ein neues Spiel starten</h6>
+			<input type="button" onclick="initializeGame(id)" value="Neues Spiel starten">
+		
+		
+		
+		
+		<h5>Spiel starten mit einem Computer Player</h5>
+		<input type="button" onclick="initializeGame(id)" value="Neues Spiel starten">
+		</div>
+		
+	
+		
+		<!--Containter rechts --> 
+		<div class="containerRight">
+			<p class="textalignleft"><span id="username"/></p>
+			<button class="MenuBtn" id="MenuBtn"><i class="fa fa-bars"></i></button>
+			<p class="textalignleft">Gespielte Games</p>
+			
+			
+			
+			<div id="myModal" class="modal">
+			
+			  <!-- Modal content -->
+			  <div class="modal-content">
+			    <span class="close">&times;</span>
+			    <button class="SettingButton" id="BtnPW">Passwort ändern</button>
+			    <button class="SettingButton" id="BtnH">Hintergrundbild ändern</button>
+			    <button class="SettingButton" id="BtnDel">Account löschen</button>
+			  	<button class="SettingButton" id="LogoutBtn">Logout</button>
+			  </div>
+		<script src="js/script.js">
+
+		</script>
+		</body>
+	</html>		  
+			  
+			  
+			  
+			  
+			  
+			  
+	
