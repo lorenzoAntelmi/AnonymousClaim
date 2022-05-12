@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<!--authors: Valentina Caldana & Rocco Saracino
+	source: https://www.codehim.com/collections/login-page-in-html-with-css-code/#google_vignette -->
+	
+<html lang="DE" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Registration Claim</title>
+  <link rel="stylesheet" type="text/css" href="css/registration_stylesheet.css"/>
+
+</head>
+
+<body>
+
+<div class="registration-area"> <!-- container for registration-area -->
+	
+	<div class="left">
+	<!-- Container for registration-area (left) -->
+	</div>
+	
+		<div class="right">
+		<h5>Registration</h5>
+		
+			<form>
+		<div class="inputs">
+			<input type="text" id="username" placeholder="BENUTZERNAME" value="deborah" />
+			<br>
+			<input type="date" id="birthDate" placeholder="GEBURTSDATUM" value="1990-09-09" />
+			<br>
+			<input type="email" id="email" placeholder="E-MAIL" value="deborah@vanzin.com" />
+			<br>
+			<input type="email" id="confirmEmail" placeholder="E-MAIL BESTÄTIGEN" value="deborah@vanzin.com" />
+			<br>
+			<input type="password" id="password" placeholder="PASSWORT" value="rootroot" />
+			<br>
+			<input type="password" id="confirmPassword" placeholder="PASSWORT BESTÄTIGEN" value="rootroot" />
+		</div>
+			
+			<br><br><br>
+			
+		<div class="buttons">
+			<button onclick="abort()">Abbrechen</button>
+			<button onclick="register(document.getElementById('username').value, document.getElementById('email').value, document.getElementById('password').value, document.getElementById('birthDate').value)">Bestätigen</button>
+		</div>	
+		</form>
+	</div>
+</div>
+<script src="js/script.js">
+
+</script>
+</body>
+</html>

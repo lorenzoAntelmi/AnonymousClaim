@@ -17,11 +17,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.claim.model.JwtUserDetailServices;
 
 /**
- * 
+ *
  * @author Lorenzo Antelmi
- * This class extends the WebSecurityConfigurerAdapter is a convenience class 
+ * This class extends the WebSecurityConfigurerAdapter is a convenience class
  * that allows customization to both WebSecurity and HttpSecurity.
- * 
+ *
  * source: https://www.javainuse.com/spring/boot-jwt
  *
  */
@@ -30,7 +30,7 @@ import com.claim.model.JwtUserDetailServices;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-	
+
 	@Autowired
 	private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
-	
+
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		/**
@@ -49,25 +49,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		 */
 		auth.userDetailsService(jwtUserDetailServices).passwordEncoder(passwordEncoder());
 	}
-	
+
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
 	@Bean
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
-	
+
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		// We don't need CSRF for this example
 		httpSecurity.csrf().disable()
 				// dont authenticate this particular request
-				.authorizeRequests().antMatchers("/**").permitAll().
+				.authorizeRequests().antMatchers("/authenticate").permitAll()
+				.antMatchers("/account").permitAll()
+				.antMatchers("/**.html").permitAll()
+				.antMatchers("/css/**").permitAll()
+				.antMatchers("/image/**").permitAll()
+				.antMatchers("/js/**").permitAll()
 				// all other requests need to be authenticated
-				anyRequest().authenticated().and().
+				.anyRequest().authenticated().and().
 				// make sure we use stateless session; session won't be used to
 				// store user's state.
 				exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
@@ -76,5 +81,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// Add a filter to validate the tokens with every request
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
+	
+	
 
 }

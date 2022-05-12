@@ -1,6 +1,7 @@
 package com.claim.model;
 
 import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -86,7 +87,7 @@ public class Player {
 	public void setHand(List<Card> hand) {
 		this.hand = hand;
 	}
-	
+
 	public List<Card> getPointStack() {
 		return pointStack;
 	}

@@ -19,14 +19,14 @@ import com.claim.model.JwtResponse;
 import com.claim.model.JwtUserDetailServices;
 
 /**
- * 
+ *
  * @author Lorenzo Antelmi
- * 
- * Expose a POST API /authenticate using the JwtAuthenticationController. 
- * The POST API gets username and password in the body- Using Spring Authentication Manager 
- * we authenticate the username and password.If the credentials are valid, a JWT token is created using 
+ *
+ * Expose a POST API /authenticate using the JwtAuthenticationController.
+ * The POST API gets username and password in the body- Using Spring Authentication Manager
+ * we authenticate the username and password.If the credentials are valid, a JWT token is created using
  * the JWTTokenUtil and provided to the client.
- * 
+ *
  * Source: https://www.javainuse.com/spring/boot-jwt
  *
  */
@@ -34,29 +34,29 @@ import com.claim.model.JwtUserDetailServices;
 @RestController
 @CrossOrigin
 public class JwtAuthenticationController {
-	
+
 	@Autowired
 	private AuthenticationManager authenticationManager;
-	
+
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
-	
+
 	@Autowired
 	private JwtUserDetailServices userDetailServices;
-	
-	
+
+
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
-		
-		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+
+		authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 
 		final UserDetails userDetails = userDetailServices
-				.loadUserByUsername(authenticationRequest.getUsername());
+				.loadUserByUsername(authenticationRequest.getEmail());
 
 		final String token = jwtTokenUtil.generateToken(userDetails);
 
 		return ResponseEntity.ok(new JwtResponse(token));
-		
+
 	}
 
 	private void authenticate(String username, String password) throws Exception {

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.claim.model.Card;
 import com.claim.service.CardDeckService;
 
@@ -14,15 +15,15 @@ import com.claim.service.CardDeckService;
 
 @RestController
 public class CardDeckController {
-	
+
 	@Autowired
 	private CardDeckService cardDeckService;
-	
+
 
 	@GetMapping(path="/carddecks/{cardDeckId}/topcard")
 	public Card getTopOfDeck(@PathVariable("cardDeckId") Integer cardDeckId) {
 		return cardDeckService.topCard(cardDeckId);
 	}
-	
+
 	// Create an endpoint to remove the top card of the deck
 }

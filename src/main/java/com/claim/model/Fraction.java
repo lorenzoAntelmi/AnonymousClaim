@@ -5,7 +5,7 @@ package com.claim.model;
  */
 
 public enum Fraction {
-	
+
 	GOBLIN, KNIGHT, UNDEAD, DWARF, DOPPELGANGER;
 
 }

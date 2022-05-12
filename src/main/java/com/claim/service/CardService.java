@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.claim.database.CardRepository;
 import com.claim.model.Card;
 import com.claim.model.Fraction;
@@ -14,13 +15,13 @@ import com.claim.model.Fraction;
 
 @Service
 public class CardService {
-	
+
 	@Autowired
 	private CardRepository cardRepository;
 
 	public List<Card> generateCards() {
 
-		List<Card> initialCards = new ArrayList<Card>();
+		List<Card> initialCards = new ArrayList<>();
 		/**
 		 * Each of them 10 cards with value 0 - 9
 		 */
@@ -59,7 +60,7 @@ public class CardService {
 		 */
 		for (int i = 2; i < 10; i++) {
 			Card knight = new Card(null, Fraction.KNIGHT, i, null);
-			
+
 			initialCards.add(knight);
 			cardRepository.save(knight);
 		}

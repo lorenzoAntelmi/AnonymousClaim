@@ -15,8 +15,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Represents a CardDeck.
- * 
- * @author Deborah Vanzin 
+ *
+ * @author Deborah Vanzin
  * -basic structure
  */
 
@@ -63,8 +63,8 @@ public class CardDeck {
 		 * an instantiated List to the parameters
 		 */
 	}
-	
-	
+
+
 	/**
 	 * @Getter & @Setter
 	 */
@@ -83,7 +83,7 @@ public class CardDeck {
 	public void setCards(List<Card> cards) {
 		this.cards = cards;
 	}
-	
+
 	public Game getGame() {
 		return game;
 	}

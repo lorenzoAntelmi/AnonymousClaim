@@ -3,6 +3,7 @@ package com.claim.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +36,7 @@ public class GameService {
 	private CardService cardService;
 
 	private Card removedCard;
-	private List<Card> tempPlayedCards = new ArrayList<Card>();
+	private List<Card> tempPlayedCards = new ArrayList<>();
 	private List<Card> handPhase2A;
 	private List<Card> handPhase2B;
 
@@ -47,9 +48,9 @@ public class GameService {
 		 * and given to Card-List.
 		 * Else = empty Game-List
 		 * thanks to @createCardsIfNotExist
-		 * Cards can be retrieved from Card-repository 
+		 * Cards can be retrieved from Card-repository
 		 * and given to Card-List */
-		List<Card> cards = new ArrayList<Card>();
+		List<Card> cards = new ArrayList<>();
 		List<Game> games = gameRepository.findAll();
 		if (!games.isEmpty()) {
 			cards = cardService.generateCards();
@@ -78,18 +79,18 @@ public class GameService {
 		game.setPlayerB(playerB);
 		playerRepository.save(playerB);
 
-		/**Take remaining cards and 
+		/**Take remaining cards and
 		 *create a CardDeck (26 cards to CardDeck)*/
 		List<Card> cardsForDeck = cards.subList(27, 52);
 		CardDeck deck = new CardDeck(null, game, cardsForDeck);
-		
+
 		game.setCardDeck(deck);
 		deck.setGame(game);
 		cardDeckRepository.save(deck);
-		
+
 		return game;
 	}
-	
+
 	/**Method handles 13 rounds of
 	 * phase 1*/
 	public void phase1(Integer gameId, Integer playerA, Integer playerB, Integer cardIdA, Integer cardIdB) {
@@ -116,23 +117,23 @@ public class GameService {
 
 		/**PlayerA*/
 		if (pA.getCardsForPhase2().isEmpty()) {
-			
+
 		/**Creates empty deposit stack in first round */
-			handPhase2A = new ArrayList<Card>();
+			handPhase2A = new ArrayList<>();
 		} else {
-			
+
 		/**In following rounds it gets the empty created
 		 * deposit stack*/
 			handPhase2A = pA.getCardsForPhase2();
 		}
-		 
+
 		/**PlayerB*/
 		if (pB.getCardsForPhase2().isEmpty()) {
-			
+
 			/**Creates empty deposit stack in first round */
-			handPhase2B = new ArrayList<Card>();
+			handPhase2B = new ArrayList<>();
 		} else {
-			
+
 			/**In following rounds it gets the empty created
 			 * deposit stack*/
 			handPhase2B = pB.getCardsForPhase2();
@@ -147,15 +148,15 @@ public class GameService {
 			handPhase2B.add(cardToWin);
 			handPhase2A.add(coveredCard);
 		}
-		
+
 		pA.setCardsPhase2(handPhase2A);
 		playerRepository.save(pA);
-		
+
 		pB.setCardsPhase2(handPhase2B);
 		playerRepository.save(pB);
 
-		List<Card> pointsUndead = new ArrayList<Card>();
-		
+		List<Card> pointsUndead = new ArrayList<>();
+
 		// vergleicht ob die beiden gespielten Karten "UNDEAD" sind und speichert diese in pointStack
 		if (cardA.isWinner(cardB) && (playedCards.get(1).getFraction().name() == "UNDEAD"
 				&& playedCards.get(0).getFraction().name() == "UNDEAD")) {
@@ -172,7 +173,7 @@ public class GameService {
 			int i = playedCards.size() - 2;
 			for (Card c : playedCards) {
 				switch (i) {
-				case (0): 
+				case (0):
 					if (cardA.isWinner(cardB) && c.getFraction().name() == "UNDEAD") {
 						pointsUndead.add(playedCards.get(0));
 						pA.setPointStack(pointsUndead);
@@ -181,7 +182,7 @@ public class GameService {
 						pB.setPointStack(pointsUndead);
 					}
 				break;
-				case (1): 
+				case (1):
 					if (cardA.isWinner(cardB) && c.getFraction().name() == "UNDEAD") {
 						pointsUndead.add(playedCards.get(0));
 						pA.setPointStack(pointsUndead);
@@ -207,12 +208,12 @@ public class GameService {
 	public void makeMovePlayerA(Integer gameId, Integer playerA, Integer cardIdA) {
 		Game game = gameRepository.getById(gameId);
 
-		/**Pick a specific card by playerID and 
+		/**Pick a specific card by playerID and
 		 * cardID, add it to List tempPlayedCards */
 		Card cardA = removeCard(cardIdA, playerA);
 		tempPlayedCards.add(cardA);
 
-		/**Put content of tempPlayedCards in 
+		/**Put content of tempPlayedCards in
 		 * List playedCards of Game-Constructor*/
 		game.setPlayedCards(tempPlayedCards);
 		gameRepository.save(game);
@@ -222,37 +223,37 @@ public class GameService {
 	public void makeMovePlayerB(Integer gameId, Integer playerB, Integer cardIdB) {
 		Game game = gameRepository.getById(gameId);
 
-		/**Pick a specific card by playerID and 
+		/**Pick a specific card by playerID and
 		 * cardID, add it to List tempPlayedCards */
 		Card cardB = removeCard(cardIdB, playerB);
 		tempPlayedCards.add(cardB);
 
-		/**Put content of tempPlayedCards in 
+		/**Put content of tempPlayedCards in
 		 * List playedCards of Game-Constructor*/
 		game.setPlayedCards(tempPlayedCards);
 		gameRepository.save(game);
 	}
 
-	/**A specific Card of a specific Player hand 
+	/**A specific Card of a specific Player hand
 	 * will be removed and returned*/
 	private Card removeCard(Integer cardId, Integer playerId) {
 		removedCard = new Card();
 
 		Player player = playerRepository.getById(playerId);
 		List<Card> playerHand = player.getHand();
-		
+
 		/**Iteration: Check every card to see if
 		 * it is the chosen card (by player)
 		 * to be played/to make the move */
 		for (Card card : playerHand) {
 			if (card.getId() == cardId) {
-				
-				/**As soon as match is found, 
+
+				/**As soon as match is found,
 				 * card is stored in card object*/
 				removedCard = card;
 			}
 		}
-		
+
 		/**Card from iteration is removed from playerHand*/
 		playerHand.remove(removedCard);
 		playerRepository.save(player);

@@ -1,6 +1,7 @@
 package com.claim.model;
 
 import java.sql.Blob;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -11,10 +12,10 @@ import javax.persistence.ManyToOne;
 
 /**
  * Represents a card.
- * 
- * @author Deborah Vanzin 
+ *
+ * @author Deborah Vanzin
  * -basic structure
- * 
+ *
  * @author Rocco Saracino & Valentina Caldana
  * -rules for cards (all rule-related methods)
  */
@@ -84,7 +85,7 @@ public class Card {
 	}
 
 	/**@Support methods (see private): */
-	
+
 	/**Compares 2 cards by "Fraction" */
 	private boolean compareFraction(Card otherCard) {
 		boolean bo = false;
@@ -93,7 +94,7 @@ public class Card {
 		}
 		return bo;
 	}
-	
+
 	/**Method compares Card values and returns true
 	 * for the higher value  */
 	public boolean compareValue(Card otherCard) {
@@ -104,7 +105,7 @@ public class Card {
 		}
 		return bo;
 	}
-	
+
 	/**Knight-Fraction has to beat Goblin-Fraction
 	 * Method returns true if a Knight-Card meets a
 	 * Goblin-Card  */
@@ -117,8 +118,8 @@ public class Card {
 	}
 
 	/**Doppelganger clones the opponents Fraction
-	 * Method returns true when the combination of 
-	 * Doppelganger with every other Fraction 
+	 * Method returns true when the combination of
+	 * Doppelganger with every other Fraction
 	 * (including Doppelganger itself) occurs */
 	private boolean doppelgangerCloneRule(Card otherCard) {
 		boolean bo = false;
@@ -133,20 +134,20 @@ public class Card {
 	}
 
 	/**Doppelganger clones the opponents Fraction:
-	 * Method returns true for higher Card value 
+	 * Method returns true for higher Card value
 	 * and for a Doppelganger-Card in combination with
 	 * any other fraction.
-	 * Because Doppelganger-Fraction can only win with a higher 
+	 * Because Doppelganger-Fraction can only win with a higher
 	 * Card value */
 	public boolean doppelgangerValueRule(Card otherCard) {
 		boolean bo = false;
-		if (this.doppelgangerCloneRule(otherCard) == true && this.compareValue(otherCard) == true) {
+		if (this.doppelgangerCloneRule(otherCard) && this.compareValue(otherCard)) {
 			bo = true;
 		}
 		return bo;
 	}
-	
-	/**In case of draw: 
+
+	/**In case of draw:
 	 * Method returns true with same Fraction and
 	 * Card value */
 	public boolean draw(Card otherCard) {
@@ -156,21 +157,21 @@ public class Card {
 		}
 		return bo;
 	}
-	
+
 	/**Method returns true if...
-	 * -two Cards have different Fractions 
+	 * -two Cards have different Fractions
 	 * -Knight-Rule does not occur
 	 * -Doppelganger-Rule does not occur
-	 * 
-	 * Because this would mean the opponent 
-	 * had no other choice than making a 
-	 * "random" move, which would 
+	 *
+	 * Because this would mean the opponent
+	 * had no other choice than making a
+	 * "random" move, which would
 	 * automatically cause him to lose */
 	public boolean effectlessMoveRule(Card otherCard) {
 		boolean bo = false;
-		if (this.compareFraction(otherCard) == false && 
-				this.ruleKnight(otherCard) == false
-				&& this.doppelgangerCloneRule(otherCard) == false) {
+		if (!this.compareFraction(otherCard) &&
+				!this.ruleKnight(otherCard)
+				&& !this.doppelgangerCloneRule(otherCard)) {
 			bo = true;
 		}
 		return bo;
@@ -181,7 +182,7 @@ public class Card {
 	 * the same Fraction type */
 	public boolean isHigherValueBySameFraction(Card otherCard) {
 		boolean bo = false;
-		if (this.compareFraction(otherCard) == true && this.compareValue(otherCard) == true) {
+		if (this.compareFraction(otherCard) && this.compareValue(otherCard)) {
 			bo = true;
 		}
 		return bo;
@@ -190,16 +191,16 @@ public class Card {
 	/**Method describes requirements for a winner*/
 	public boolean isWinner(Card otherCard) {
 		boolean bo = false;
-		if (this.doppelgangerValueRule(otherCard) == true
-			 || this.effectlessMoveRule(otherCard) == true
-				|| this.ruleKnight(otherCard) == true
-					|| this.draw(otherCard) == true//DRAW MUSS GETESTET WERDEN
-						|| this.isHigherValueBySameFraction(otherCard) == true) { 			
+		if (this.doppelgangerValueRule(otherCard)
+			 || this.effectlessMoveRule(otherCard)
+				|| this.ruleKnight(otherCard)
+					|| this.draw(otherCard)
+						|| this.isHigherValueBySameFraction(otherCard)) {
 			bo = true;
 		}
 		return bo;
 	}
-	
+
 	public boolean ruleUndead(Card otherCard) {
 		boolean bo = false;
 		if (this.getFraction().name() == "UNDEAD" && otherCard.getFraction().name() == "UNDEAD") {
@@ -207,8 +208,8 @@ public class Card {
 		} else if (this.getFraction().name() == "UNDEAD" || otherCard.getFraction().name() == "UNDEAD"){
 			bo = true;
 		}
-		
-		
+
+
 		return bo;
 	}
 

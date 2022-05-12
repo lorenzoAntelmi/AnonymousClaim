@@ -14,19 +14,26 @@ public class LoginController {
 	public String getLoginDE() {
 		return "login-DE";
 	}
-	
+
 	@GetMapping("/login-en")
 	public String getLoginEN() {
 		return "login-EN";
 	}
-	
+
 	@GetMapping("/registration-de")
 	public String getRegistrationDE() {
 		return "registration-DE";
 	}
-	
+
 	@GetMapping("/registration-en")
 	public String getRegistrationEN() {
 		return "registration-EN";
 	}
+	
+	/** Provides login-related endpoints.
+	 * @author Deborah Vanzin
+	 */
+	
+	
+
 }

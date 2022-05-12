@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 /**
- * 
+ *
  * @author Lorenzo Antelmi
  * implements the Spring Security UserDetailsService interface
  * It overrides the loadUserByUsername for fetching user details from the database using the username
@@ -25,7 +25,7 @@ public class JwtUserDetailServices implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		if ("username".equals(username)) {
-		
+
 			/**
 			 *do we need to write Account instead User, because we don't have a User-Class?
 			 */
