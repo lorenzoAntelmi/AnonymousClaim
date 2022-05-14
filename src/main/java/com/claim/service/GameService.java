@@ -447,7 +447,7 @@ public class GameService {
 			break;
 			case ("DOPPELGANGER"): pADoppelganger.add(c);
 			break;
-			case ("DWERF"): pADwarf.add(c);
+			case ("DWARF"): pADwarf.add(c);
 			break;
 			}
 		}
@@ -473,7 +473,7 @@ public class GameService {
 			break;
 			case ("DOPPELGANGER"): pBDoppelganger.add(c);
 			break;
-			case ("DWERF"): pBDwarf.add(c);
+			case ("DWARF"): pBDwarf.add(c);
 			break;
 			}
 		}
@@ -524,8 +524,17 @@ public class GameService {
 			scoreB++;
 		}
 		
+		//muss noch angeschaut werden, so wird immer auf 1 gsetzt
+		if (scoreA > scoreB) {	
+			Integer i = pA.getAccount().getScore() + 1;
+			pA.getAccount().setScore(i);
+		} else {
+			Integer i = pB.getAccount().getScore() + 1;
+			pB.getAccount().setScore(i);
+		}
+		
 	}
 	
-	//Methode fehlt für "Wer macht den ersten Zug" - Gewinner/Verlierer aus Phase 1
+	//Methode fehlt für "Wer macht den ersten Zug" (Birth Date) - Gewinner/Verlierer aus Phase 1
 	//isWinner phase 1 und isWinner phase 2
 }

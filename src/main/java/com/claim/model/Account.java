@@ -37,7 +37,6 @@ public class Account {
 	@Column(nullable = false, length = 64)
 	private Date birthDate;
 
-	
 	@Column(columnDefinition = "integer default 0")
 	private Integer score;
 	
