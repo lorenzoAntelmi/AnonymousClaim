@@ -22,17 +22,17 @@
 		<nav>
 		<ul> <!-- symbols instead of numbers -->
 		<li> <a>Hilfe?</a></li>
-		<li> <a hreflang="de" lang="de" href="/login-de">DE</a></li> 
-		<li> <a hreflang="en" lang="en" href="/login-en">EN</a></li> 
+		<li> <a hreflang="de" lang="de" href="/login-de.html">DE</a></li> 
+		<li> <a hreflang="en" lang="en" href="/login-en.html">EN</a></li> 
 		</ul>
 		</nav>
 		<h5>Login</h5>
 
 		<form>
 		<div class="inputs">
-			<input type="email" placeholder="E-MAIL">
+			<input id="email" type="email" placeholder="E-MAIL">
 			<br>
-			<input type="password" placeholder="PASSWORD">
+			<input id="password" type="password" placeholder="PASSWORD">
 		</div>
 			
 			<br><br>
@@ -44,12 +44,13 @@
 			<br><br>
 			
 			<div class="buttons">
-			<button>Login</button>
-			<button>Register</button>
+			<button onclick="login(document.getElementById('email').value, document.getElementById('password').value)"> Login</button >
+			<button onclick="location.href='registration-EN.html';" type="button">Register</button >
 			</div>
 		</form>
 	</div>
 </div>
+<script src="js/script-EN.js"></script>
 
   
 </body>

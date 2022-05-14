@@ -23,28 +23,29 @@
 		
 		<form>
 		<div class="inputs">
-			<input type="text" placeholder="USERNAME">
+			<input type="text" id="username" placeholder="USERNAME" />
 			<br>
-			<input type="text" placeholder="BIRTH DATE">
+			<input type="date" id="birthDate" placeholder="BIRTH DATE" />
 			<br>
-			<input type="email" placeholder="E-MAIL">
+			<input type="email" id= "email" placeholder="E-MAIL">
 			<br>
-			<input type="email" placeholder="CONFIRM E-MAIL">
+			<input type="email" id="confirmMail" placeholder="CONFIRM E-MAIL" />
 			<br>
-			<input type="password" placeholder="PASSWORD">
+			<input type="password" id="password" placeholder="PASSWORD">
 			<br>
-			<input type="password" placeholder="CONFIRM PASSWORD">
+			<input type="password" id="confirmPassword"placeholder="CONFIRM PASSWORD" />
 		</div>
 			
 			<br><br><br>
 			
 		<div class="buttons">
-			<button>Cancel</button>
-			<button>Confirm</button>
+			<button onclick="abort()">Cancel</button >
+			<button onclick="register(document.getElementById('username').value, document.getElementById('email').value, document.getElementById('password').value, document.getElementById('birthDate').value)">Confirm</button >
 		</div>	
 		</form>
 	</div>
 </div>
+<script src="js/script-EN.js"></script>
   
 </body>
 </html>
