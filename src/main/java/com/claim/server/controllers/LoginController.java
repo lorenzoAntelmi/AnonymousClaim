@@ -35,5 +35,12 @@ public class LoginController {
 	public String getGameSurface() {
 		return "gameSurface-DE";
 	}
+	
+	//PROVISORISCH HIER PLATZIERT ZU TESTZWECKEN
+	@GetMapping("/lobby-DE")
+	public String getLobby() {
+		return "lobby-DE";
+	}
+
 
 }

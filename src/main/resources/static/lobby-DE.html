@@ -1,71 +1,145 @@
-
 <!DOCTYPE html>
 
-<html lang="DE" xmlns:th="http://www.thymeleaf.org">
-
-	<head>
-		<meta charset="UFT-8">
-		<title>Lobby-CLAIM</title>
-		<link rel="stylesheet" type="text/css" href="lobby_stylesheet.css"/>
+<!--authors: Hanna Kropf -->
 	
-	</head>
+<html lang="DE" xmlns:th="http://www.thymeleaf.org"> 
+
+<head>
+  <meta charset="UTF-8">
+  <title>Lobby Claim</title>
+  <link rel="stylesheet" type="text/css" href="/css/lobby_stylesheet.css"/>
+</head>
 
 
-	<body> 
+	<body onload="fakeRanking()"> 
+	
+	
 	<!-- Containers Lobby -->
 	<div class="lobby-area"> 
 
-		<!-- Container links -->
+		<!-- Container left -->
 		<div class="containerLeft">
-		<h3>Top Spieler</h3>
-		<table style="width:100%">
+		<h3>Top 10 Spieler</h3>
+		
+		<table>
+			<tr style="height:40px">
+				<th>Rang</th>
+				<th>Benutzername</th>
+				<th>Score</th>
+			</tr >
+			
 			<tr>
-				<th style="width: 100%">Rang</th>
-				<th style="width: 100%">Benutzername</th>
-				<th style="width: 100%">Score</th>
+				<td id="rangId">1</td>
+				<td id="username"></td>
+				<td id="score"></td>
 			</tr>
 			
 			<tr>
-				<td>Rang1</td>
-				<td>Username1</td>
-				<td>Score1</td>
+				<td id="rangId">2</td>
+				<td id="username"></td>
+				<td id="score"></td>
 			</tr>
 			
-			 <!-- macht für jedes Ranking eine neue Reihe mit den 3 Werten rank, username, score) --> 
+			<tr>
+				<td id="rangId">3</td>
+				<td id="username"></td>
+				<td id="score"></td>
+			</tr>
+			
+			<tr>
+				<td id="rangId">4</td>
+				<td id="username"></td>
+				<td id="score"></td>
+			</tr>
+			
+			<tr>
+				<td id="rangId">5</td>
+				<td id="username"></td>
+				<td id="score"></td>
+			</tr>
+			
+			<tr>
+				<td id="rangId">6</td>
+				<td id="username"></td>
+				<td id="score"></td>
+			</tr>
+			
+			<tr>
+				<td id="rangId">7</td>
+				<td id="username"></td>
+				<td id="score"></td>
+			</tr>
+			
+			<tr>
+				<td id="rangId">8</td>
+				<td id="username"></td>
+				<td id="score"></td>
+			</tr>
+			
+			<tr>
+				<td id="rangId">9</td>
+				<td id="username"></td>
+				<td id="score8"></td>
+			</tr>
+			
+			<tr>
+				<td id="rangId">10</td>
+				<td id="username"></td>
+				<td id="score"></td>
+			</tr>
+			
+			 <!-- macht fÃžr jedes Ranking eine neue Reihe mit den 3 Werten rank, username, score) --> 
 			 <!--
 			<tr th:each="ranking:"${href="/ranking}">    
-					<td th:text="${ranking.rank}"/>
+					<td th:text="${ranking.rank}/>
 					<td th:text="${ranking.username}"/>
 					<td th:text="${ranking.score}"/>
 			</tr>
 			--> 
-			
-			
+						
 		</table>
 		</div>
 				
 
 		
-		<!-- Container mitte --> 
-		<div class="containerMiddle">
+		<!-- Container Center --> 
+	<div class="containerMiddle">
 		
-		<h3>Ready to be the next King?</h3>
+		<h3>Claim - Duell um den Thron</h3>
+		<p>Der König ist tot und hat keinen Thronfolger! 
+		Nun entscheiden die 5 Fraktionen des Königreiches, wer der 
+		neue Herrscher sein wird: Bist du es oder ist es dein Gegner? 
+		Sammle in diesem packenden Stichspiel Anhänger aus allen 
+		Fraktionen und beanspruche den Thron!</p>
 		
-		<h5>Spiel starten mit einem Human Player</h5>
+		
+		<h3>Einem laufenden Spiel beitreten</h3>
 		
 		
-		<h6>Einem laufenden Spiel beitreten</h6>
-		<div class="ButtonsSpielStarten">
-		<!-- Todo: Listenelemente generieren in For-Loop in JavaScript-->
-			<ul> 
-				<li>Game1</li> <input type="button" onclick="joinGame(1,1)" value="Spiel beitreten">
-				<li>Game2</li> <input type="button" onclick="joinGame(2,2)" value="Spiel beitreten">
-				<li>Game3</li> <input type="button" onclick="joinGame(3,3)" value="Spiel beitreten">
-				<li>Game4</li> <input type="button" onclick="joinGame(4,4)" value="Spiel beitreten">
-				<li>Game5</li> <input type="button" onclick="joinGame(5,5)" value="Spiel beitreten">
-				
-		</div>
-			<!-- Auflistung der laufenden Spiele & Möglichkeit einem dieser Spiele beizutreten
+ 		<div class="btn button1">
+   		<span input type= "button", onclick="joinGame(1,1)">RAUM A <br> SPIEL BEITRETEN</span>
+  		</div>
+
+ 		<div class="btn button2">
+   		<span input type="button" onclick="joinGame(2,2)">RAUM B <br> SPIEL BEITRETEN</span>
+  		</div>
+
+ 		<div class="btn button3">
+   		<span input type="button" onclick="joinGame(3,3)">RAUM C <br> SPIEL BEITRETEN</span>
+  		</div>
+  		
+ 		<div class="btn button4">
+   		<span input type="button" onclick="joinGame(4,4)">RAUM D <br> SPIEL BEITRETEN</span>
+  		</div>
+  		
+  		<div class="btn button5">
+   		<span input type="button" onclick="joinGame(5,5)" >RAUM E <br> SPIEL BEITRETEN</span>
+  		</div>
+		
+		
+	</div>
+	
+			<!-- Auflistung der laufenden Spiele & MÃķglichkeit einem dieser Spiele beizutreten
 				List<Game> games = getOpenGames();
 				for(int i = 0; i++; i <5) {
 				gameId = games[i].game.id;
@@ -76,45 +150,49 @@
 			-->  
 			
 			
-		<h6>Ein neues Spiel starten</h6>
-			<input type="button" onclick="initializeGame(id)" value="Neues Spiel starten">
+		
+	<!--Containter right --> 
+	<div class="containerRight">
+	
+		<nav>
+		<ul> <!-- symbols instead of numbers -->
+		<li> <a hreflang="de" lang="de" href="/lobby-DE.html">DE</a></li> 
+		<li> <a hreflang="en" lang="en" href="/lobby-EN.html">EN</a></li>
+		</ul>
+		</nav>
 		
 		
+		<button class="menuBtn" id="menuBtn"></button>
 		
-		
-		<h5>Spiel starten mit einem Computer Player</h5>
-		<input type="button" onclick="initializeGame(id)" value="Neues Spiel starten">
+		<!-- Modal content -->
+		<div class="modal" id="myModal" >
+			 <div class="modal-content">
+			 <span class="close">&times;</span>
+			 <button class="settingButton" id="btnPW">PASSWORT ÄNDERN</button>
+			 <button class="settingButton" id="btnDel">ACCOUNT LÖSCHEN</button>
+			 <button class="settingButton" id="btnLogout">LOGOUT</button>
+			 </div>
 		</div>
 		
-	
+		<h3 class="username">WILLKOMMEN<br><span id="username">MusterName</span></h3>
 		
-		<!--Containter rechts --> 
-		<div class="containerRight">
-			<p class="textalignleft"><span id="username"/></p>
-			<button class="MenuBtn" id="MenuBtn"><i class="fa fa-bars"></i></button>
-			<p class="textalignleft">Gespielte Games</p>
-			
-			
-			
-			<div id="myModal" class="modal">
-			
-			  <!-- Modal content -->
-			  <div class="modal-content">
-			    <span class="close">&times;</span>
-			    <button class="SettingButton" id="BtnPW">Passwort ändern</button>
-			    <button class="SettingButton" id="BtnH">Hintergrundbild ändern</button>
-			    <button class="SettingButton" id="BtnDel">Account löschen</button>
-			  	<button class="SettingButton" id="LogoutBtn">Logout</button>
-			  </div>
-		<script src="js/script.js">
+		
+		<div class="btn newGame">
+   		<span input type="button" onclick="initializeGame(id)">NEUES <br> SPIEL STARTEN</span>
+  		</div>
+		
 
-		</script>
-		</body>
+			
+			
+		
+
+		</div>
+</div>	
+			
+			
+		<script src="js/script-lobby.js"></script>
+		
+		
+		
+		</body onload=(RankingEndPoint)>
 	</html>		  
-			  
-			  
-			  
-			  
-			  
-			  
-	
