@@ -1,5 +1,7 @@
 package com.claim.server.controllers;
 
+import java.util.Date;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,7 @@ public class AccountController {
 
 		  BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 	      String encodedPassword = passwordEncoder.encode(registration.getPassword());
+	      // FIXME: Convert to correct Birthdate!
 	      Account account = new Account(registration.getUsername(), registration.getEmail(), encodedPassword, registration.getBirthDate());
 	      account.setPasswordHash(encodedPassword);
 

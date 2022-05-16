@@ -1,6 +1,7 @@
 package com.claim.model;
 
-import java.sql.Date;
+
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,7 +36,7 @@ public class Account {
 	private String passwordHash;
 
 	@Column(nullable = false, length = 64)
-	private Date birthDate;
+	private LocalDate birthDate;
 
 	@Column(columnDefinition = "integer default 0")
 	private Integer score;
@@ -47,7 +48,7 @@ public class Account {
 	*/
 	protected Account() {}
 
-	public Account(String username, String email, String passwordHash, Date birthDate) {
+	public Account(String username, String email, String passwordHash, LocalDate birthDate) {
 
 		this.username = username;
 		this.email = email;
@@ -74,9 +75,7 @@ public class Account {
 		return passwordHash;
 	}
 
-	public Date getBirthDate() {
-		return birthDate;
-	}
+
 
 	public Integer getScore() {
 		return score;
@@ -99,7 +98,13 @@ public class Account {
 		this.email = email;
 	}
 
-	public void setBirthDate(Date birthDate) {
+	
+
+	public LocalDate getBirthDate() {
+		return birthDate;
+	}
+
+	public void setBirthDate(LocalDate birthDate) {
 		this.birthDate = birthDate;
 	}
 

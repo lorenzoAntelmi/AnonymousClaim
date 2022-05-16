@@ -1,6 +1,7 @@
 package com.claim.model;
 
-import java.sql.Date;
+
+import java.time.LocalDate;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -23,7 +24,7 @@ public class Registration {
 	private String password;
 
 	
-	private Date birthDate;
+	private LocalDate birthDate;
 
 
 
@@ -48,12 +49,13 @@ public class Registration {
 	}
 
 
-	public Date getBirthDate() {
+
+	public LocalDate getBirthDate() {
 		return birthDate;
 	}
 
 
-	public void setBirthDate(Date birthDate) {
+	public void setBirthDate(LocalDate birthDate) {
 		this.birthDate = birthDate;
 	}
 

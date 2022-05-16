@@ -74,7 +74,7 @@ function login(email, password) {
   const url ='http://localhost:8080/authenticate';
   console.log("Fetching from " + url);
   const json = JSON.stringify(data);
-
+	console.log("Senting data to login: " + json);
   var request = new Request(url, {
       method: 'POST',
       body: json,
@@ -155,3 +155,4 @@ function getGames() {
 function abort() {
   console.log("Registrierung abgebrochen!");
 }
+
