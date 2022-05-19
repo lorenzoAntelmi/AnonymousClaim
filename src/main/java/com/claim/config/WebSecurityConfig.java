@@ -71,6 +71,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/css/**").permitAll()
 				.antMatchers("/image/**").permitAll()
 				.antMatchers("/js/**").permitAll()
+				.antMatchers("/**").permitAll() // FIXME: remove this!
 				// all other requests need to be authenticated
 				.anyRequest().authenticated().and().
 				// make sure we use stateless session; session won't be used to

@@ -6,7 +6,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Spiel</title>
-  <link rel="stylesheet" type="text/css" href="/css/gameSurface_stylesheet.css"/>
+  <link rel="stylesheet" type="text/css" href="/css/gameSurface.css"/>
 </head>
 
 <body>
@@ -20,22 +20,22 @@
 </div>
 
 <!--container which shows 13 handCards-->
-<div class="hand"> 
+<div id="hand" class="hand"> 
 
 	<!--13 container for individual Cards, which should disappear when being played-->
-	<div class="card0"><!-- handCard1 --></div>
-	<div class="card1"><!-- handCard2 --></div>
-	<div class="card2"><!-- handCard3 --></div>
-	<div class="card3"><!-- handCard4 --></div>
-	<div class="card4"><!-- handCard5 --></div>
-	<div class="card5"><!-- handCard6 --></div>
-	<div class="card6"><!-- handCard7 --></div>
-	<div class="card7"><!-- handCard8 --></div>
-	<div class="card8"><!-- handCard9 --></div>
-	<div class="card9"><!-- handCard10 --></div>
-	<div class="card10"><!-- handCard11 --></div>
-	<div class="card11"><!-- handCard12 --></div>
-	<div class="card12"><!-- handCard13 --></div>
+	<div id="card0" class="card0"><!-- handCard1 --></div>
+	<div id="card1" class="card1"><!-- handCard2 --></div>
+	<div id="card2" class="card2"><!-- handCard3 --></div>
+	<div id="card3" class="card3"><!-- handCard4 --></div>
+	<div id="card4" class="card4"><!-- handCard5 --></div>
+	<div id="card5" class="card5"><!-- handCard6 --></div>
+	<div id="card6" class="card6"><!-- handCard7 --></div>
+	<div id="card7" class="card7"><!-- handCard8 --></div>
+	<div id="card8" class="card8"><!-- handCard9 --></div>
+	<div id="card9" class="card9"><!-- handCard10 --></div>
+	<div id="card10" class="card10"><!-- handCard11 --></div>
+	<div id="card11" class="card11"><!-- handCard12 --></div>
+	<div id="card12" class="card12"><!-- handCard13 --></div>
 
 </div>
 
@@ -58,6 +58,10 @@
 
 <!--container showing the opponents card-->
 <div class="oponentsCard"> </div>
-  
+  <script src="js/game.js">
+  </script>
+  <script>
+  initializeGame();
+  </script>
 </body>
 </html>

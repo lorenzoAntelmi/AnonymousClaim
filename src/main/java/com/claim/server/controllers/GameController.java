@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.claim.database.GameRepository;
@@ -44,18 +45,34 @@ public class GameController {
 	  public List<Game> listAllGames() {
 		  return repository.findAll();
 	  }
+	  
+	  /**
+	   * Spiele dich noch keine 2 Spieler haben
+	   */
+	  @GetMapping(path = "/opengames", produces = "application/json")
+	  public List<Game> listAllOpenGames(){
+		  // return repository.findByPlayerBAccount(null);
+		  return repository.findByPlayerBAccount(null);
+		  
+	  }
+	  
+	  @PostMapping(path = "/games/{gameId}/join")
+		  public ResponseEntity <Void> joinGame(@PathVariable int gameId ) throws URISyntaxException{
+		  gameService.joinGame(gameId);
+		  URI location = new URI("http://localhost:8080/games/" + gameId);
+		  return ResponseEntity.created(location).build();
+	  }
 
 	  /**
 	   * Create a new game with the data passed in the request body
 	   * @throws URISyntaxException
 	   */
-	  @PostMapping(path = "/games/")
-	  public ResponseEntity<Game> createNewGame(@PathVariable Integer playerId) throws URISyntaxException {
+	  @PostMapping(path = "/games")
+	  public ResponseEntity<Game> createNewGame() throws URISyntaxException {
 
 		  Game game = gameService.initializeGame();
-		  // Create an URI which identifies the resource created
 		  URI location = new URI("http://localhost:8080/games/"+ game.getId());
-		  return ResponseEntity.created(location).build();
+		  return ResponseEntity.created(location).body(game);
 	  }
 
 	  /**
@@ -74,15 +91,14 @@ public class GameController {
 	   * To enable to see the played cards of each round per player
 	   * @author: Rocco Saracino
 	   */
-	  @GetMapping (path = "/makeMove/{gameId}/{playerA}/{playerB}/{cardIdA}/{cardIdB}", produces = "application/jason")
+	  @PutMapping (path = "/games/{gameId}/player/{playerId}/card/{cardId}", produces = "application/jason")
 	  public ResponseEntity<Game> makeMove(@PathVariable("gameId") Integer gameId,
-			  @PathVariable("playerA") Integer playerA,
-			  @PathVariable("playerB") Integer playerB,
-			  @PathVariable("cardIdA") Integer cardIdA,
-			  @PathVariable("cardIdB") Integer cardIdB) {
+	
+			  @PathVariable("playerId") Integer playerId,
+			  @PathVariable("cardId") Integer cardId) {
 
-		  gameService.makeMovePlayerA(gameId, playerA, cardIdA);
-		  gameService.makeMovePlayerB(gameId, playerB, cardIdB);
+		  gameService.putCard(gameId, playerId, cardId);
+
 
 		  return ResponseEntity.status(HttpStatus.CREATED).build();
 	  }

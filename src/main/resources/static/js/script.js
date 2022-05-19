@@ -104,6 +104,8 @@ function login(email, password) {
         case 200:
           console.log("JWT: " + JSON.stringify(message));
           accessToken = json.token;
+          localStorage.setItem("accessToken", accessToken);
+          window.location.href='lobby-DE.html';
           break;
         case 500:
         default:
@@ -144,6 +146,7 @@ function getGames() {
         case 201:
         case 200:
           console.log("games: ", json);
+          
           break;
         case 500:
         default:

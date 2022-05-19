@@ -535,6 +535,41 @@ public class GameService {
 		
 	}
 	
+	/**Represents services for Game
+	 * @author Deborah Vanzin
+	 * joinGame: Player joins an existing GAme
+	 */
+
+	public void joinGame(int gameId) {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		  String email;
+		  if (principal instanceof UserDetails) {
+		     email = ((UserDetails)principal).getUsername();
+		  } else {
+		     email = principal.toString();
+		  } 
+		  
+		  Optional<Account> maybeAccount = accountRepository.findByEmail(email);
+		  
+		  Account account = maybeAccount.get();
+		  
+		  Game game = gameRepository.findById(gameId).get();
+		  game.getPlayerB().setAccountId(account);
+		  gameRepository.save(game);
+		  
+	}
+
+	// TODO: Geschäftslogik
+	public void putCard(Integer gameId, Integer playerId, Integer cardId) {
+		Card card = cardRepository.getById(cardId);
+		Game game = gameRepository.findById(gameId).get();
+		// Annahme, ein Spieler kann nicht gegen sich selbst spielen.
+		if (game.getPlayerA().getId().equals(playerId)) {
+			game.getPlayerA().getHand().remove(card);
+		}
+		
+	}
+	
 	//Methode fehlt für "Wer macht den ersten Zug" (Birth Date) - Gewinner/Verlierer aus Phase 1
 	//isWinner phase 1 und isWinner phase 2
 }

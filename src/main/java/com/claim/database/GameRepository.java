@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.claim.model.Game;
+import com.claim.model.Player;
 
 /** Manipulates games in the database.
  * @author Deborah Vanzin
@@ -27,6 +28,7 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
 
 	List<Game> findByPhaseAndPlayerA(int phase, int player);
 	List<Game> findByPhase(int phase);
+	List<Game> findByPlayerBAccount(Player playerB);
 
 	/** locating an element or a list of elements
 	 * with findBy___

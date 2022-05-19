@@ -11,6 +11,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**Represents a Player.
  * @author Rocco Saracino & Valentina Caldana */
 
@@ -31,6 +33,7 @@ public class Player {
 
 	/**@OneToOne association = one Player to one Game*/
 	@OneToOne(cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Game game;
 
 	/**@OneToMany association = one Player to many hand*/

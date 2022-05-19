@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Represents a card.
@@ -34,12 +35,15 @@ public class Card {
 	 * @ManyToOne association = Many Cards to one Player/Game/CardDeck
 	 */
 	@ManyToOne
+	@JsonIgnore
 	private Player player;
 
 	@ManyToOne
+	@JsonIgnore
 	private CardDeck cardDeck;
 
 	@ManyToOne
+	@JsonIgnore
 	private Game game;
 
 	/**

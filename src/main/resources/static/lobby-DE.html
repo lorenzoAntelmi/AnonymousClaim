@@ -11,7 +11,7 @@
 </head>
 
 
-	<body onload="fakeRanking()"> 
+	<body > 
 	
 	
 	<!-- Containers Lobby -->
@@ -114,9 +114,10 @@
 		
 		
 		<h3>Einem laufenden Spiel beitreten</h3>
+		<div id="openGames">
 		
 		
- 		<div class="btn button1">
+ <!--		<div class="btn button1">
    		<span input type= "button", onclick="joinGame(1,1)">RAUM A <br> SPIEL BEITRETEN</span>
   		</div>
 
@@ -135,8 +136,8 @@
   		<div class="btn button5">
    		<span input type="button" onclick="joinGame(5,5)" >RAUM E <br> SPIEL BEITRETEN</span>
   		</div>
-		
-		
+		-->
+		</div>
 	</div>
 	
 			<!-- Auflistung der laufenden Spiele & MÃķglichkeit einem dieser Spiele beizutreten
@@ -178,8 +179,7 @@
 		
 		
 		<div class="btn newGame">
-   		<span input type="button" onclick="initializeGame(id)">NEUES <br> SPIEL STARTEN</span>
-  		</div>
+   		<span input type="button" onclick="startGame()">NEUES <br> SPIEL STARTEN</div>
 		
 
 			
@@ -191,8 +191,12 @@
 			
 			
 		<script src="js/script-lobby.js"></script>
+		<script>
+		console.log("Call showOpenGames()");
+			showOpenGames();
+		</script>
+	
 		
 		
-		
-		</body onload=(RankingEndPoint)>
+		</body >
 	</html>		  
