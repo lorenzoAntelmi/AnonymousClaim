@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +32,7 @@ public class GameController {
 
 
 	  /**
-	   * Represents the endpoint to list of all open games
+	   * Represents the endpoint to list all open games
 	   */
 	  @GetMapping(path = "/games/open", produces = "application/json")
 	  public List<Game> getListOfOpenGames() {
@@ -47,11 +48,11 @@ public class GameController {
 	  }
 	  
 	  /**
+	   * @Deborah AVnzin
 	   * Spiele dich noch keine 2 Spieler haben
 	   */
 	  @GetMapping(path = "/opengames", produces = "application/json")
 	  public List<Game> listAllOpenGames(){
-		  // return repository.findByPlayerBAccount(null);
 		  return repository.findByPlayerBAccount(null);
 		  
 	  }
@@ -146,6 +147,13 @@ public class GameController {
 		  
 		  return ResponseEntity.status(HttpStatus.CREATED).build();
 		  
+	  }
+	  
+	  @DeleteMapping(path = "/games")
+		  public ResponseEntity<Void> deleteAllgames() {
+				  gameService.removeAllGames();
+				  
+		  return ResponseEntity.status(HttpStatus.OK).build();
 	  }
 	  
 	 

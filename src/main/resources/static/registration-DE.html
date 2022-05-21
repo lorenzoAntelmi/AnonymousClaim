@@ -24,17 +24,27 @@
 		
 			<form>
 		<div class="inputs">
-			<input type="text" id="username" placeholder="BENUTZERNAME" value="deborah" />
+			<input type="text" id="username" placeholder="BENUTZERNAME" />
 			<br>
-			<input type="date" id="birthDate" placeholder="GEBURTSDATUM" value="1990-09-09" />
+			<input type="date" id="birthDate" placeholder="GEBURTSDATUM" />
 			<br>
-			<input type="email" id="email" placeholder="E-MAIL" value="deborah@vanzin.com" />
+			<input type="email" id="email" placeholder="E-MAIL" />
 			<br>
-			<input type="email" id="confirmEmail" placeholder="E-MAIL BESTÄTIGEN" value="deborah@vanzin.com" />
+			<input type="email" id="confirmEmail" placeholder="E-MAIL BESTÄTIGEN" />
 			<br>
-			<input type="password" id="password" placeholder="PASSWORT" value="rootroot" />
+			<input type="password" id="password" placeholder="PASSWORT" />
 			<br>
-			<input type="password" id="confirmPassword" placeholder="PASSWORT BESTÄTIGEN" value="rootroot" />
+			<input type="password" id="confirmPassword" placeholder="PASSWORT BESTÄTIGEN" />
+			<br>
+			
+			 <div class="captcha">
+		 	   <p id=captchaText></p >
+		    <button onclick="reloadCaptcha" class="reload-btn"> </button>
+		    <input type="text" id="captchaField" placeholder="Enter Captcha" maxlength="6" spellcheck="false" required/>
+		    </div >
+		    </form>
+    		<div class="status-text"></div>
+    		
 		</div>
 			
 			<br><br><br>

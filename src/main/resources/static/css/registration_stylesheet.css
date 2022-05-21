@@ -1,5 +1,7 @@
 /*	authors: Valentina Caldana
 	source: https://www.codehim.com/collections/login-page-in-html-with-css-code/#google_vignette */
+	
+	@import url('https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap');
 
 body {
   background-image: linear-gradient(135deg, #008080 20%,#a0522d 60% ,#9400d3 100%);
@@ -102,6 +104,42 @@ flex-flow: wrap;
   	 border: solid;
 }
 
-/*TESTS MIT VERKLEINERUNG DER BROWSERSEITE DURCHFÜHREN!!!
+.registration-area .right .captcha{
+	background-image: url("/image/captcha.png");
+	background-size: 250px 70px;
+	background-repeat: no-repeat;
+	object-fit: cover;
+	position: relative;
+	opacity: 0.95;
+	Margin: 10px;
+
+	
+}
+
+.registration-area .right .captcha .reload-btn {
+	background-image:url("/image/reload-icon.png");
+	background-position: center;
+ 	background-size: 30px;
+  	background-repeat: no-repeat;  
+ 	height: 75px;
+	width: 5px;
+	border: 3px solid black;
+	border-radius: 40px;
+	position: relative;
+	left: 260px;
+}
+
+.captcha-text{
+ 	position: absolute;
+ 	letter-spacing: 15px;
+ 	left: 40px;
+ 	font-family: 'Rubik Glitch', cursive;
+ 	font-size: 25px;
+ 	 
+
+}
+
+
+/*TESTS MIT VERKLEINERUNG DER BROWSERSEITE DURCHFï¿½HREN!!!
 -Bei Minimierung soll die untere seite komplett mittig sein*/
 

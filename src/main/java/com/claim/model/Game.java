@@ -53,7 +53,7 @@ public class Game {
 	*/
 	public Game() {}
 
-	//REMOVE PHASE IN EVERY CLASS
+	/**REMOVE PHASE IN EVERY CLASS
 	public Game(Integer id, Player playerA, Player playerB, CardDeck cardDeck) {
 		super(); //WIESO
 		this.id = id;
@@ -62,10 +62,10 @@ public class Game {
 		this.cardDeck = cardDeck;
 		this.playedCards = new ArrayList<>();
 	}
-
-
-	/**@Getter & @Setter (parameters Game)
 	*/
+
+	/**@Getter & @Setter (parameters Game) */
+	
 	public Integer getId() {
 		return id;
 	}
