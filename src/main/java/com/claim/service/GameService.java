@@ -569,6 +569,11 @@ public class GameService {
 		}
 		
 	}
+
+	public void removeAllGames() {
+		gameRepository.deleteAll();
+		
+	}
 	
 	//Methode fehlt für "Wer macht den ersten Zug" (Birth Date) - Gewinner/Verlierer aus Phase 1
 	//isWinner phase 1 und isWinner phase 2

@@ -23,7 +23,7 @@ function register(username, email, password, birthDate) {
       email: email,
       birthDate: birthDate
   }
-  const url ='http://localhost:8080/account';
+  const url ='/account';
   console.log("Fetching from " + url);
   const json = JSON.stringify(data);
 
@@ -71,7 +71,9 @@ function login(email, password) {
       password: password,
   }
 
-  const url ='http://localhost:8080/authenticate';
+  //const url ='http://localhost:8080/authenticate';
+  const url ='/authenticate';
+  
   console.log("Fetching from " + url);
   const json = JSON.stringify(data);
 	console.log("Senting data to login: " + json);
@@ -116,7 +118,7 @@ function login(email, password) {
 // Diese Funktion schickt einen GET-Request an die API um eine Liste der Spiele zu erhalten
 function getGames() {
 
-  const url ='http://localhost:8080/games';
+  const url ='/games';
   console.log("Fetching from " + url);
 
   var request = {
