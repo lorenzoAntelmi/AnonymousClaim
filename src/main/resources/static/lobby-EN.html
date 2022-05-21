@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<!--authors: Hanna Kropf -->
+	
+<html lang="DE" xmlns:th="http://www.thymeleaf.org"> 
+
+<head>
+  <meta charset="UTF-8">
+  <title>Lobby Claim</title>
+  <link rel="stylesheet" type="text/css" href="/css/lobby_stylesheet.css"/>
+</head>
+
+
+	<body > 
+	
+	
+	<!-- Containers Lobby -->
+	<div class="lobby-area"> 
+
+		<!-- Container left -->
+		<div class="containerLeft">
+		<h3>Top 10 Player</h3>
+		
+		<table>
+			<tr style="height:40px">
+				<th>Rang</th>
+				<th>Username</th>
+				<th>Score</th>
+			</tr >
+			
+			<tr>
+				<td id="rangId">1</td>
+				<td id="username"></td>
+				<td id="score"></td>
+			</tr>
+			
+			<tr>
+				<td id="rangId">2</td>
+				<td id="username"></td>
+				<td id="score"></td>
+			</tr>
+			
+			<tr>
+				<td id="rangId">3</td>
+				<td id="username"></td>
+				<td id="score"></td>
+			</tr>
+			
+			<tr>
+				<td id="rangId">4</td>
+				<td id="username"></td>
+				<td id="score"></td>
+			</tr>
+			
+			<tr>
+				<td id="rangId">5</td>
+				<td id="username"></td>
+				<td id="score"></td>
+			</tr>
+			
+			<tr>
+				<td id="rangId">6</td>
+				<td id="username"></td>
+				<td id="score"></td>
+			</tr>
+			
+			<tr>
+				<td id="rangId">7</td>
+				<td id="username"></td>
+				<td id="score"></td>
+			</tr>
+			
+			<tr>
+				<td id="rangId">8</td>
+				<td id="username"></td>
+				<td id="score"></td>
+			</tr>
+			
+			<tr>
+				<td id="rangId">9</td>
+				<td id="username"></td>
+				<td id="score8"></td>
+			</tr>
+			
+			<tr>
+				<td id="rangId">10</td>
+				<td id="username"></td>
+				<td id="score"></td>
+			</tr>
+			
+			 <!-- macht fÃžr jedes Ranking eine neue Reihe mit den 3 Werten rank, username, score) --> 
+			 <!--
+			<tr th:each="ranking:"${href="/ranking}">    
+					<td th:text="${ranking.rank}/>
+					<td th:text="${ranking.username}"/>
+					<td th:text="${ranking.score}"/>
+			</tr>
+			--> 
+						
+		</table>
+		</div>
+				
+
+		
+		<!-- Container Center --> 
+	<div class="containerMiddle">
+		
+		<h3>Claim - Battle for the Throne</h3>
+		<p>The king is dead and has no heir to the throne! 
+		Now the 5 fractions of the kingdom decide who is going to be  the new ruler: Is it you or is it your opponent? 
+		Gather followers from all fractions in this thrilling trick-taking game and claim the throne!</p>
+		
+		
+		<h3>Join a running game</h3>
+		<div id="openGames">
+		
+		
+ <!--		<div class="btn button1">
+   		<span input type= "button", onclick="joinGame(1,1)">RAUM A <br> SPIEL BEITRETEN</span>
+  		</div>
+
+ 		<div class="btn button2">
+   		<span input type="button" onclick="joinGame(2,2)">RAUM B <br> SPIEL BEITRETEN</span>
+  		</div>
+
+ 		<div class="btn button3">
+   		<span input type="button" onclick="joinGame(3,3)">RAUM C <br> SPIEL BEITRETEN</span>
+  		</div>
+  		
+ 		<div class="btn button4">
+   		<span input type="button" onclick="joinGame(4,4)">RAUM D <br> SPIEL BEITRETEN</span>
+  		</div>
+  		
+  		<div class="btn button5">
+   		<span input type="button" onclick="joinGame(5,5)" >RAUM E <br> SPIEL BEITRETEN</span>
+  		</div>
+		-->
+		</div>
+	</div>
+	
+			<!-- Auflistung der laufenden Spiele & MÃķglichkeit einem dieser Spiele beizutreten
+				List<Game> games = getOpenGames();
+				for(int i = 0; i++; i <5) {
+				gameId = games[i].game.id;
+				playerId = games[i].playerA.id;
+				// create <li><input ...> entry a la
+				// <li>Game ${game.id}<input type="button" onclick="joinGame(gameId, playerId)" ....
+}
+			-->  
+			
+			
+		
+	<!--Containter right --> 
+	<div class="containerRight">
+	
+		<nav>
+		<ul> <!-- symbols instead of numbers -->
+		<li> <a hreflang="de" lang="de" href="/lobby-DE.html">DE</a></li> 
+		<li> <a hreflang="en" lang="en" href="/lobby-EN.html">EN</a></li>
+		</ul>
+		</nav>
+		
+		
+		<button class="menuBtn" id="menuBtn"></button>
+		
+		<!-- Modal content -->
+		<div class="modal" id="myModal" >
+			 <div class="modal-content">
+			 <span class="close">&times;</span>
+			 <button class="settingButton" id="btnPW">CHANGE PASSWORD</button>
+			 <button class="settingButton" id="btnDel">DELETE ACCOUNT</button>
+			 <button class="settingButton" id="btnLogout">LOGOUT</button>
+			 </div>
+		</div>
+		
+		<h3 class="username">WELCOME<br><span id="username">MusterName</span></h3>
+		
+		
+		<div class="btn newGame">
+   		<span input type="button" onclick="startGame()">START <br> NEW GAME</div>
+		
+
+			
+			
+		
+
+		</div>
+</div>	
+			
+			
+		<script src="js/script-lobby.js"></script>
+		<script>
+		console.log("Call showOpenGames()");
+			showOpenGames();
+		</script>
+	
+		
+		
+		</body >
+	</html>		  

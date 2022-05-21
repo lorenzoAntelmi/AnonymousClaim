@@ -38,8 +38,14 @@ public class LoginController {
 	
 	//PROVISORISCH HIER PLATZIERT ZU TESTZWECKEN
 	@GetMapping("/lobby-DE")
-	public String getLobby() {
+	public String getLobbyDE() {
 		return "lobby-DE";
+	}
+	
+	//PROVISORISCH HIER PLATZIERT ZU TESTZWECKEN
+	@GetMapping("/lobby-EN")
+	public String getLobbyEN() {
+		return "lobby-EN";
 	}
 
 
