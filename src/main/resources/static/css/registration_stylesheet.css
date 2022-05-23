@@ -104,6 +104,8 @@ flex-flow: wrap;
   	 border: solid;
 }
 
+/*Author Lorenzo Antelmi*/
+
 .registration-area .right .captcha{
 	background-image: url("/image/captcha.png");
 	background-size: 250px 70px;
@@ -129,10 +131,10 @@ flex-flow: wrap;
 	left: 260px;
 }
 
-.captcha-text{
+#captchaText{
  	position: absolute;
- 	letter-spacing: 15px;
- 	left: 40px;
+ 	letter-spacing: 10px;
+ 	left: 15px;
  	font-family: 'Rubik Glitch', cursive;
  	font-size: 25px;
  	 

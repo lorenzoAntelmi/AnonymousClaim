@@ -14,8 +14,66 @@ form.addEventListener('submit', (e) => {
   return false;
 });
 
+/**
+Author Lorenzo (für Captcha)
+ */
+ 
+//Variablen für Captcha definieren
+
+const captcha = document.querySelector(".captcha"),
+reloadBtn = document.querySelector(".reload-btn"),
+captchaText = document.getElementById("captchaText"),
+statusTxt = document.querySelector(".status-text");
+
+
+
+//Captcha Symbole werden im einem Array gespeichert
+
+let allCharacters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+                     'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd',
+                     'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
+                     't', 'u', 'v', 'w', 'x', 'y', 'z', 0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+                     
+     
+ //Captcha funktion generiert zufällige ausgabe und gibt diese weiter an captchaText.innerText                
+function getCaptcha(){
+	
+  for (let i = 0; i < 6; i++) { //getting 6 random characters from the array
+    let randomCharacter = allCharacters[Math.floor(Math.random() * allCharacters.length)];
+    captchaText.innerText += ` ${randomCharacter}`; 
+  }
+}
+
+//Funktionsaufruf
+getCaptcha(); 
+
+//Reload Button setzt zuerst inhalt auf null und generiert danach ein neues
+function reloadCaptcha(){
+	//calling getCaptcha & removeContent on the reload btn click
+ captchaText.innerText = "";
+  getCaptcha();
+  
+};
+
+ // Captcha-Validierungsfunktion Eingabe wird mit leerzeichen versehen da wir oben die Charakter inkl leerzeichen übermitteln
+ function validateCaptcha(){
+	
+	  let inputVal = captchaField.value.split('').join(' ');
+	  return inputVal === captchaText.innerText; //in js ist es möglich mit === gleich die eingabe zu validieren
+	  
+
+}
+
 //Diese Funktion schickt die Daten des Formulars über AJAX zur API
 function register(username, email, password, birthDate) {
+if(!validateCaptcha()){
+	    statusTxt.style.color = "#ff0000";
+    statusTxt.innerText = "Captcha not matched. Please try again!";
+    return;
+}
+statusTxt.innerText="";
+
+// ab hier ist der Code von Deborah Vanzin
 
   const data = {
       username: username,
@@ -161,61 +219,6 @@ function abort() {
   console.log("Registrierung abgebrochen!");
 }
 
-//variables for captcha
-
-const captcha = document.querySelector(".captcha"),
-reloadBtn = document.querySelector(".reload-btn"),
-inputField = document.querySelector("captchaField"),
-captchaText = document.getElementById("captchaText");
-
-
-
-//storing all captcha characters in array
-let allCharacters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
-                     'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd',
-                     'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
-                     't', 'u', 'v', 'w', 'x', 'y', 'z', 0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-                     
-                     
-function getCaptcha(){
-	
-  for (let i = 0; i < 6; i++) { //getting 6 random characters from the array
-    let randomCharacter = allCharacters[Math.floor(Math.random() * allCharacters.length)];
-    captchaText.innerText += ` ${randomCharacter}`; //passing 6 random characters inside captcha innerText
-  }
-}
-
-
-getCaptcha(); //calling getCaptcha when the page open
-
-
-function reloaCaptcha(){
-	
-	//calling getCaptcha & removeContent on the reload btn click
-reloadBtn.addEventListener("click", ()=>{
-  removeContent();
-  getCaptcha();
-  
-});
-
- //adding space after each character of user entered values because I've added spaces while generating captcha
-  let inputVal = captchaField.value.split('').join(' ');
-  if(inputVal == captcha.innerText){ //if captcha matched
-    statusTxt.style.color = "#00CC00";
-    statusTxt.innerText = "Perfect! You don't appear to be a robot.";
-    
-    setTimeout(()=>{ //calling removeContent & getCaptcha after 3 seconds
-      removeContent();
-      getCaptcha();
-     
-    }, 3000);
-    
-    
-  }else{
-    statusTxt.style.color = "#ff0000";
-    statusTxt.innerText = "Captcha not matched. Please try again!";
-  }
-};
 
 
 

@@ -39,7 +39,7 @@
 			
 			 <div class="captcha">
 		 	   <p id=captchaText></p >
-		    <button onclick="reloadCaptcha" class="reload-btn"> </button>
+		    <button onclick="reloadCaptcha()" class="reload-btn" type="button"> </button>
 		    <input type="text" id="captchaField" placeholder="Enter Captcha" maxlength="6" spellcheck="false" required/>
 		    </div >
 		    </form>
@@ -50,7 +50,7 @@
 			<br><br><br>
 			
 		<div class="buttons">
-			<button onclick="abort()">Abbrechen</button>
+			<button onclick="abort()" type="button">Abbrechen</button>
 			<button onclick="register(document.getElementById('username').value, document.getElementById('email').value, document.getElementById('password').value, document.getElementById('birthDate').value)">Bestätigen</button>
 		</div>	
 		</form>
