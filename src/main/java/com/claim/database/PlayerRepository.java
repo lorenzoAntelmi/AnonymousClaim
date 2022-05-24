@@ -1,5 +1,7 @@
 package com.claim.database;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +16,6 @@ import com.claim.model.Player;
 */
 @Repository
 public interface PlayerRepository extends JpaRepository<Player, Integer> {
-	Player findByHand_Id(Integer cardId);
-	Player deleteByHand_Id(Integer cardId);
+	Player findByHand_Id(Player player);
+	Optional<Player> findByAccount_Email(String username);
 }

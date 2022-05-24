@@ -45,7 +45,7 @@ body {
 	position: absolute; /*to overlap elements*/
 	
 	/*only card picture*/
-	background-image: url("/image/Untot_0.png"); /*TEMPORÄR ZU TESTZWECKEN*/
+	background-image: url("/image/backside_cards.png"); /*TEMPORÄR ZU TESTZWECKEN*/
 	background-size: cover;
 	background-position: center;
  	background-repeat: no-repeat;
@@ -72,297 +72,47 @@ body {
 .hand{
 	width: 1370px;
 	position: absolute; /*to overlap elements*/
-	top:600px;
+	top:64%;
 	left: 38%;
 	margin: 0 0 0 -700px; /* right = -700px */
 	border: solid 3px black;
 	border-radius:20px;
 	height: 300px;
-	background-color:rgba(128,128,128,0.3)
+	background-color:rgba(128,128,128,0.3);
+	
+	overflow: hidden;
 }
 
+/*ARBEITE HIER NOCH AN RESPONSIVE
+@media (max-width: 1590px) {
+.hand {
+	
+width: 600px ;
+height: 600px;
+	}
+}
 
-.hand .card0{
+*/
+
+.hand .card{
 	width:150px;
 	height: 230px;
-	left: 0;
 	margin:35px; /* border space of hand */
 	border-radius: 10px;
 	border: solid 3px black;
-	position: absolute;	
-	z-index: 1; /*layer or level of element*/
+	position: absolute;
+	
 	
 	/*only card picture (default: backside)*/
-	background-image: url("/image/backside_cards.png"); 
 	background-size: cover;
 	background-position: center;
  	background-repeat: no-repeat;
 }
 
- .hand .card0:hover {
+ .hand .card:hover {
     transform: translateY(-20px);
  }
  
-.hand .card1{
-	width:150px;
-	height: 230px;
-	left: 2.5cm;
-	margin:35px; /* border space of hand */
-	border-radius: 10px;
-	border: solid 3px black;
-	position: absolute;
-	z-index: 2; /*layer or level of element*/
-	
-/*only card picture (default: backside)*/
-	background-image: url("/image/backside_cards.png"); 
-	background-size: cover;
-	background-position: center;
- 	background-repeat: no-repeat;
-}
-
- .hand .card1:hover {
-    transform: translateY(-20px);
- }
-
-.hand .card2{
-	width:150px;
-	height: 230px;
-	left: 5cm;
-	margin:35px; /* border space of hand */
-	border-radius: 10px;
-	border: solid 3px black;
-	position: absolute;
-	z-index: 3; /*layer or level of element*/
-	
-/*only card picture (default: backside)*/
-	background-image: url("/image/backside_cards.png"); 
-	background-size: cover;
-	background-position: center;
- 	background-repeat: no-repeat;
-}
-
- .hand .card2:hover {
-    transform: translateY(-20px);
- }
-
-.hand .card3{
-	width:150px;
-	height: 230px;
-	left: 7.5cm;
-	margin:35px; /* border space of hand */
-	border-radius: 10px;
-	border: solid 3px black;
-	position: absolute;
-	z-index: 4; /*layer or level of element*/
-	
-/*only card picture (default: backside)*/
-	background-image: url("/image/backside_cards.png"); 
-	background-size: cover;
-	background-position: center;
- 	background-repeat: no-repeat;
-}
-
- .hand .card3:hover {
-    transform: translateY(-20px);
- }
-
-.hand .card4{
-	width:150px;
-	height: 230px;
-	left: 10cm;
-	margin:35px; /* border space of hand */
-	border-radius: 10px;
-	border: solid 3px black;
-	position: absolute;
-	background-color: grey;
-	z-index: 5; /*layer or level of element*/
-	
-	/*only card picture (default: backside)*/
-	background-image: url("/image/backside_cards.png"); 
-	background-size: cover;
-	background-position: center;
- 	background-repeat: no-repeat;
-}
-
- .hand .card4:hover {
-    transform: translateY(-20px);
- }
-
-.hand .card5{
-	width:150px;
-	height: 230px;
-	left: 12.5cm;
-	margin:35px; /* border space of hand */
-	border-radius: 10px;
-	border: solid 3px black;
-	position: absolute;
-	background-color: grey;
-	z-index: 6; /*layer or level of element*/
-	
-	/*only card picture (default: backside)*/
-	background-image: url("/image/backside_cards.png"); 
-	background-size: cover;
-	background-position: center;
- 	background-repeat: no-repeat;
-}
-
- .hand .card5:hover {
-    transform: translateY(-20px);
- }
-
-.hand .card6{
-	width:150px;
-	height: 230px;
-	left: 15cm;
-	margin:35px; /* border space of hand */
-	border-radius: 10px;
-	border: solid 3px black;
-	position: absolute;
-	background-color: grey;
-	z-index: 7; /*layer or level of element*/
-	
-	/*only card picture (default: backside)*/
-	background-image: url("/image/backside_cards.png"); 
-	background-size: cover;
-	background-position: center;
- 	background-repeat: no-repeat;
-}
-
- .hand .card6:hover {
-    transform: translateY(-20px);
- }
-
-.hand .card7{
-	width:150px;
-	height: 230px;
-	left: 17.5cm;
-	margin:35px; /* border space of hand */
-	border-radius: 10px;
-	border: solid 3px black;
-	position: absolute;
-	background-color: grey;
-	z-index: 8; /*layer or level of element*/
-	
-	/*only card picture (default: backside)*/
-	background-image: url("/image/backside_cards.png"); 
-	background-size: cover;
-	background-position: center;
- 	background-repeat: no-repeat;
-}
-
- .hand .card7:hover {
-    transform: translateY(-20px);
- }
-
-.hand .card8{
-	width:150px;
-	height: 230px;
-	left: 20cm;
-	margin:35px; /* border space of hand */
-	border-radius: 10px;
-	border: solid 3px black;
-	position: absolute;
-	background-color: grey;
-	z-index: 9; /*layer or level of element*/
-	
-	/*only card picture (default: backside)*/
-	background-image: url("/image/backside_cards.png"); 
-	background-size: cover;
-	background-position: center;
- 	background-repeat: no-repeat;
-}
-
- .hand .card8:hover {
-    transform: translateY(-20px);
- }
-
-.hand .card9{
-	width:150px;
-	height: 230px;
-	left: 22.5cm;
-	margin:35px; /* border space of hand */
-	border-radius: 10px;
-	border: solid 3px black;
-	position: absolute;
-	background-color: grey;
-	z-index: 10; /*layer or level of element*/
-	
-	/*only card picture (default: backside)*/
-	background-image: url("/image/backside_cards.png"); 
-	background-size: cover;
-	background-position: center;
- 	background-repeat: no-repeat;
-}
-
- .hand .card9:hover {
-    transform: translateY(-20px);
- }
-
-.hand .card10{
-	width:150px;
-	height: 230px;
-	left: 25cm;
-	margin:35px; /* border space of hand */
-	border-radius: 10px;
-	border: solid 3px black;
-	position: absolute;
-	background-color: grey;
-	z-index: 11; /*layer or level of element*/
-	
-	/*only card picture (default: backside)*/
-	background-image: url("/image/backside_cards.png"); 
-	background-size: cover;
-	background-position: center;
- 	background-repeat: no-repeat;
-}
-
- .hand .card10:hover {
-    transform: translateY(-20px);
- }
-
-.hand .card11{
-	width:150px;
-	height: 230px;
-	left: 27.5cm;
-	margin:35px; /* border space of hand */
-	border-radius: 10px;
-	border: solid 3px black;
-	position: absolute;
-	background-color: grey;
-	z-index: 12; /*layer or level of element*/
-	
-	/*only card picture (default: backside)*/
-	background-image: url("/image/backside_cards.png"); 
-	background-size: cover;
-	background-position: center;
- 	background-repeat: no-repeat;
-}
-
- .hand .card11:hover {
-    transform: translateY(-20px);
- }
-
-.hand .card12{
-	width:150px;
-	height: 230px;
-	left: 30cm;
-	margin:35px; /* border space of hand */
-	border-radius: 10px;
-	border: solid 3px black;
-	position: absolute;
-	background-color: grey;
-	z-index: 13; /*layer or level of element*/
-	
-	/*only card picture (default: backside)*/
-	background-image: url("/image/backside_cards.png"); 
-	background-size: cover;
-	background-position: center;
- 	background-repeat: no-repeat;
-}
-
- .hand .card12:hover {
-    transform: translateY(-20px);
- }
 
 .pointStackTitle{
 	width:150px;
@@ -394,6 +144,7 @@ body {
 	background-size: cover;
 	background-position: center;
  	background-repeat: no-repeat;
+ 	
 }
 
 .depositStack{

@@ -89,8 +89,8 @@ public class GameService {
 		Collections.shuffle(cards);
 
 		/**Distribute 13 cards per Player to generate a hand*/
-		List<Card> handPlayerA = cards.subList(1, 14);
-		List<Card> handPlayerB = cards.subList(14, 27);
+		List<Card> handPlayerA = cards.subList(0, 13);
+		List<Card> handPlayerB = cards.subList(13, 26);
 
 		/**Generate PlayerA and save in repository*/
 		Player playerA = new Player(account, handPlayerA, game, null, null);
