@@ -219,6 +219,19 @@ function abort() {
   console.log("Registrierung abgebrochen!");
 }
 
+/** Modal Code */
+var modal = document.getElementById('loginModal');
+var modalBtn = document.getElementById('help');
+var closeBtn = document.getElemetByClassName('close')[0];
 
-
+		function openModal() {
+			  modal.style.display = 'block';
+			}
+			
+		function closeModal() {
+			  modal.style.display = 'none';
+			}
+			
+modalBtn.addEventListener('click', openModal);
+closeBtn.addEventListener('click', closeModal);
 

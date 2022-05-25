@@ -1,11 +1,19 @@
 /*	authors: Valentina Caldana
 	source: https://www.codehim.com/collections/login-page-in-html-with-css-code/#google_vignette */
 
+html{
+	overflow-x: hidden;
+	/* no scroll from left to right*/
+}
+
 body {
   background-image: linear-gradient(135deg, #008080 20%,#a0522d 60% ,#9400d3 100%);
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  min-width: 1000px;
+  
+  
  
 }
 
@@ -25,6 +33,9 @@ body {
 @media (max-width: 1590px) {
 .login-area {
 flex-flow: wrap;
+justify-content: center;
+
+
 	}
 }
 
@@ -43,12 +54,16 @@ flex-flow: wrap;
   padding: 40px;
   overflow: hidden;
   width: 40%;
+
 }
 
 /*when resize the browser (e. g. make smaller)*/
-@media (max-width: 980px) {
+@media (max-width: 1400px) {
   .login-area .right {
     width: 100%;
+
+  
+    
   }
 }
 
@@ -70,6 +85,24 @@ li:not(:first-child)::after {
     content: '|';
     padding: 10px;
 } 
+
+/*Button for Modal*/
+.login-area .right .helpButton{
+	background-color: white;
+ 	height:23px;
+	width: 23px;
+	border: 1px solid black;
+	border-radius: 50%;
+	display: block;
+	text-align: center;
+	font-size: 12px;
+	font-weight: bold;	
+}
+
+.login-area .right .helpButton:hover{
+	  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+	  cursor: pointer;
+}
 
 .login-area .right h5 {
   font-size: 6vh;
@@ -114,7 +147,7 @@ li:not(:first-child)::after {
   	margin: 0 auto;
 }
 
-.login-area .right button {
+.login-area .right .btn {
   color: #fff;
   font-size: 20px;
   font-family: Century Gothic, Verdana, sans-serif;
@@ -128,12 +161,60 @@ li:not(:first-child)::after {
   
 }
 
-.login-area .right button:hover{
+.login-area .right .btn:hover{
 	 background-color: white;
   	 color: black;
   	 border: solid;
 }
 
-/*TESTS MIT VERKLEINERUNG DER BROWSERSEITE DURCHFÜHREN!!!
--Bei Minimierung soll die untere seite komplett mittig sein*/
+/*Modal Styling for rules*/
+.login-area .right .modal{
+	display: none;
+	position: fixed;
+	z-index: 2;
+	left:55px;
+	top:0;
+	height:100%;
+	width: 100%;
+	overflow: hidden;
+	background-color: rgba(0,0,0,0.4); /*behind modal*/
+	
+}
+
+.login-area .right .modal .content{
+	overflow-y:scroll;
+	max-height: 800px;
+	max-width: 780px;
+	margin: 2% auto; /*window position (15% from the top and centered)*/
+	padding: 20px;
+	border-radius: 10px;
+	background-color: white;
+	box-shadow: 0 5px 8px 0 rgba(0,0,0,0.2), 0 7px 20px 0 rgba(0,0,0,0.2);
+}
+
+.login-area .right .modal .content .img-rules{
+	width: 730px;
+	height: 2100px;
+	background-image: url("/image/rules.png");
+ 	background-position: center;
+ 	background-size: cover;
+  	background-repeat: no-repeat;  
+  	border-radius: 10px;
+
+}
+
+.login-area .right .content .close{
+	color: #ccc;
+	float: right;
+	font-size: 30px;
+	font-weight: bold;
+}
+
+.login-area .right .content .close:hover,
+.close:focus{
+	color: #000;
+	text-decoration:none;
+	cursor: pointer;
+}	
+
 

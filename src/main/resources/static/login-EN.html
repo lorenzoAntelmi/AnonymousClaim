@@ -19,13 +19,24 @@
 	</div>
 	
 		<div class="right">
+		
+		
 		<nav>
 		<ul> <!-- symbols instead of numbers -->
-		<li> <a>Hilfe?</a></li>
+		<li> <button class="helpButton" id = "help">?</button></li>
 		<li> <a hreflang="de" lang="de" href="/login-de.html">DE</a></li> 
 		<li> <a hreflang="en" lang="en" href="/login-en.html">EN</a></li> 
 		</ul>
 		</nav>
+		
+		<!-- Modal -->
+		<div class="modal" id="loginModal">
+			<div class="content">
+				 <span class="close">&times;</span>
+				<div class="img-rules"><!-- Container for img rules --></div>
+			</div>
+		</div>
+		
 		<h5>Login</h5>
 
 		<form>
@@ -44,14 +55,14 @@
 			<br><br>
 			
 			<div class="buttons">
-			<button onclick="login(document.getElementById('email').value, document.getElementById('password').value)"> Login</button >
-			<button onclick="location.href='registration-EN.html';" type="button">Register</button >
+			<button class= "btn" onclick="login(document.getElementById('email').value, document.getElementById('password').value)">Login</button >
+			<button class= "btn" onclick="location.href='registration-EN.html';" type="button">Register</button >
 			</div>
 		</form>
 	</div>
 </div>
+
 <script src="js/script-EN.js"></script>
 
-  
 </body>
 </html>

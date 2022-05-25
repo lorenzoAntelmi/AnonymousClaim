@@ -8,7 +8,6 @@
   <meta charset="UTF-8">
   <title>Registration Claim</title>
   <link rel="stylesheet" type="text/css" href="css/registration_stylesheet.css"/>
-
 </head>
 
 <body>
@@ -19,10 +18,10 @@
 	<!-- Container for registration-area (left) -->
 	</div>
 	
-		<div class="right">
-		<h5>Registration</h5>
+	<div class="right">
+	<h5>Registration</h5>
 		
-			<form>
+		<form>
 		<div class="inputs">
 			<input type="text" id="username" placeholder="BENUTZERNAME" />
 			<br>
@@ -36,26 +35,27 @@
 			<br>
 			<input type="password" id="confirmPassword" placeholder="PASSWORT BESTÄTIGEN" />
 			<br>
-			
+		</div>
+		
 			 <div class="captcha">
-		 	   <p id=captchaText></p >
-		    <button onclick="reloadCaptcha()" class="reload-btn" type="button"> </button>
-		    <input type="text" id="captchaField" placeholder="Enter Captcha" maxlength="6" spellcheck="false" required/>
+		 	  <p id="captchaText"></p >
+		      <button onclick="reloadCaptcha()" class="reload-btn" type="button"> </button>
+		      <input type="text" class="captchaField" id="captchaField" placeholder="CAPTCHA EINGEBEN" maxlength="6" spellcheck="false" required/>
+		      <div class="status-text"></div>
 		    </div >
 		    </form>
-    		<div class="status-text"></div>
     		
-		</div>
-			
-			<br><br><br>
+    		<br><br><br>
 			
 		<div class="buttons">
-			<button onclick="abort()" type="button">Abbrechen</button>
-			<button onclick="register(document.getElementById('username').value, document.getElementById('email').value, document.getElementById('password').value, document.getElementById('birthDate').value)">Bestätigen</button>
+			<button class="btn" onclick="abort()" type="button">Abbrechen</button>
+			<button class="btn" onclick="register(document.getElementById('username').value, document.getElementById('email').value, document.getElementById('password').value, document.getElementById('birthDate').value)">Bestätigen</button>
 		</div>	
-		</form>
-	</div>
+    </div>	
 </div>
+			
+		
+		
 <script src="js/script.js"></script>
 
 </body>

@@ -34,17 +34,28 @@
 			<input type="password" id="password" placeholder="PASSWORD">
 			<br>
 			<input type="password" id="confirmPassword"placeholder="CONFIRM PASSWORD" />
+			<br>
 		</div>
 			
-			<br><br><br>
-			
-		<div class="buttons">
-			<button onclick="abort()">Cancel</button >
-			<button onclick="register(document.getElementById('username').value, document.getElementById('email').value, document.getElementById('password').value, document.getElementById('birthDate').value)">Confirm</button >
-		</div>	
+			<div class="captcha">
+		 	  <p id="captchaText"></p >
+		      <button onclick="reloadCaptcha()" class="reload-btn" type="button"> </button>
+		      <input type="text" class="captchaField" id="captchaField" placeholder="ENTER CAPTCHA" maxlength="6" spellcheck="false" required/>
+		      <div class="status-text"></div>
+		    </div >
 		</form>
+		
+		<br><br><br>
+		
+		<div class="buttons">
+			<button class="btn" onclick="abort()" type="button">Cancel</button>
+			<button class="btn" onclick="register(document.getElementById('username').value, document.getElementById('email').value, document.getElementById('password').value, document.getElementById('birthDate').value)">Confirm</button >
+		</div>	
 	</div>
 </div>
+
+
+
 <script src="js/script-EN.js"></script>
   
 </body>
