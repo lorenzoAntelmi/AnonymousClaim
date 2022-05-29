@@ -229,7 +229,7 @@
 
 // build the clickable buttons (as a div) to join an opened game
 	function buildHTMLOpenGames(games) {
-		console.log("building open games");
+	
 		// we search for the html element which will contain the buttons.
 		const openGames = document.getElementById("openGames");
 		
@@ -242,9 +242,11 @@
 			// We add some classes to the newly generated div-element.
 			div.classList.add("btn");
 			div.classList.add("button" + (i+1));
-			
+			div.addEventListener('click', function(){
+				joinGame(games[i].id);
+			},false);
 			// We set an inner HTML to the div element by providing an html code using the back tricks ´ to replace some data with variables.
-			div.innerHTML = (`<span input type="button" onclick="joinGame(${games[i].id})" >RAUM ${i+1} <br> SPIEL BEITRETEN</span>`);
+			div.innerHTML = (`<span>RAUM ${i+1} <br> SPIEL BEITRETEN</span>`);
 			
 			// finally we add the generated div element to the children of the container.
 			openGames.appendChild(div);
@@ -296,18 +298,17 @@
 
 //Spiel beitreten
 	function joinGame(gameId) {
-		console.log("joining game with id: " + gameId);
+		
 		const jwt = localStorage.getItem("accessToken");
 		const url =`/games/${gameId}/join`;
 		var request = new Request(url, {
-	      method: 'POST',
+	      method: 'GET',
 	      headers: new Headers({
 	          'Content-Type': 'application/json',
 	          'Authorization' : 'Bearer ' + jwt
 	        })
 	  	});
 	  	
-	 
 	  	fetch(request).then(response => {
 			switch (response.status) {
 				case 200:

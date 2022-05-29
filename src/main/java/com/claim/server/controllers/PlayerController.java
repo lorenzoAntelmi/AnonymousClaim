@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import com.claim.database.PlayerRepository;
 import com.claim.model.Card;
+import com.claim.model.Player;
+
+/** Provides player-related endpoints.
+ * @author Rocco Saracino*/
 
 @RestController
 public class PlayerController {
@@ -19,12 +23,20 @@ public class PlayerController {
 		@Autowired
 		private PlayerRepository playerRepository;
 		
-		@GetMapping(path="/getHand",produces="application/json")
+		/** Gets the players handCards*/
+		@GetMapping("/getHand")
 		public List<Card> getHand(@AuthenticationPrincipal UserDetails account) {
 			return playerRepository
 					.findByAccount_Email(account.getUsername())
 					.orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND))
 					.getHand();
+		}
+		
+		@GetMapping("/getPlayer")
+		public Player getPlayer(@AuthenticationPrincipal UserDetails account) {
+			return playerRepository
+					.findByAccount_Email(account.getUsername())
+					.orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		}
 
 }

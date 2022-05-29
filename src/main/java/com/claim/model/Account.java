@@ -38,22 +38,21 @@ public class Account {
 	@Column(nullable = false, length = 64)
 	private LocalDate birthDate;
 
-	@Column(columnDefinition = "integer default 0")
-	private Integer score;
+	private Integer score = 0;
 	
- 
 	/**Default Constructor: Object relational mapper (ORM) is a Framework, which
 	 * mapps objects in database. In order for the mapper to create an object,
 	 * it needs a default constructor
 	*/
 	protected Account() {}
 
-	public Account(String username, String email, String passwordHash, LocalDate birthDate) {
+	public Account(String username, String email, String passwordHash, LocalDate birthDate, Integer score) {
 
 		this.username = username;
 		this.email = email;
 		this.passwordHash = passwordHash;
 		this.birthDate = birthDate;
+		this.score = score;
 
 	}
 
@@ -75,12 +74,6 @@ public class Account {
 		return passwordHash;
 	}
 
-
-
-	public Integer getScore() {
-		return score;
-	}
-
 	public void setPasswordHash(String encodedPassword) {
 		this.passwordHash = encodedPassword;
 
@@ -98,14 +91,16 @@ public class Account {
 		this.email = email;
 	}
 
-	
-
 	public LocalDate getBirthDate() {
 		return birthDate;
 	}
 
 	public void setBirthDate(LocalDate birthDate) {
 		this.birthDate = birthDate;
+	}
+	
+	public Integer getScore() {
+		return score;
 	}
 
 	public void setScore(Integer score) {

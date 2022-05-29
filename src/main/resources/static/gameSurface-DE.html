@@ -15,11 +15,10 @@
 <!--Container which displays a chosen handCard and has a button to play the chosen card-->
 <div class="display-area"> 
 
-	<div class="displayed-card"><!-- should be bind with the users card choice in hand--></div>
-	<button class="make-move">KARTE SPIELEN</button><!--makes a move and empties the container "displayed-card" when clicked -->
+	<div class="displayed-card" id = "displayed-card"><!-- should be bind with the users card choice in hand--></div>
+	<button class="make-move" id="makeMove" onclick="playCard()">KARTE SPIELEN</button><!--makes a move and empties the container "displayed-card" when clicked -->
 
 </div>
-
 
 <div id="hand" class="hand"> 
 	<!--container which shows 13 handCards-->
@@ -40,14 +39,17 @@
 	All of them will disappear in phase 2-->
 	<div class="deck"> </div>
 	<div class="deckTitle"> <p>KARTENDECK</p> </div>
-	<div class="revealedCard"></div>
+	<div class="revealedCard" id="revealedCard"></div>
 
 <!--container showing the opponents card-->
 <div class="oponentsCard"> </div>
   <script src="js/game.js">
   </script>
   <script>
-   getHandCards();
+
+	getPlayer();
+ 	getGameData();
+   
   </script>
 </body>
 </html>

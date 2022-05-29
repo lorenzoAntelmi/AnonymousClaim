@@ -50,7 +50,7 @@ public class AccountController {
 		  BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 	      String encodedPassword = passwordEncoder.encode(registration.getPassword());
 	      // FIXME: Convert to correct Birthdate!
-	      Account account = new Account(registration.getUsername(), registration.getEmail(), encodedPassword, registration.getBirthDate());
+	      Account account = new Account(registration.getUsername(), registration.getEmail(), encodedPassword, registration.getBirthDate(), registration.getScore());
 	      account.setPasswordHash(encodedPassword);
 
 		  repository.save(account);

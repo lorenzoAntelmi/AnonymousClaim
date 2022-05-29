@@ -40,8 +40,18 @@ public class Player {
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Card> cardsPhase2;
 
+	/**@OneToMany association = one Game to many playedCards*/
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Card> playedCards;
+	
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Card> pointStack;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Card> depositedCard;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Card> depositedCardPhase2;
 
 	/** Default Constructor: Object relational mapper (ORM) is a Framework, which
 	 * maps objects in database. In order for the mapper to create an object, it
@@ -71,7 +81,7 @@ public class Player {
 		return account;
 	}
 
-	public void setAccountId(Account account) {
+	public void setAccount(Account account) {
 		this.account = account;
 	}
 
@@ -99,12 +109,41 @@ public class Player {
 		this.pointStack = pointStack;
 	}
 
-	public List<Card> getCardsForPhase2() {
-		return cardsPhase2;
+	/**@Getter & @Setter
+	 * List of played cards from PlayerA & PlayerB
+	 * (List should have only 2 cards per round)*/
+
+	public List<Card> getPlayedCards() {
+		return playedCards;
 	}
 
+	public void setPlayedCards(List<Card> playedCards) {
+		this.playedCards = playedCards;
+	}
+	
+	public List<Card> getDepositedCard() {
+		return depositedCard;
+	}
+
+	public void setDepositedCard(List<Card> depositedCard) {
+		this.depositedCard = depositedCard;
+	}
+
+	public List<Card> getCardsPhase2() {
+		return cardsPhase2;
+	}
+	
 	public void setCardsPhase2(List<Card> cardsPhase2) {
 		this.cardsPhase2 = cardsPhase2;
 	}
+
+	public List<Card> getDepositedCardPhase2() {
+		return depositedCardPhase2;
+	}
+
+	public void setDepositedCardPhase2(List<Card> depositedCardPhase2) {
+		this.depositedCardPhase2 = depositedCardPhase2;
+	}
+
 
 }

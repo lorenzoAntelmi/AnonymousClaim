@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.claim.database.AccountRepository;
 import com.claim.database.CardDeckRepository;
@@ -21,8 +23,10 @@ import com.claim.model.CardDeck;
 import com.claim.model.Game;
 import com.claim.model.Player;
 
-/**Represents services for Game
- * @author Rocco Saracino & Valentina Caldana*/
+/**
+ * Represents services for Game
+ * @author Rocco Saracino & Valentina Caldana
+ */
 
 @Service
 public class GameService {
@@ -42,69 +46,61 @@ public class GameService {
 	@Autowired
 	private AccountRepository accountRepository;
 
-	private Card removedCard;
-	private List<Card> tempPlayedCards = new ArrayList<>();
-	private List<Card> handPhase2A;
-	private List<Card> handPhase2B;
-
 	public Game initializeGame() {
-		/** Wir holen uns den Context aus dem SecurityContextHolder.
-		* In diesem Context wird das Principal (aka eingeloggter User) geholt.
-		* Mit dem Principal Objekt können wir den Account aus der Datenbank laden.
-		* @author Lorenzo Antelmi*/
-		  Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		  String email;
-		  if (principal instanceof UserDetails) {
-		     email = ((UserDetails)principal).getUsername();
-		  } else {
-		     email = principal.toString();
-		  } 
-		  
-		  Optional<Account> maybeAccount = accountRepository.findByEmail(email);
-		  
-		  Account account = maybeAccount.get();
-		
-		  
-		/**Every Game has its own card set (52 cards)
-		 * If Game-List has Game objects, 52 cards
-		 * are generated (incl. stored in database)
-		 * and given to Card-List.
-		 * Else = empty Game-List
-		 * thanks to @createCardsIfNotExist
-		 * Cards can be retrieved from Card-repository
-		 * and given to Card-List */
-		List<Card> cards = new ArrayList<>();
-		List<Game> games = gameRepository.findAll();
-		if (!games.isEmpty()) {
-			cards = cardService.generateCards();
-		} else if (games.isEmpty()) {
-			cards = cardRepository.findAll();
+		/**
+		 * Wir holen uns den Context aus dem SecurityContextHolder. In diesem Context
+		 * wird das Principal (aka eingeloggter User) geholt. Mit dem Principal Objekt
+		 * können wir den Account aus der Datenbank laden.
+		 * 
+		 * @author Lorenzo Antelmi
+		 */
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String email;
+		if (principal instanceof UserDetails) {
+			email = ((UserDetails) principal).getUsername();
+		} else {
+			email = principal.toString();
 		}
 
-		/** Generate a new Game*/
-		Game game = new Game();
-		gameRepository.save(game);
+		Optional<Account> maybeAccount = accountRepository.findByEmail(email);
 
-		/** shuffles 52 generated cards	 */
+		Account account = maybeAccount.get();
+
+		/**
+		 * Every Game has its own card set (52 cards) If Game-List has Game objects, 52
+		 * cards are generated (incl. stored in database) and given to Card-List. Else =
+		 * empty Game-List thanks to @createCardsIfNotExist Cards can be retrieved from
+		 * Card-repository and given to Card-List
+		 */
+		List<Card> cards = cardService.generateCards();
+
+		cards = cardRepository.saveAll(cards);
+
+		/** Generate a new Game */
+		Game game = new Game();
+		game = gameRepository.save(game);
+
+		/** shuffles 52 generated cards */
 		Collections.shuffle(cards);
 
-		/**Distribute 13 cards per Player to generate a hand*/
+		/** Distribute 13 cards per Player to generate a hand */
 		List<Card> handPlayerA = cards.subList(0, 13);
 		List<Card> handPlayerB = cards.subList(13, 26);
 
-		/**Generate PlayerA and save in repository*/
+		/** Generate PlayerA and save in repository */
 		Player playerA = new Player(account, handPlayerA, game, null, null);
+		playerA = playerRepository.save(playerA);
 		game.setPlayerA(playerA);
-		playerRepository.save(playerA);
 
-		/**Generate PlayerB and save in repository*/
+		/** Generate PlayerB and save in repository */
 		Player playerB = new Player(null, handPlayerB, game, null, null);
+		playerB = playerRepository.save(playerB);
 		game.setPlayerB(playerB);
-		playerRepository.save(playerB);
 
-		/**Take remaining cards and
-		 *create a CardDeck (26 cards to CardDeck)*/
-		List<Card> cardsForDeck = cards.subList(27, 52);
+		/**
+		 * Take remaining cards and create a CardDeck (26 cards to CardDeck)
+		 */
+		List<Card> cardsForDeck = cards.subList(26, 52);
 		CardDeck deck = new CardDeck(game, cardsForDeck);
 
 		game.setCardDeck(deck);
@@ -114,467 +110,624 @@ public class GameService {
 		return game;
 	}
 
-	/**Method handles 13 rounds of
-	 * phase 1*/
-	public void phase1(Integer gameId, Integer playerA, Integer playerB, Integer cardIdA, Integer cardIdB) {
-
-		/**Get specific Game & Player from database*/
-		Game game = gameRepository.getById(gameId);
-		Player pA = playerRepository.getById(playerA);
-		Player pB = playerRepository.getById(playerB);
-
-		/**Get List of playedCards from database
-		 * and store its cards in Card objects */
-		List<Card> playedCards = game.getPlayedCards();
-		Card cardA = playedCards.get(0);
-		Card cardB = playedCards.get(1);
-
-		/**Get top card of Deck and store it into
-		 * a Card object...
-		 * @cardToWin = revealed Card
-		 * @coveredCard = to pick a card from deck */
-		Card cardToWin = cardDeckService.topCard(game.getCardDeck().getId());
-		cardDeckService.removeCardFromDeck(game.getCardDeck().getId(), cardToWin.getId());
-		Card coveredCard = cardDeckService.topCard(game.getCardDeck().getId());
-		cardDeckService.removeCardFromDeck(game.getCardDeck().getId(), coveredCard.getId());
-
-		/**PlayerA*/
-		if (pA.getCardsForPhase2().isEmpty()) {
-
-		/**Creates empty deposit stack in first round */
-			handPhase2A = new ArrayList<>();
-		} else {
-
-		/**In following rounds it gets the empty created
-		 * deposit stack*/
-			handPhase2A = pA.getCardsForPhase2();
-		}
-
-		/**PlayerB*/
-		if (pB.getCardsForPhase2().isEmpty()) {
-
-			/**Creates empty deposit stack in first round */
-			handPhase2B = new ArrayList<>();
-		} else {
-
-			/**In following rounds it gets the empty created
-			 * deposit stack*/
-			handPhase2B = pB.getCardsForPhase2();
-		}
-
-		/**Finds out about who won a round &
-		 * fills deposit stack("hand for phase 2")*/
-		if (cardA.isWinner(cardB)) {
-			handPhase2A.add(cardToWin);
-			handPhase2B.add(coveredCard);
-		} else {
-			handPhase2B.add(cardToWin);
-			handPhase2A.add(coveredCard);
-		}
-
-		pA.setCardsPhase2(handPhase2A);
-		playerRepository.save(pA);
-
-		pB.setCardsPhase2(handPhase2B);
-		playerRepository.save(pB);
-
-
-		/**This part handles UNDEAD logic, in which won Cards
-		 * have to be put into the final pointStack of phase 2.
-		 * For this purpose a temp List "pointsUndead" is
-		 * created.*/
-		List<Card> pointsUndead = new ArrayList<Card>();
+	public Game pickCard(Game game, Integer cardId, String username) {
 		
-		/**If Player A wins and both played Cards are UNDEAD
-		 * the played Cards go directly into the List 
-		 * "pointsUndead". Then the "pointStack" of Player A is
-		 * being set with the Cards of "pointsUndead". */
+		Card card = removeCard(cardId, username);
+		/**
+		 * Put content of tempPlayedCards in List playedCards of Game-Constructor
+		 */
+		Player player = game.getCurrentPlayer();
+		player.getPlayedCards().add(card);
+		return game;
+	}
 
-		if (cardA.isWinner(cardB) && (playedCards.get(1).getFraction().name() == "UNDEAD"
-				&& playedCards.get(0).getFraction().name() == "UNDEAD")) {
-			pointsUndead.add(playedCards.get(0));
-			pointsUndead.add(playedCards.get(1));
-			pA.setPointStack(pointsUndead);
-			
-		/**If Player B wins and both played Cards are UNDEAD
-		 * the played Cards go directly into the List 
-		 * "pointsUndead". Then the "pointStack" of Player B is
-		 * being set with the Cards of "pointsUndead". */
-		} else if (cardB.isWinner(cardA) && (playedCards.get(1).getFraction().name() == "UNDEAD"
-				&& playedCards.get(0).getFraction().name() == "UNDEAD")) {
-			pointsUndead.add(playedCards.get(0));
-			pointsUndead.add(playedCards.get(1));
-			pB.setPointStack(pointsUndead);
+	/**
+	 * A specific Card of a specific Player hand will be removed and returned
+	 */
+	private Card removeCard(Integer cardId, String username) {
+
+		Game game = getCurrentGame(username);
+
+		Player player = game.getCurrentPlayer();
+	
+
+		/**
+		 * Iteration: Check every card to see if it is the chosen card (by player) to be
+		 * played/to make the move
+		 */
+		Card removedCard = cardRepository.findById(cardId)
+				.orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+		/** Card from iteration is removed from playerHand */
+		if (player.getHand().isEmpty()) {
+			player.getCardsPhase2().remove(removedCard);
 		} else {
-			
-			/**In case only one of the two played Cards is UNDEAD
-			 * only the UNDEAD-Card should go into "pointStack". 
-			 * See the following iteration and switch per List-position:*/
-			int i = playedCards.size() - 2;
-			for (Card c : playedCards) {
-				switch (i) {
-
-				case (0): 
-					/**Player A wins*/
-
-					if (cardA.isWinner(cardB) && c.getFraction().name() == "UNDEAD") {
-						pointsUndead.add(playedCards.get(0));
-						pA.setPointStack(pointsUndead);
-						/**Player B wins*/
-					} else if (cardB.isWinner(cardA) && c.getFraction().name() == "UNDEAD") {
-						pointsUndead.add(playedCards.get(0));
-						pB.setPointStack(pointsUndead);
-					}
-				break;
-				case (1):
-
-					/**Player A wins*/
-
-					if (cardA.isWinner(cardB) && c.getFraction().name() == "UNDEAD") {
-						pointsUndead.add(playedCards.get(1));
-						pA.setPointStack(pointsUndead);
-						/**Player B wins*/
-					} else if (cardB.isWinner(cardA) && c.getFraction().name() == "UNDEAD") {
-						pointsUndead.add(playedCards.get(1));
-						pB.setPointStack(pointsUndead);
-					}
-				break;
-				}
-				i++;
-			}
+			player.getHand().remove(removedCard);
 		}
-
-		/**Get List of playedCards from database
-		 * and remove its cards in Card objects
-		 * (List should be empty per round) */
-		playedCards.remove(1); playedCards.remove(0);
-		game.setPlayedCards(playedCards);
-		gameRepository.save(game);
-	}
-
-	/**Allow Player A to play a card from hand*/
-	public void makeMovePlayerA(Integer gameId, Integer playerA, Integer cardIdA) {
-		Game game = gameRepository.getById(gameId);
-
-		/**Pick a specific card by playerID and
-		 * cardID, add it to List tempPlayedCards */
-		Card cardA = removeCard(cardIdA, playerA);
-		tempPlayedCards.add(cardA);
-
-		/**Put content of tempPlayedCards in
-		 * List playedCards of Game-Constructor*/
-		game.setPlayedCards(tempPlayedCards);
-		gameRepository.save(game);
-	}
-
-	/**Allow Player B to play a card from hand*/
-	public void makeMovePlayerB(Integer gameId, Integer playerB, Integer cardIdB) {
-		Game game = gameRepository.getById(gameId);
-
-		/**Pick a specific card by playerID and
-		 * cardID, add it to List tempPlayedCards */
-		Card cardB = removeCard(cardIdB, playerB);
-		tempPlayedCards.add(cardB);
-
-		/**Put content of tempPlayedCards in
-		 * List playedCards of Game-Constructor*/
-		game.setPlayedCards(tempPlayedCards);
-		gameRepository.save(game);
-	}
-
-	/**A specific Card of a specific Player hand
-	 * will be removed and returned*/
-	private Card removeCard(Integer cardId, Integer playerId) {
-		removedCard = new Card();
-
-		Player player = playerRepository.getById(playerId);
-		List<Card> playerHand = player.getHand();
-
-		/**Iteration: Check every card to see if
-		 * it is the chosen card (by player)
-		 * to be played/to make the move */
-		for (Card card : playerHand) {
-			if (card.getId() == cardId) {
-
-				/**As soon as match is found,
-				 * card is stored in card object*/
-				removedCard = card;
-			}
-		}
-
-		/**Card from iteration is removed from playerHand*/
-		playerHand.remove(removedCard);
 		playerRepository.save(player);
 
 		return removedCard;
 	}
-	
-	/**Method handles 13 rounds of
-	 * phase 2*/
-	public void phase2 (Integer gameId, Integer playerA, 
-		Integer playerB, Integer cardIdA, Integer cardIdB) {
-			
-		/**Get specific Game & Player from database*/
-		Game game = gameRepository.getById(gameId);
-		Player pA = playerRepository.getById(playerA);
-		Player pB = playerRepository.getById(playerB);
 
-		/**List for pointStack per Player (List was 
-		 * already initialized in phase 1 for UNDEAD logic)*/
+
+
+	public Game calcScore(String username) {
+		
+		Game game = getCurrentGame(username);
+
+		/** Get specific Game & Player from database */
+		var pA = game.getPlayerA();
+		var pB = game.getPlayerB();
+
+		/**
+		 * List for pointStack per Player (List was already initialized in phase 1 for
+		 * UNDEAD logic)
+		 */
 		List<Card> pointStackPlayerA = pA.getPointStack();
 		List<Card> pointStackPlayerB = pB.getPointStack();
 
-		/**Get the playedCards List and store the Cards into
-		 * objects.*/
-		List<Card> playedCards = game.getPlayedCards();
-		Card cardA = playedCards.get(0);
-		Card cardB = playedCards.get(1);
-		
-		/**Iteration through List playedCards for
-		 * following switch, which defines rules
-		 * of phase 2:*/
-		int i = playedCards.size() - 2;
-		for (Card c : playedCards) {
-			switch (i) {
-			case (0): 
-				
-				/**Case: Player A wins & plays DWARF
-				 * DWARF-Card (at List-position 0) goes  
-				 * into pointsStack of Player B 
-				 * (loosers pointStack).*/
-				if ((cardA.isWinner(cardB) == true) 
-						&& c.getFraction().name() == "DWARF") {
-					c = playedCards.get(0);
-					pointStackPlayerB.add(c);
-					pB.setPointStack(pointStackPlayerB);
-				
-					/**Case: Player A looses & plays DWARF
-					 * DWARF-Card (at List-position 0) goes  
-					 * into pointsStack of Player A 
-					 * (loosers pointStack).*/
-				} else if ((cardA.isWinner(cardB) == false) 
-						&& c.getFraction().name() == "DWARF"){
-					c = playedCards.get(0);
-					pointStackPlayerA.add(c);
-					pA.setPointStack(pointStackPlayerA);
-				}
-			break;
-			case (1):
-				
-				/**Case: Player A wins & plays DWARF,
-				 * DWARF-Card (at List-position 1) goes  
-				 * into pointsStack of Player B 
-				 * (loosers pointStack).*/
-				if ((cardA.isWinner(cardB) == true) 
-						&& c.getFraction().name() == "DWARF") {
-					c = playedCards.get(1);
-					pointStackPlayerB.add(c);
-					pB.setPointStack(pointStackPlayerB);
-					
-					/**Case: Player A looses & plays DWARF,
-					 * DWARF-Card (at List-position 1) goes  
-					 * into pointsStack of Player A 
-					 * (loosers pointStack).*/
-				} else if ((cardA.isWinner(cardB) == false) 
-						&& c.getFraction().name() == "DWARF"){
-					c = playedCards.get(1);
-					pointStackPlayerA.add(c);
-					pA.setPointStack(pointStackPlayerA);
-				}
-			break;
-			case (2):
-				if (cardA.isWinner(cardB)) {
-					pointStackPlayerA.addAll(playedCards);
-					pA.setPointStack(pointStackPlayerA);
-				} else {
-					pointStackPlayerB.addAll(playedCards);
-					pB.setPointStack(pointStackPlayerB);
-				}
-			break;
-			}
-			
-			/**This part handles the increment of "i"
-			 * after every break and checks if both
-			 * Cards are NOT DWARFS!
-			 * -> Goes case (0), then i++ & if, goes case (1),
-			 * then i++ & if, goes case (2)*/
-			i++;
-			if (playedCards.get(0).getFraction().name() != "DWARF" && 
-					playedCards.get(1).getFraction().name() != "DWARF") {
-				i = 2;
-			}
-		} 
-
-		playerRepository.save(pA);
-		playerRepository.save(pB);
-
-		/**Get List of playedCards from database
-		 * and remove its cards in Card objects
-		 * (List should be empty per round) */
-		playedCards.remove(1); playedCards.remove(0);
-		game.setPlayedCards(playedCards);
-		gameRepository.save(game);
-	}
-	
-	public void calcScore(Integer playerA, Integer playerB) {
-		
-		Player pA = playerRepository.getById(playerA);
-		Player pB = playerRepository.getById(playerB);
-
-		/**List for pointStack per Player (List was 
-		 * already initialized in phase 1 for UNDEAD logic)*/
-		List<Card> pointStackPlayerA = pA.getPointStack();
-		List<Card> pointStackPlayerB = pB.getPointStack();
-		
-		/**List per Fraction Player A*/
+		/** List per Fraction Player A */
 		List<Card> pAGoblin = new ArrayList<Card>();
 		List<Card> pAKnight = new ArrayList<Card>();
 		List<Card> pAUndead = new ArrayList<Card>();
 		List<Card> pADoppelganger = new ArrayList<Card>();
 		List<Card> pADwarf = new ArrayList<Card>();
-		
-		/**Iteration through pointStack Player A
-		 * to check for every Fraction and to
-		 * add them into the corresponding
-		 * Fraction-List*/
+
+		/**
+		 * Iteration through pointStack Player A to check for every Fraction and to add
+		 * them into the corresponding Fraction-List
+		 */
 		for (Card c : pointStackPlayerA) {
 			switch (c.getFraction().name()) {
-			case ("GOBLIN"): pAGoblin.add(c);
-			break;
-			case ("KNIGHT"): pAKnight.add(c);
-			break;
-			case ("UNDEAD"): pAUndead.add(c);
-			break;
-			case ("DOPPELGANGER"): pADoppelganger.add(c);
-			break;
-			case ("DWARF"): pADwarf.add(c);
-			break;
+			case ("GOBLIN"):
+				pAGoblin.add(c);
+				break;
+			case ("KNIGHT"):
+				pAKnight.add(c);
+				break;
+			case ("UNDEAD"):
+				pAUndead.add(c);
+				break;
+			case ("DOPPELGANGER"):
+				pADoppelganger.add(c);
+				break;
+			case ("DWARF"):
+				pADwarf.add(c);
+				break;
 			}
 		}
-		
-		/**List per Fraction Player B*/
+
+		/** List per Fraction Player B */
 		List<Card> pBGoblin = new ArrayList<Card>();
 		List<Card> pBKnight = new ArrayList<Card>();
 		List<Card> pBUndead = new ArrayList<Card>();
 		List<Card> pBDoppelganger = new ArrayList<Card>();
 		List<Card> pBDwarf = new ArrayList<Card>();
-		
-		/**Iteration through pointStack Player B
-		 * to check for every Fraction and to
-		 * add them into the corresponding
-		 * Fraction-List*/
+
+		/**
+		 * Iteration through pointStack Player B to check for every Fraction and to add
+		 * them into the corresponding Fraction-List
+		 */
 		for (Card c : pointStackPlayerB) {
 			switch (c.getFraction().name()) {
-			case ("GOBLIN"): pBGoblin.add(c);
-			break;
-			case ("KNIGHT"): pBKnight.add(c);
-			break;
-			case ("UNDEAD"): pBUndead.add(c);
-			break;
-			case ("DOPPELGANGER"): pBDoppelganger.add(c);
-			break;
-			case ("DWARF"): pBDwarf.add(c);
-			break;
+			case ("GOBLIN"):
+				pBGoblin.add(c);
+				break;
+			case ("KNIGHT"):
+				pBKnight.add(c);
+				break;
+			case ("UNDEAD"):
+				pBUndead.add(c);
+				break;
+			case ("DOPPELGANGER"):
+				pBDoppelganger.add(c);
+				break;
+			case ("DWARF"):
+				pBDwarf.add(c);
+				break;
 			}
 		}
-		
-		//ENTWURF, DARIN SOLL DER PUNKTESTAND GESPEICHERT WERDEN
-		//ALLERDINGS WISSEN WIR NICHT WO WIR DEN SPEICHERN SOLLEN
-		//SOLLTE MIT ACCOUNT ZUSAMMENHÄNGEN
+
+		// ENTWURF, DARIN SOLL DER PUNKTESTAND GESPEICHERT WERDEN
+		// ALLERDINGS WISSEN WIR NICHT WO WIR DEN SPEICHERN SOLLEN
+		// SOLLTE MIT ACCOUNT ZUSAMMENHÄNGEN
 		int scoreA = 0;
 		int scoreB = 0;
-		
-		/**List Fraction GOBLIN - comparing Player A & Player B
-		 * Player with bigger list, gets his Score incremented*/
+
+		/**
+		 * List Fraction GOBLIN - comparing Player A & Player B Player with bigger list,
+		 * gets his Score incremented
+		 */
 		if (pAGoblin.size() > pBGoblin.size()) {
 			scoreA++;
 		} else {
 			scoreB++;
 		}
-		
-		/**List Fraction KNIGHT - comparing Player A & Player B
-		 * Player with bigger list, gets his Score incremented*/
+
+		/**
+		 * List Fraction KNIGHT - comparing Player A & Player B Player with bigger list,
+		 * gets his Score incremented
+		 */
 		if (pAKnight.size() > pBKnight.size()) {
 			scoreA++;
 		} else {
 			scoreB++;
 		}
-		
-		/**List Fraction UNDEAD - comparing Player A & Player B
-		 * Player with bigger list, gets his Score incremented*/
+
+		/**
+		 * List Fraction UNDEAD - comparing Player A & Player B Player with bigger list,
+		 * gets his Score incremented
+		 */
 		if (pAUndead.size() > pBUndead.size()) {
 			scoreA++;
 		} else {
 			scoreB++;
 		}
-		
-		/**List Fraction DOPPELGANGER - comparing Player A & Player B
-		 * Player with bigger list, gets his Score incremented*/
+
+		/**
+		 * List Fraction DOPPELGANGER - comparing Player A & Player B Player with bigger
+		 * list, gets his Score incremented
+		 */
 		if (pADoppelganger.size() > pBDoppelganger.size()) {
 			scoreA++;
 		} else {
 			scoreB++;
 		}
-		
-		/**List Fraction DWARF - comparing Player A & Player B
-		 * Player with bigger list, gets his Score incremented*/
+
+		/**
+		 * List Fraction DWARF - comparing Player A & Player B Player with bigger list,
+		 * gets his Score incremented
+		 */
 		if (pADwarf.size() > pBDwarf.size()) {
 			scoreA++;
 		} else {
 			scoreB++;
 		}
+
 		
-		//muss noch angeschaut werden, so wird immer auf 1 gsetzt
-		if (scoreA > scoreB) {	
-			Integer i = pA.getAccount().getScore() + 1;
-			pA.getAccount().setScore(i);
+		if (scoreA > scoreB) {
+			pA.getAccount().setScore(pA.getAccount().getScore() + 1);
+			game.setPhaseWinner(pA.getAccount().getUsername());
 		} else {
-			Integer i = pB.getAccount().getScore() + 1;
-			pB.getAccount().setScore(i);
+			pB.getAccount().setScore(pB.getAccount().getScore() + 1);
+			game.setPhaseWinner(pB.getAccount().getUsername());
 		}
-		
+		return game;
+
 	}
-	
-	/**Represents services for Game
-	 * @author Deborah Vanzin
-	 * joinGame: Player joins an existing GAme
+
+	/**
+	 * Represents services for Game
+	 * 
+	 * @author Deborah Vanzin joinGame: Player joins an existing Game
+	 * @param user
 	 */
 
-	public void joinGame(int gameId) {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		  String email;
-		  if (principal instanceof UserDetails) {
-		     email = ((UserDetails)principal).getUsername();
-		  } else {
-		     email = principal.toString();
-		  } 
-		  
-		  Optional<Account> maybeAccount = accountRepository.findByEmail(email);
-		  
-		  Account account = maybeAccount.get();
-		  
-		  Game game = gameRepository.findById(gameId).get();
-		  game.getPlayerB().setAccountId(account);
-		  gameRepository.save(game);
-		  
-	}
+	public Game joinGame(int gameId, UserDetails user) {
 
-	// TODO: Geschäftslogik
-	public void putCard(Integer gameId, Integer playerId, Integer cardId) {
-		Card card = cardRepository.getById(cardId);
-		Game game = gameRepository.findById(gameId).get();
-		// Annahme, ein Spieler kann nicht gegen sich selbst spielen.
-		if (game.getPlayerA().getId().equals(playerId)) {
-			game.getPlayerA().getHand().remove(card);
+		Account account = accountRepository.findByEmail(user.getUsername())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+		Game game = gameRepository.findById(gameId)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+		game.getPlayerB().setAccount(account);
+
+		if (game.getPlayerA().getAccount().getBirthDate().isAfter(account.getBirthDate())) {
+			game.setCurrentPlayer(game.getPlayerA());
+		} else {
+			game.setCurrentPlayer(game.getPlayerB());
 		}
-		
+
+		return gameRepository.save(game);
+
 	}
 
 	public void removeAllGames() {
 		gameRepository.deleteAll();
+
+	}
+
+	// holt ein aktueller Game
+	public Game getCurrentGame(String username) {
+		var game = playerRepository.findByAccount_Email(username)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)).getGame();
+		return game;
+	}
+
+	// logik für ein ganzer Spielzug bis zur festnahme wer gwonnen hat Phase 1
+	public Game makeMovePhase1(String username, Integer cardId) {
+		// hier passiert die ganze spiellogik
+		Game game = getCurrentGame(username);
 		
+		if(!game.getCurrentPlayer().getAccount().getEmail().equals(username)) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+		}
+		
+		game = pickCard(game, cardId, username);
+		
+		// wenn Hand 
+		if (game.getPlayerA().getHand().size() != game.getPlayerB().getHand().size()) {
+			game.setRoundWinner(null);
+		}
+		
+		if (game.getPlayerA().getAccount().getUsername().equals(game.getRoundWinner())) {
+			game.setCurrentPlayer(game.getPlayerA());
+			
+		} else if (game.getPlayerB().getAccount().getUsername().equals(game.getRoundWinner())) {
+			game.setCurrentPlayer(game.getPlayerB());
+			
+		} else if (game.getCurrentPlayer().getId().equals(game.getPlayerA().getId())) {
+				game.setCurrentPlayer(game.getPlayerB());
+				} else {
+				game.setCurrentPlayer(game.getPlayerA());
+				}
+		
+		if( game.getPlayerA().getPlayedCards().size()==game.getPlayerB().getPlayedCards().size()) {
+			var playerACard = game.getPlayerA().getPlayedCards().get( game.getPlayerA().getPlayedCards().size()-1);
+			var playerBCard = game.getPlayerB().getPlayedCards().get( game.getPlayerB().getPlayedCards().size()-1);
+			
+			game = phase1(game,playerACard,playerBCard);
+			
+			return gameRepository.save(game);
+		} else {
+			return gameRepository.save(game);
+		}	
 	}
 	
-	//Methode fehlt für "Wer macht den ersten Zug" (Birth Date) - Gewinner/Verlierer aus Phase 1
-	//isWinner phase 1 und isWinner phase 2
+	public Game makeMovePhase2(String username, Integer cardId) {
+		// hier passiert die ganze spiellogik
+		Game game = getCurrentGame(username);
+		
+		if(!game.getCurrentPlayer().getAccount().getEmail().equals(username)) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+		}
+		
+		game = pickCard(game, cardId, username);
+		
+		// wenn HandPhase2 
+		if (game.getPlayerA().getCardsPhase2().size() != game.getPlayerB().getCardsPhase2().size()) {
+			game.setRoundWinner(null);
+		}
+		
+		// currentplayer ändern
+		if (game.getPlayerA().getAccount().getUsername().equals(game.getRoundWinner())) {
+			game.setCurrentPlayer(game.getPlayerA());
+			
+		} else if (game.getPlayerB().getAccount().getUsername().equals(game.getRoundWinner())) {
+			game.setCurrentPlayer(game.getPlayerB());
+			
+		} else if (game.getCurrentPlayer().getId().equals(game.getPlayerA().getId())) {
+				game.setCurrentPlayer(game.getPlayerB());
+				} else {
+				game.setCurrentPlayer(game.getPlayerA());
+				}
+		
+		if( game.getPlayerA().getPlayedCards().size()==game.getPlayerB().getPlayedCards().size()) {
+			var playerACard = game.getPlayerA().getPlayedCards().get( game.getPlayerA().getPlayedCards().size()-1);
+			var playerBCard = game.getPlayerB().getPlayedCards().get( game.getPlayerB().getPlayedCards().size()-1);
+			
+			game = phase2(game,playerACard,playerBCard);
+			
+			if (game.getPlayerA().getCardsPhase2().isEmpty() && game.getPlayerB().getCardsPhase2().isEmpty()) {
+				game = calcScore(username);
+			}
+			
+			return gameRepository.save(game);
+		} else {
+			return gameRepository.save(game);
+		}	
+	}
+
+	// Logik für 1 Phase des Spiels
+	public Game phase1(Game game, Card playedCardA, Card playedCardB) {
+		
+	 	var pA = game.getPlayerA();
+	 	var pB = game.getPlayerB();
+		/**
+		 * Get top card of Deck and store it into a Card object...
+		 * 
+		 * @cardToWin = revealed Card
+		 * @coveredCard = to pick a card from deck
+		 */
+		Card cardToWin = cardDeckService.topCard(game.getCardDeck().getId());
+		cardDeckService.removeCardFromDeck(game.getCardDeck().getId(), cardToWin.getId());
+		Card coveredCard = cardDeckService.topCard(game.getCardDeck().getId());
+		cardDeckService.removeCardFromDeck(game.getCardDeck().getId(), coveredCard.getId());
+
+		ArrayList<Card> handPhase2A;
+		ArrayList<Card> handPhase2B;
+		
+		/** PlayerA */
+		if (game.getPlayerA().getCardsPhase2().isEmpty()) {
+
+			/** Creates empty deposit stack in first round */
+			handPhase2A = new ArrayList<>();
+		} else {
+
+			/**
+			 * In following rounds it gets the empty created deposit stack
+			 */
+			handPhase2A = new ArrayList(game.getPlayerA().getCardsPhase2());
+		}
+
+		/** PlayerB */
+		if (game.getPlayerB().getCardsPhase2().isEmpty()) {
+
+			/** Creates empty deposit stack in first round */
+			handPhase2B = new ArrayList<>();
+		} else {
+
+			/**
+			 * In following rounds it gets the empty created deposit stack
+			 */
+			handPhase2B = new ArrayList(game.getPlayerB().getCardsPhase2());
+		}
+
+		/**
+		 * Finds out about who won a round & fills deposit stack("hand for phase 2")
+		 */
+		if (playedCardA.isWinner(playedCardB)) {
+			handPhase2A.add(cardToWin);
+			handPhase2B.add(coveredCard);
+			game.setRoundWinner(game.getPlayerA().getAccount().getUsername());
+		} else {
+			handPhase2B.add(cardToWin);
+			handPhase2A.add(coveredCard);
+			game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
+		}
+
+		game.getPlayerA().setCardsPhase2(handPhase2A);
+		playerRepository.save(pA);
+
+		game.getPlayerB().setCardsPhase2(handPhase2B);
+		playerRepository.save(pB);
+
+		/**
+		 * This part handles UNDEAD logic, in which won Cards have to be put into the
+		 * final pointStack of phase 2. For this purpose a temp List "pointsUndead" is
+		 * created.
+		 */
+		List<Card> pointsUndead = new ArrayList<Card>();
+
+		/**
+		 * If Player A wins and both played Cards are UNDEAD the played Cards go
+		 * directly into the List "pointsUndead". Then the "pointStack" of Player A is
+		 * being set with the Cards of "pointsUndead".
+		 */
+
+		if (playedCardA.isWinner(playedCardB)
+				&& (playedCardA.getFraction().name() == "UNDEAD" && playedCardB.getFraction().name() == "UNDEAD")) {
+			pointsUndead.add(playedCardA);
+			pointsUndead.add(playedCardB);
+			pA.setPointStack(pointsUndead);
+
+			/**
+			 * If Player B wins and both played Cards are UNDEAD the played Cards go
+			 * directly into the List "pointsUndead". Then the "pointStack" of Player B is
+			 * being set with the Cards of "pointsUndead".
+			 */
+		} else if (playedCardB.isWinner(playedCardA)
+				&& (playedCardA.getFraction().name() == "UNDEAD" && playedCardB.getFraction().name() == "UNDEAD")) {
+			pointsUndead.add(playedCardA);
+			pointsUndead.add(playedCardA);
+			pB.setPointStack(pointsUndead);
+		} else {
+
+			/**
+			 * In case only one of the two played Cards is UNDEAD only the UNDEAD-Card
+			 * should go into "pointStack". See the following iteration and switch per
+			 * List-position:
+			 */
+			List<Card> playedCards = new ArrayList<Card>();
+			playedCards.add(playedCardA);
+			playedCards.add(playedCardB);
+
+			int i = playedCards.size() - 2;
+			for (Card c : playedCards) {
+				switch (i) {
+
+				case (0):
+					/** Player A wins */
+					if (playedCardA.isWinner(playedCardB) && c.getFraction().name() == "UNDEAD") {
+						pointsUndead.add(playedCards.get(0));
+						pA.setPointStack(pointsUndead);
+						/** Player B wins */
+					} else if (playedCardB.isWinner(playedCardA) && c.getFraction().name() == "UNDEAD") {
+						pointsUndead.add(playedCards.get(0));
+						pB.setPointStack(pointsUndead);
+					}
+					break;
+				case (1):
+					/** Player A wins */
+					if (playedCardA.isWinner(playedCardB) && c.getFraction().name() == "UNDEAD") {
+						pointsUndead.add(playedCards.get(1));
+						pA.setPointStack(pointsUndead);
+						/** Player B wins */
+					} else if (playedCardB.isWinner(playedCardA) && c.getFraction().name() == "UNDEAD") {
+						pointsUndead.add(playedCards.get(1));
+						pB.setPointStack(pointsUndead);
+					}
+					break;
+				}
+				i++;
+			}
+		}
+
+		/**
+		 * Get List of playedCards from database and remove its cards in Card objects
+		 * (List should be empty per round)
+		 */
+
+		List<Card> depositedCardA = new ArrayList<Card>();
+		List<Card> depositedCardB = new ArrayList<Card>();
+		
+		depositedCardA.add(playedCardA);
+		depositedCardB.add(playedCardB);
+		
+		pA.setDepositedCard(depositedCardA);
+		pB.setDepositedCard(depositedCardB);
+			
+		pA.setPlayedCards(new ArrayList<Card>());
+		pB.setPlayedCards(new ArrayList<Card>());
+		
+		return game;
+	}
+	
+	private Game phase2(Game game, Card playerACard, Card playerBCard) {
+
+		 /** Get specific Game & Player from database */
+			var pA = game.getPlayerA();
+			var pB = game.getPlayerB();
+		  
+		 /**
+			 * List for pointStack per Player (List was already initialized in phase 1 for
+			 * UNDEAD logic)
+			 */
+		
+		  List<Card> pointStackPlayerA = pA.getPointStack(); 
+		  List<Card> pointStackPlayerB = pB.getPointStack();
+		  
+		 /**
+			 * Get the playedCards List and store the Cards into objects.
+			 */
+		
+		  ArrayList<Card> playedCards = new ArrayList<Card>();
+		  playedCards.add(playerACard);
+		  playedCards.add(playerBCard);
+		  
+		 /**
+			 * Iteration through List playedCards for following switch, which defines rules
+			 * of phase 2:
+			 */
+		
+		  int i = playedCards.size() - 2; 
+		  for (Card c : playedCards) { 
+			  
+			  switch (i) {
+		  case (0):
+		  
+		 /**
+			 * Case: Player A wins & plays DWARF DWARF-Card (at List-position 0) goes into
+			 * pointsStack of Player B (loosers pointStack).
+			 */
+		
+		  if ((playerACard.isWinner(playerBCard) == true) 
+				  && c.getFraction().name() == "DWARF") { 
+			  c = playedCards.get(0); 
+			  pointStackPlayerB.add(c);
+			  pB.setPointStack(pointStackPlayerB);
+			  
+			  //set RoundWinner
+			  game.setRoundWinner(game.getPlayerA().getAccount().getUsername());
+		  
+		 /**
+			 * Case: Player A looses & plays DWARF DWARF-Card (at List-position 0) goes into
+			 * pointsStack of Player A (loosers pointStack).
+			 */
+		  } else if ((playerACard.isWinner(playerBCard) == false) 
+				  && c.getFraction().name() == "DWARF"){ 
+			  c = playedCards.get(0); 
+			  pointStackPlayerA.add(c);
+		  pA.setPointStack(pointStackPlayerA); 
+		  
+		  //set RoundWinner
+		  game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
+		  
+		  } 
+		  break; 
+		  
+		  case (1):
+		  
+		 /**
+			 * Case: Player A wins & plays DWARF, DWARF-Card (at List-position 1) goes into
+			 * pointsStack of Player B (loosers pointStack).
+			 */
+		
+		  if ((playerACard.isWinner(playerBCard) == true) 
+				  && c.getFraction().name() == "DWARF") { 
+			  c = playedCards.get(1); 
+			  pointStackPlayerB.add(c);
+			  game.setRoundWinner(game.getPlayerA().getAccount().getUsername());		  
+			  pB.setPointStack(pointStackPlayerB);
+			  
+			  //set RoundWinner
+			  game.setRoundWinner(game.getPlayerA().getAccount().getUsername());
+		  
+		 /**
+			 * Case: Player A looses & plays DWARF, DWARF-Card (at List-position 1) goes
+			 * into pointsStack of Player A (loosers pointStack).
+			 */
+		
+		  } else if ((playerACard.isWinner(playerBCard) == false) 
+				  && c.getFraction().name() == "DWARF"){ 
+			  c = playedCards.get(1); 
+			  pointStackPlayerA.add(c);
+			  game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
+		  pA.setPointStack(pointStackPlayerA); 
+		  
+		  //set RoundWinner
+		  game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
+		  
+		  } 
+		  break; 
+		  
+		  case (2): 
+			  if (playerACard.isWinner(playerBCard)) { 
+				  pointStackPlayerA.addAll(playedCards);
+				  pA.setPointStack(pointStackPlayerA); 
+				  
+				  //set RoundWinner
+				  game.setRoundWinner(game.getPlayerA().getAccount().getUsername());
+				  
+				  
+		  } else {
+			  
+		  pointStackPlayerB.addAll(playedCards); 	
+		  pB.setPointStack(pointStackPlayerB); 
+		  
+		  //set RoundWinner
+		  game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
+		  
+		  }
+		  
+		  break; }
+		  
+		 /**
+			 * This part handles the increment of "i" after every break and checks if both
+			 * Cards are NOT DWARFS! -> Goes case (0), then i++ & if, goes case (1), then
+			 * i++ & if, goes case (2)
+			 */
+
+		  i++; 
+		  
+		  if (playedCards.get(0).getFraction().name() != "DWARF" &&
+		  playedCards.get(1).getFraction().name() != "DWARF") { 
+			  i = 2; 
+		  	} 
+		  
+		  }
+		  
+		  playerRepository.save(pA); 
+		  playerRepository.save(pB);
+		  
+		 /**
+			 * Get List of playedCards from database and remove its cards in Card objects
+			 * (List should be empty per round)
+			 */
+		  	List<Card> depositedCardA = new ArrayList<Card>();
+			List<Card> depositedCardB = new ArrayList<Card>();
+			
+			depositedCardA.add(playerACard);
+			depositedCardB.add(playerBCard);
+			
+			pA.setDepositedCardPhase2(depositedCardA);
+			pB.setDepositedCardPhase2(depositedCardB);
+				
+			pA.setPlayedCards(new ArrayList<Card>());
+			pB.setPlayedCards(new ArrayList<Card>());
+
+		return game;
+	}
+
 }
