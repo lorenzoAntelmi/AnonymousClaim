@@ -47,6 +47,12 @@ public class LoginController {
 	public String getLobbyEN() {
 		return "lobby-EN";
 	}
+	
+	//PROVISORISCH HIER PLATZIERT ZU TESTZWECKEN
+	@GetMapping("/password-reset-DE")
+	public String getPasswordResetDE() {
+		return "password-reset-DE";
+	}
 
 
 }
