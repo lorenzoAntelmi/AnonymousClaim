@@ -1,20 +1,17 @@
 /**
-* Function to get all the opengames from Server
-@ Hanna Kropf
+@ Hanna Kropf - Haupt
  */
 
 
-// Modal Settings 
+// Modal "Settings" 
 		var modal = document.getElementById('myModal');
 		var modalBtn = document.getElementById('menuBtn');
 		var closeBtn = document.getElementsByClassName('close')[0];
 		var logoutBtn = document.getElementById('btnLogout');
-		var delBtn = document.getElementById('btnDel');
 			
 		modalBtn.addEventListener('click', openModal);
 		closeBtn.addEventListener('click', closeModal);
 		logoutBtn.addEventListener('click', logout);
-		delBtn.addEventListener('click', deleteAccount);
 
 			
 		function openModal() {
@@ -25,23 +22,7 @@
 			  modal.style.display = 'none';
 			}
 		
-	
-//Account löschen
-		function deleteAccount() {
-			const jwt = localStorage.getItem("accessToken");
-			var request = new Request('/current-account', {
-	     	method: 'GET',
-	      	headers: new Headers({
-	          'Accept': 'application/json',
-	          'Authorization' : 'Bearer ' + jwt
-	        })
-	  	});
-	  	console.log('--- json: ' + request.json);
-		}
-	
-
-
-//Logout User durchführen - Achtung: Token existiert auf Server	noch (jwt erlaubt kein Logout, nur Ablauf vom Token)
+//Logout User - Achtung: Token existiert auf Server	noch (jwt erlaubt kein Logout, nur Ablauf vom Token)
 		function logout() {
 			localStorage.removeItem('accessToken');
 			  window.location.href='login-DE.html';
@@ -49,50 +30,7 @@
 		
 
 
-/* Aufruf Backend für Anzeigen "Username"  
-	const AccountEndPoint = async () => {
- 	const response = await fetch('http://example.com/movies.json'); //**ToDo: URL von Mapping GET-Account einfügen
-  	const myJson = await response.json(); //extract JSON from the http response
-  */
-	
-	
-/*
-//RankingFAKE
- 	//Aufruf Backend für Ranking 
-		function fakeRanking() {
-		const myJsonAnswer = [
-		{ username: "TheBest", score: "9001" },
-		{ username: "nobody", score: "8000" },
-		{ username: "huh", score: "700" },
-		{ username: "blah", score: "5601" },
-		{ username: "foo", score: "4501" },
-		{ username: "bar", score: "4500" },
-		{ username: "loser", score: "100" }
-		];
-	//Abfüllen der Rankingtabelle mit Backendresultaten
-		for (let i = 0; i <10; i++) {
-			if (myJsonAnswer.length > i) {
-			var usernameId = document.getElementById("username" + i);
-			var usernameText = document.createTextNode(myJsonAnswer[i].username);
-			usernameId.appendChild(usernameText);
-			var scoreId = document.getElementById("score" + i);
-			var scoreText = document.createTextNode(myJsonAnswer[i].score);
-			scoreId.appendChild(scoreText);
-			}
-			else {
-			var usernameId = document.getElementById("username" + i);
-			var usernameText = document.createTextNode("-");
-			usernameId.appendChild(usernameText);
-			var scoreId = document.getElementById("score" + i);
-			var scoreText = document.createTextNode("-");
-			scoreId.appendChild(scoreText);
-}
-}
-		}
-  */
-  
- /*
- //Ranking
+ //Ranking 
   function buildRanking() {
   
   const jwt = localStorage.getItem("accessToken");
@@ -100,7 +38,7 @@
 		var request = new Request(url, {
 	      method: 'GET',
 	      headers: new Headers({
-	          'Accept': 'application/json',
+	          'Content-Type': 'application/json',
 	          'Authorization' : 'Bearer ' + jwt
 	        })
 	  	});
@@ -118,12 +56,10 @@
 	    // status contins the response code of the server (i.e. 200 for OK)
 	    // json is the actual response data (in the body)
 	    // ok is just a flag, if everything is ok (from response.ok)
-	    .then(({ status, json, ok }) => {
-	      const message = json;
+	    .then(({ status, ok, json }) => {
+	     
 	      // we switch to the response code and handle accordingly.
-	      // if the response code is 200, we have a list of open games in our json-data
-	      // an we will build bup the the HTML stuff with the buttons to select or join an
-	      // open game
+	      // if the response code is 200, we have a list of the ranked user with the score in our json-data
 	      switch (status) {
 	        case 400:
 	          console.log("Bad Request: " + JSON.stringify(message));
@@ -132,12 +68,12 @@
 	        case 200: 
 			//Abfüllen der Rankingtabelle mit Backendresultaten
 				for (let i = 0; i <10; i++) {
-					if (rankingJson.length > i) {
+					if (json.length > i) {
 					var usernameId = document.getElementById("username" + i);
-					var usernameText = document.createTextNode(rankingJson[i].username);
+					var usernameText = document.createTextNode(json[i].username);
 					usernameId.appendChild(usernameText);
 					var scoreId = document.getElementById("score" + i);
-					var scoreText = document.createTextNode(rankingJson[i].score);
+					var scoreText = document.createTextNode(json[i].score);
 					scoreId.appendChild(scoreText);
 				}
 				else {
@@ -157,13 +93,10 @@
 	  })
 	 }
   
-*/
   	
- 	
-	
 
 
-//Anzeige laufende Spiele
+//Show open Games
 	function showOpenGames() {
 		console.log("show open games!");
 		// The lobby assumes that the user already has logged in.
@@ -254,7 +187,7 @@
 	}
 
 
-//neues Spiel starten
+//Start a new Game
 	function startGame() {
 		console.log("starting game!");
 		const jwt = localStorage.getItem("accessToken");
@@ -296,7 +229,7 @@
 	}
 
 
-//Spiel beitreten
+//Join a Game
 	function joinGame(gameId) {
 		
 		const jwt = localStorage.getItem("accessToken");

@@ -12,6 +12,9 @@ import com.claim.database.AccountRepository;
 import com.claim.model.Account;
 import com.claim.model.Ranking;
 
+/**Represents services for the Ranking
+ * @author Hanna Kropf*/
+
 @Service
 public class RankingService {
 	
@@ -29,7 +32,7 @@ public class RankingService {
 		final List<Ranking> rankingList=new ArrayList<>();
 		topTenAccount.forEach((account) -> 
 			rankingList.add(mapAccountToRanking(account)));
-		for (int i = 0; i < 10; i++ ) {rankingList.get(i).setRank(i+1);	}
+		for (int i = 0; i < topTenAccount.size(); i++ ) {rankingList.get(i).setRank(i+1);	}
 		return rankingList;
 	}
 	//Daten vom Account, die für Ranking verwendet werden, sollen in Objekt Ranking abgefüllt werden/

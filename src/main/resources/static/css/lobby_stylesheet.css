@@ -1,4 +1,4 @@
-/*	author: Hanna Kropf */
+/*	author: Hanna Kropf - Haupt*/
 		
 body {
  	background-image: linear-gradient(135deg, #008080 20%,#a0522d 60% ,#9400d3 100%);
@@ -110,46 +110,6 @@ background-image: linear-gradient(315deg, #48dbfb 0%, #d3d3d3 74%);
   	 letter-spacing: 3px;
   
 		}
-
-.containerMiddle .button1 {
-	top: 50px;
-	left: 50px;
-	text-align: center;
-	transition: all 0.5s;
-	position: relative;	
-}
-
-.containerMiddle .button2 {
-	top: -20px;
-	left: 400px;
-	text-align: center;
-	transition: all 0.5s;
-	position: relative;	
-}
-
-.containerMiddle .button3 {
-	top: 80px;
-	left: 50px;
-	text-align: center;
-	transition: all 0.5s;
-	position: relative;	
-}
-
-.containerMiddle .button4 {
-	top: 10px;
-	left: 400px;
-	text-align: center;
-	transition: all 0.5s;
-	position: relative;	
-}
-
-.containerMiddle .button5 {
-	top: 90px;
-	left: 240px;
-	text-align: center;
-	transition: all 0.5s;
-	position: relative;	
-}
 
 .containerMiddle .btn {
 	line-height: 25px;

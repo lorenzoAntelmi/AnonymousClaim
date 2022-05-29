@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<!--authors: Hanna Kropf -->
+<!--author: Hanna Kropf -- Hanna-->
 	
 <html lang="DE" xmlns:th="http://www.thymeleaf.org"> 
 
@@ -11,7 +11,7 @@
 </head>
 
 
-	<body> 
+	<body onload="buildRanking()"> 
 	
 	
 	<!-- Containers Lobby -->
@@ -29,63 +29,63 @@
 			</tr >
 			
 			<tr>
-				<td id="rangId">1</td>
-				<td id="username"></td>
-				<td id="score"></td>
+				<td class="rangId">1</td>
+				<td class="username" id="username0"></td>
+				<td class="score" id="score0"></td>
 			</tr>
 			
 			<tr>
-				<td id="rangId">2</td>
-				<td id="username"></td>
-				<td id="score"></td>
+				<td class="rangId">2</td>
+				<td class="username" id="username1"></td>
+				<td class="score" id="score1"></td>
 			</tr>
 			
 			<tr>
-				<td id="rangId">3</td>
-				<td id="username"></td>
-				<td id="score"></td>
+				<td class="rangId">3</td>
+				<td class="username" id="username2"></td>
+				<td class="score" id="score2"></td>
 			</tr>
 			
 			<tr>
-				<td id="rangId">4</td>
-				<td id="username"></td>
-				<td id="score"></td>
+				<td class="rangId">4</td>
+				<td class="username" id="username3"></td>
+				<td class="score" id="score3"></td>
 			</tr>
 			
 			<tr>
-				<td id="rangId">5</td>
-				<td id="username"></td>
-				<td id="score"></td>
+				<td class="rangId">5</td>
+				<td class="username" id="username4"></td>
+				<td class="score" id="score4"></td>
 			</tr>
 			
 			<tr>
-				<td id="rangId">6</td>
-				<td id="username"></td>
-				<td id="score"></td>
+				<td class="rangId">6</td>
+				<td class="username" id="username5"></td>
+				<td class="score" id="score5"></td>
 			</tr>
 			
 			<tr>
-				<td id="rangId">7</td>
-				<td id="username"></td>
-				<td id="score"></td>
+				<td class="rangId">7</td>
+				<td class="username" id="username6"></td>
+				<td class="score" id="score6"></td>
 			</tr>
 			
 			<tr>
-				<td id="rangId">8</td>
-				<td id="username"></td>
-				<td id="score"></td>
+				<td class="rangId">8</td>
+				<td class="username" id="username7"></td>
+				<td class="score" id="score7"></td>
 			</tr>
 			
 			<tr>
-				<td id="rangId">9</td>
-				<td id="username"></td>
-				<td id="score8"></td>
+				<td class="rangId">9</td>
+				<td class="username" id="username8"></td>
+				<td class="score" id="score8"></td>
 			</tr>
 			
 			<tr>
-				<td id="rangId">10</td>
-				<td id="username"></td>
-				<td id="score"></td>
+				<td class="rangId">10</td>
+				<td class="username" id="username9"></td>
+				<td class="score" id="score9"></td>
 			</tr>
 		
 						
@@ -133,7 +133,6 @@
 			 <div class="modal-content">
 			 <span class="close">&times;</span>
 			 <button class="settingButton" id="btnPW">PASSWORT ÄNDERN</button>
-			 <button class="settingButton" id="btnDel">ACCOUNT LÖSCHEN</button>
 			 <button class="settingButton" id="btnLogout">LOGOUT</button>
 			 </div>
 		</div>
@@ -155,11 +154,10 @@
 			
 		<script src="js/script-lobby.js"></script>
 		<script>
-		
 			showOpenGames();
 		</script>
 	
 		
 		
-		</body >
+		</body onload="buildRanking()" >
 	</html>		  
