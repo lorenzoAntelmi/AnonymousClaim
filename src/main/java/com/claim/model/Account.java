@@ -38,7 +38,7 @@ public class Account {
 	@Column(nullable = false, length = 64)
 	private LocalDate birthDate;
 
-	private Integer score = 0;
+	private Integer score;
 	
 	/**Default Constructor: Object relational mapper (ORM) is a Framework, which
 	 * mapps objects in database. In order for the mapper to create an object,
@@ -52,7 +52,7 @@ public class Account {
 		this.email = email;
 		this.passwordHash = passwordHash;
 		this.birthDate = birthDate;
-		this.score = score;
+		this.score = 0;
 
 	}
 

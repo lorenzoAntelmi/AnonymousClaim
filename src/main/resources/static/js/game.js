@@ -205,10 +205,12 @@ function getCurrentGame(){
           break;
         case 201:
         case 200:
-          currentGame= game;
+        
+          currentGame = game;
 
        		let currentOwnPlayer;
-       		let oppositePlayer;
+       		let oppositePlayer; 
+       		
        		if (ownPlayer.id === currentGame.playerA.id) {
 					oppositePlayer = currentGame.playerB;
 					currentOwnPlayer= currentGame.playerA;
@@ -217,7 +219,7 @@ function getCurrentGame(){
 					currentOwnPlayer= currentGame.playerB;
 			}
 				
-			if(currentOwnPlayer.hand.length ===0){
+			if(currentOwnPlayer.hand.length === 0){
 				phase2started = true;
 				
 			}
@@ -228,19 +230,15 @@ function getCurrentGame(){
 				renderHandCardsPhase2();
 			}
 			
-			if(currentGame.roundWinner !== null){	
-
-				// dann identification welchen Player gegner ist
-				
-				// und dann gepsielte Karte von Gegner holen und ausgeben
-					let oppositeCard = oppositePlayer.depositedCard[0]; 
-				alert("Gegner hat die Karte: " + oppositeCard.fraction + " " + oppositeCard.value + " gespielt"+
-				"\nRunde gewonnen von:" + currentGame.roundWinner);	
-				}
-       		
-			console.log("--------------");
-			console.log(currentOwnPlayer);
-			console.log(currentOwnPlayer.hand.length ===0);
+			if (currentOwnPlayer.depositedCard.length > oppositePlayer.depositedCard.length) {
+				let showedCard = currentOwnPlayer.depositedCard[0]; 
+				alert("Gespielte Karte: " + showedCard.fraction + " " + showedCard.value);	
+			}
+					
+       		// Wenn ein Round Winner gibt dann
+       		if(currentGame.roundWinner !== null){
+				alert("Runde gewonnen von: " + currentGame.roundWinner);	
+			}
 
           break;
         case 500:
@@ -287,22 +285,24 @@ function phase1(){
 
        		let oppositePlayer;
        		let currentOwnPlayer;
+       		
+       		// dann identification welchen Player gegner ist
+			if (ownPlayer.id === currentGame.playerA.id) {
+				oppositePlayer = currentGame.playerB;
+				currentOwnPlayer= currentGame.playerA;
+			} else {
+				oppositePlayer = currentGame.playerA;
+				currentOwnPlayer= currentGame.playerB;
+			}
+		
+			if (currentOwnPlayer.depositedCard.length > oppositePlayer.depositedCard.length) {
+				let showedCard = currentOwnPlayer.depositedCard[0]; 
+				alert("Gespielte Karte: " + showedCard.fraction + " " + showedCard.value);	
+			}
+			
        		// Wenn ein Round Winner gibt dann
        		if(currentGame.roundWinner !== null){
-
-				// dann identification welchen Player gegner ist
-				if (ownPlayer.id === currentGame.playerA.id) {
-					oppositePlayer = currentGame.playerB;
-					currentOwnPlayer= currentGame.playerA;
-				} else {
-					oppositePlayer = currentGame.playerA;
-					currentOwnPlayer= currentGame.playerB;
-				}
-				// und dann gepsielte Karte von Gegner holen und ausgeben
-					let oppositeCard = oppositePlayer.depositedCard[0]; 
-				alert("Gegner hat die Karte: " + oppositeCard.fraction + " " + oppositeCard.value + " gespielt"+
-				"\nRunde gewonnen von:" + currentGame.roundWinner);		
-				
+				alert("Runde gewonnen von:" + currentGame.roundWinner);	
 			}
 			
 			clearSelectedCardAndTopCard();
@@ -454,7 +454,7 @@ function getGameData(){
 	getCurrentGame()
 	interval = setInterval(function b(){
 		getCurrentGame();
-	}, 300000);
+	}, 12000);
 
 }
 

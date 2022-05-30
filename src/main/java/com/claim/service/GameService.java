@@ -113,10 +113,15 @@ public class GameService {
 	public Game pickCard(Game game, Integer cardId, String username) {
 		
 		Card card = removeCard(cardId, username);
-		/**
-		 * Put content of tempPlayedCards in List playedCards of Game-Constructor
-		 */
+		
 		Player player = game.getCurrentPlayer();
+		
+		if (player.getHand().isEmpty()) {
+			player.getDepositedCardPhase2().add(card);	
+		} else {
+			player.getDepositedCard().add(card);
+		}
+		
 		player.getPlayedCards().add(card);
 		return game;
 	}
@@ -151,9 +156,9 @@ public class GameService {
 
 
 
-	public Game calcScore(String username) {
+	public Game calcScore(Game game, String username) {
 		
-		Game game = getCurrentGame(username);
+		game = getCurrentGame(username);
 
 		/** Get specific Game & Player from database */
 		var pA = game.getPlayerA();
@@ -292,6 +297,7 @@ public class GameService {
 			pB.getAccount().setScore(pB.getAccount().getScore() + 1);
 			game.setPhaseWinner(pB.getAccount().getUsername());
 		}
+		
 		return game;
 
 	}
@@ -346,10 +352,6 @@ public class GameService {
 		
 		game = pickCard(game, cardId, username);
 		
-		// wenn Hand 
-		if (game.getPlayerA().getHand().size() != game.getPlayerB().getHand().size()) {
-			game.setRoundWinner(null);
-		}
 		
 		if (game.getPlayerA().getAccount().getUsername().equals(game.getRoundWinner())) {
 			game.setCurrentPlayer(game.getPlayerA());
@@ -362,6 +364,11 @@ public class GameService {
 				} else {
 				game.setCurrentPlayer(game.getPlayerA());
 				}
+		
+		// wenn Hand 
+		if (game.getPlayerA().getHand().size() != game.getPlayerB().getHand().size()) {
+			game.setRoundWinner(null);
+		}
 		
 		if( game.getPlayerA().getPlayedCards().size()==game.getPlayerB().getPlayedCards().size()) {
 			var playerACard = game.getPlayerA().getPlayedCards().get( game.getPlayerA().getPlayedCards().size()-1);
@@ -410,7 +417,7 @@ public class GameService {
 			game = phase2(game,playerACard,playerBCard);
 			
 			if (game.getPlayerA().getCardsPhase2().isEmpty() && game.getPlayerB().getCardsPhase2().isEmpty()) {
-				game = calcScore(username);
+				game = calcScore(game, username);
 			}
 			
 			return gameRepository.save(game);
@@ -715,14 +722,6 @@ public class GameService {
 			 * Get List of playedCards from database and remove its cards in Card objects
 			 * (List should be empty per round)
 			 */
-		  	List<Card> depositedCardA = new ArrayList<Card>();
-			List<Card> depositedCardB = new ArrayList<Card>();
-			
-			depositedCardA.add(playerACard);
-			depositedCardB.add(playerBCard);
-			
-			pA.setDepositedCardPhase2(depositedCardA);
-			pB.setDepositedCardPhase2(depositedCardB);
 				
 			pA.setPlayedCards(new ArrayList<Card>());
 			pB.setPlayedCards(new ArrayList<Card>());

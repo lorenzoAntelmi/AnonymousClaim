@@ -27,8 +27,6 @@
 			localStorage.removeItem('accessToken');
 			  window.location.href='login-DE.html';
 				}
-		
-
 
  //Ranking 
   function buildRanking() {
