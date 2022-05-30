@@ -17,31 +17,34 @@ import javax.mail.internet.MimeMessage;
  */
 
 public class SendMail {
-	
-	//variablen für das Mail sowie Konfigurationen 
-	
-	final String senderEmail = "noreplyclaimgame@gmail.com"; 
-	final String senderPassword = "Claim@123"; 
+
+	// variablen für das Mail sowie Konfigurationen
+
+	final String senderEmail = "noreplyclaimgame@gmail.com";
+	final String senderPassword = "Claim@123";
 	final String emailSMTPserver = "smtp.gmail.com";
 	final String emailServerPort = "465";
 	String receiverEmail = null;
 	static String emailSubject;
 	static String emailBody;
-	
-	//Definition des Konstruktors dem wir die Empfängeradresse, Betreff und "Body" also Nachricht mitgeben
-	
+
+	// Definition des Konstruktors dem wir die Empfängeradresse, Betreff und "Body"
+	// also Nachricht mitgeben
+
 	public SendMail(String receiverEmail, String subject, String body) {
-		//receiver email
+		// receiver email
 		this.receiverEmail = receiverEmail;
-		//subject
+		// subject
 		this.emailSubject = subject;
-		//body
+		// body
 		this.emailBody = body;
-		
-		
-		//Mit den Properties geben die Konfigurationen an den SMPT Server weiter
+
+	}
+
+	public void send() {
+		// Mit den Properties geben die Konfigurationen an den SMPT Server weiter
 		Properties props = new Properties();
-		props.put("mail.smtp.user",senderEmail);
+		props.put("mail.smtp.user", senderEmail);
 		props.put("mail.smtp.host", emailSMTPserver);
 		props.put("mail.smtp.port", emailServerPort);
 		props.put("mail.smtp.starttls.enable", "true");
@@ -49,32 +52,30 @@ public class SendMail {
 		props.put("mail.smtp.socketFactory.port", emailServerPort);
 		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 		props.put("mail.smtp.socketFactory.fallback", "false");
-		
-		//Mit diesem Try versenden wir die Nachricht
+
+		// Mit diesem Try versenden wir die Nachricht
 		try {
 			Authenticator auth = new SMTPAuthenticator();
 			Session session = Session.getInstance(props, auth);
 			MimeMessage msg = new MimeMessage(session);
 			msg.setText(emailBody);
-			//System.out.println(emailBody);
+			// System.out.println(emailBody);
 			msg.setSubject(emailSubject);
 			msg.setFrom(new InternetAddress(senderEmail));
 			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(receiverEmail));
 			Transport.send(msg);
 			System.out.println("Message sent successfully");
 		}
-		
+
 		catch (Exception e) {
 			e.printStackTrace();
-		}	
+		}
 	}
-	
+
 	public class SMTPAuthenticator extends javax.mail.Authenticator {
 		public PasswordAuthentication getPasswordAuthentication() {
 			return new PasswordAuthentication(senderEmail, senderPassword);
 		}
-	}	
-	
-	
+	}
 
 }

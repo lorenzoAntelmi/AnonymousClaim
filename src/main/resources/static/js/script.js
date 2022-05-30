@@ -92,6 +92,11 @@ statusTxt.innerText="";
           'Content-Type': 'application/json',
         })
   }); 
+  
+  if (!validateClientSide()) {
+		
+		return;
+	}
  
   fetch(request).
     then((response) => {
@@ -111,6 +116,7 @@ statusTxt.innerText="";
     switch (status) {
       case 400:
         console.log("Bad Request: " + JSON.stringify(message));
+        showValidationErrors(message);
         break;
       case 201:
       case 200:
@@ -122,6 +128,49 @@ statusTxt.innerText="";
     }
   })
 }
+
+function showValidationErrors(errors) {
+	// Clear possible previous messages
+	const divs = ["error-email", "error-password", "error-username"];
+	for (let div of divs) {
+		let node = document.getElementById(div);
+		node.style.display = 'none';	
+	}
+	
+	// Display errors.
+	for (let error in errors) {
+		let node = document.getElementById("error-" + error);
+		node.innerText = errors[error];
+		node.style.display = 'block';
+	}
+}
+
+function validateClientSide() {
+	let email = document.getElementById("email");
+	let emailConfirm = document.getElementById("confirmEmail");
+	let password = document.getElementById("password");
+	let passwordConfirm = document.getElementById("confirmPassword");
+	let	emailConfirmError = document.getElementById("error-confirmEmail");
+	let passwordConfirmError = document.getElementById("error-confirmPassword");
+	
+	emailConfirmError.style.display = 'none';
+	passwordConfirmError.style.display = 'none';
+	
+	let valid = true;
+	if (email.value !== emailConfirm.value) {
+		emailConfirmError.innerText = "Die beiden Email-Adressen stimmen nicht überein!";
+		emailConfirmError.style.display = 'block';
+		valid = false;
+	}
+	
+	if (password.value != passwordConfirm.value) {
+		passwordConfirmError.innerText = "Die beiden Passwörter stimmen nicht überein!";
+		passwordConfirmError.style.display = 'block';
+		valid = false;
+	}
+	return valid;
+}
+
 //Diese Funktion schickt E-Mail und Password an die API um ein Access-Token zu bekommen
 function login(email, password) {
   const data = {
@@ -155,10 +204,14 @@ function login(email, password) {
     })
     .then(({ status, json, ok }) => {
       const message = json;
-      let color = 'black';
+    
       switch (status) {
         case 400:
+        case 401:
           console.log("Bad Request: " + JSON.stringify(message));
+          const errorDiv = document.getElementById("loginError");
+          errorDiv.style.display = 'block';
+          errorDiv.innerText = "Login fehlgeschlagen!";
           break;
         case 201:
         case 200:
@@ -217,6 +270,7 @@ function getGames() {
 
 function abort() {
   console.log("Registrierung abgebrochen!");
+  window.location.href='login-DE.html';
 }
 
 /** Modal Code */

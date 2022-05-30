@@ -189,6 +189,11 @@ justify-content: center;
 	}
 }
 
+.error {
+	display: none;
+	color: #ff0000;
+}
+
 
 /*TESTS MIT VERKLEINERUNG DER BROWSERSEITE DURCHF�HREN!!!
 -Bei Minimierung soll die untere seite komplett mittig sein*/

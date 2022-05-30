@@ -217,4 +217,8 @@ li:not(:first-child)::after {
 	cursor: pointer;
 }	
 
+#loginError {
+	display: none;
+	color: #ff0000;
+}
 
