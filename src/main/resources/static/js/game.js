@@ -211,6 +211,8 @@ function getCurrentGame(){
        		let currentOwnPlayer;
        		let oppositePlayer; 
        		
+       		
+	
        		if (ownPlayer.id === currentGame.playerA.id) {
 					oppositePlayer = currentGame.playerB;
 					currentOwnPlayer= currentGame.playerA;
@@ -218,11 +220,19 @@ function getCurrentGame(){
 					oppositePlayer = currentGame.playerA;
 					currentOwnPlayer= currentGame.playerB;
 			}
-				
-			if(currentOwnPlayer.hand.length === 0){
-				phase2started = true;
-				
+			
+			if (currentGame.roundWinner !== null) {
+			// und dann gepsielte Karte von Gegner holen und ausgeben
+			let oppositeCard = oppositePlayer.depositedCard[0]; 
+			alert("Gegner hat die Karte: " + oppositeCard.fraction + " " + oppositeCard.value + " gespielt"+
+			"\nRunde gewonnen von: " + currentGame.roundWinner);	
 			}
+			
+			// wenn man keine Karte in die Hand hat, dann startet Phase2
+			if(currentOwnPlayer.hand.length === 0){
+				phase2started = true;	
+			}
+			
 			if(!phase2started){
 				renderHandCards();
        			renderTopCard();
@@ -230,16 +240,6 @@ function getCurrentGame(){
 				renderHandCardsPhase2();
 			}
 			
-			if (currentOwnPlayer.depositedCard.length > oppositePlayer.depositedCard.length) {
-				let showedCard = currentOwnPlayer.depositedCard[0]; 
-				alert("Gespielte Karte: " + showedCard.fraction + " " + showedCard.value);	
-			}
-					
-       		// Wenn ein Round Winner gibt dann
-       		if(currentGame.roundWinner !== null){
-				alert("Runde gewonnen von: " + currentGame.roundWinner);	
-			}
-
           break;
         case 500:
         default:
@@ -285,28 +285,27 @@ function phase1(){
 
        		let oppositePlayer;
        		let currentOwnPlayer;
-       		
-       		// dann identification welchen Player gegner ist
+
+       		// Wenn ein Round Winner gibt dann
+       		if(currentGame.roundWinner !== null){
+
+				// dann identification welchen Player gegner ist
 			if (ownPlayer.id === currentGame.playerA.id) {
 				oppositePlayer = currentGame.playerB;
-				currentOwnPlayer= currentGame.playerA;
+				currentOwnPlayer = currentGame.playerA;
 			} else {
 				oppositePlayer = currentGame.playerA;
 				currentOwnPlayer= currentGame.playerB;
 			}
-		
-			if (currentOwnPlayer.depositedCard.length > oppositePlayer.depositedCard.length) {
-				let showedCard = currentOwnPlayer.depositedCard[0]; 
-				alert("Gespielte Karte: " + showedCard.fraction + " " + showedCard.value);	
-			}
+				// und dann gepsielte Karte von Gegner holen und ausgeben
+			let oppositeCard = oppositePlayer.depositedCard[0]; 
+			alert("Gegner hat die Karte: " + oppositeCard.fraction + " " + oppositeCard.value + " gespielt"+
+			"\nRunde gewonnen von: " + currentGame.roundWinner);	
 			
-       		// Wenn ein Round Winner gibt dann
-       		if(currentGame.roundWinner !== null){
-				alert("Runde gewonnen von:" + currentGame.roundWinner);	
 			}
-			
+				
 			clearSelectedCardAndTopCard();
-			
+
 			if(currentOwnPlayer.hand.length ===0){
 				phase2started = true;
 			}
@@ -362,12 +361,13 @@ function phase2(){
 
 				// dann identification welchen Player gegner ist
 				if (ownPlayer.id === currentGame.playerA.id) {
-					oppositePlayer = currentGame.playerB;
+					oppositePlayer = currentGame.playerB;			
 				} else {
 					oppositePlayer = currentGame.playerA;
 				}
+				
 				// und dann gepsielte Karte von Gegner holen und ausgeben
-					let oppositeCard = oppositePlayer.depositedCardPhase2[0]; 
+				let oppositeCard = oppositePlayer.depositedCardPhase2[0]; 
 				alert("Gegner hat die Karte: " + oppositeCard.fraction + " " + oppositeCard.value + " gespielt"+
 				"\nRunde gewonnen von: " + currentGame.roundWinner);	
 				
@@ -379,57 +379,6 @@ function phase2(){
 		if (currentGame.phaseWinner !== null) {
 			alert("Game gewonnen von: " + currentGame.phaseWinner +
 				"\nSpiel ist fertig, kehre bitte in der Lobby zurück!");
-		}
-		
-          break;
-        case 500:
-        default:
-          console.log("Error 500: " + message);
-    }
-  })
-}
-
-//phase2
-function calcScoreAfterGame(){
-	
-	const jwt = localStorage.getItem("accessToken");
-	const url ='/calcScore';
-
-	var request = new Request(url, {
-      method: 'GET',
-      headers: new Headers({
-          'Content-Type': 'application/json',
-          'Authorization' : 'Bearer ' + jwt
-        })
-  	});
-  	
-	fetch(request)
-    .then((response) => {
-	
-      return new Promise((resolve) => response.json()
-      .then((game) => resolve({
-        status: response.status,
-        ok: response.ok,
-        game
-      })));
-    })
-    .then(({ status, game}) => {
-      switch (status) {
-        case 400:
-          console.log("Bad Request: " + JSON.stringify(game));
-          break;
-        case 201:
-        case 200:
-          currentGame= game;
-          
-          // Wenn ein Round Winner gibt dann
-       		if(currentGame.phaseWinner !== null){				
-				alert("Runde gewonnen von:" + currentGame.phaseWinner);	
-			}
-
-		
-		if (currentGame.phaseWinner !== null) {
-			alert("Game gewonnen von: " + currentGame.phaseWinner);
 		}
 		
           break;
@@ -454,7 +403,7 @@ function getGameData(){
 	getCurrentGame()
 	interval = setInterval(function b(){
 		getCurrentGame();
-	}, 12000);
+	}, 300000);
 
 }
 

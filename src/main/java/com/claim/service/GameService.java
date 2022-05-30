@@ -134,7 +134,6 @@ public class GameService {
 		Game game = getCurrentGame(username);
 
 		Player player = game.getCurrentPlayer();
-	
 
 		/**
 		 * Iteration: Check every card to see if it is the chosen card (by player) to be
@@ -153,8 +152,6 @@ public class GameService {
 
 		return removedCard;
 	}
-
-
 
 	public Game calcScore(Game game, String username) {
 		
@@ -233,9 +230,6 @@ public class GameService {
 			}
 		}
 
-		// ENTWURF, DARIN SOLL DER PUNKTESTAND GESPEICHERT WERDEN
-		// ALLERDINGS WISSEN WIR NICHT WO WIR DEN SPEICHERN SOLLEN
-		// SOLLTE MIT ACCOUNT ZUSAMMENHÄNGEN
 		int scoreA = 0;
 		int scoreB = 0;
 
@@ -299,7 +293,6 @@ public class GameService {
 		}
 		
 		return game;
-
 	}
 
 	/**
@@ -326,7 +319,6 @@ public class GameService {
 		}
 
 		return gameRepository.save(game);
-
 	}
 
 	public void removeAllGames() {
@@ -352,29 +344,28 @@ public class GameService {
 		
 		game = pickCard(game, cardId, username);
 		
-		
-		if (game.getPlayerA().getAccount().getUsername().equals(game.getRoundWinner())) {
-			game.setCurrentPlayer(game.getPlayerA());
-			
-		} else if (game.getPlayerB().getAccount().getUsername().equals(game.getRoundWinner())) {
+		if (game.getCurrentPlayer().getId().equals(game.getPlayerA().getId())) {
 			game.setCurrentPlayer(game.getPlayerB());
 			
-		} else if (game.getCurrentPlayer().getId().equals(game.getPlayerA().getId())) {
-				game.setCurrentPlayer(game.getPlayerB());
-				} else {
-				game.setCurrentPlayer(game.getPlayerA());
-				}
-		
-		// wenn Hand 
-		if (game.getPlayerA().getHand().size() != game.getPlayerB().getHand().size()) {
-			game.setRoundWinner(null);
+		} else if (game.getCurrentPlayer().getId().equals(game.getPlayerB().getId())){
+			game.setCurrentPlayer(game.getPlayerA());
+			
 		}
+		
+		game.setRoundWinner(null);
 		
 		if( game.getPlayerA().getPlayedCards().size()==game.getPlayerB().getPlayedCards().size()) {
 			var playerACard = game.getPlayerA().getPlayedCards().get( game.getPlayerA().getPlayedCards().size()-1);
 			var playerBCard = game.getPlayerB().getPlayedCards().get( game.getPlayerB().getPlayedCards().size()-1);
 			
 			game = phase1(game,playerACard,playerBCard);
+			
+			if (game.getPlayerA().getAccount().getUsername().equals(game.getRoundWinner())) {
+				game.setCurrentPlayer(game.getPlayerA());
+				
+			} else if (game.getPlayerB().getAccount().getUsername().equals(game.getRoundWinner())) {
+				game.setCurrentPlayer(game.getPlayerB());
+			} 
 			
 			return gameRepository.save(game);
 		} else {
@@ -392,29 +383,28 @@ public class GameService {
 		
 		game = pickCard(game, cardId, username);
 		
-		// wenn HandPhase2 
-		if (game.getPlayerA().getCardsPhase2().size() != game.getPlayerB().getCardsPhase2().size()) {
-			game.setRoundWinner(null);
-		}
-		
-		// currentplayer ändern
-		if (game.getPlayerA().getAccount().getUsername().equals(game.getRoundWinner())) {
-			game.setCurrentPlayer(game.getPlayerA());
-			
-		} else if (game.getPlayerB().getAccount().getUsername().equals(game.getRoundWinner())) {
+		if (game.getCurrentPlayer().getId().equals(game.getPlayerA().getId())) {
 			game.setCurrentPlayer(game.getPlayerB());
 			
-		} else if (game.getCurrentPlayer().getId().equals(game.getPlayerA().getId())) {
-				game.setCurrentPlayer(game.getPlayerB());
-				} else {
-				game.setCurrentPlayer(game.getPlayerA());
-				}
+		} else if (game.getCurrentPlayer().getId().equals(game.getPlayerB().getId())){
+			game.setCurrentPlayer(game.getPlayerA());
+			
+		}
+		
+		game.setRoundWinner(null);
 		
 		if( game.getPlayerA().getPlayedCards().size()==game.getPlayerB().getPlayedCards().size()) {
 			var playerACard = game.getPlayerA().getPlayedCards().get( game.getPlayerA().getPlayedCards().size()-1);
 			var playerBCard = game.getPlayerB().getPlayedCards().get( game.getPlayerB().getPlayedCards().size()-1);
 			
 			game = phase2(game,playerACard,playerBCard);
+			
+			if (game.getPlayerA().getAccount().getUsername().equals(game.getRoundWinner())) {
+				game.setCurrentPlayer(game.getPlayerA());
+				
+			} else if (game.getPlayerB().getAccount().getUsername().equals(game.getRoundWinner())) {
+				game.setCurrentPlayer(game.getPlayerB());
+			} 
 			
 			if (game.getPlayerA().getCardsPhase2().isEmpty() && game.getPlayerB().getCardsPhase2().isEmpty()) {
 				game = calcScore(game, username);
@@ -474,11 +464,12 @@ public class GameService {
 		/**
 		 * Finds out about who won a round & fills deposit stack("hand for phase 2")
 		 */
-		if (playedCardA.isWinner(playedCardB)) {
+		if (isWinner(game, playedCardA, playedCardB) 
+				&& !ruleKnight(game, playedCardA, playedCardB)) {
 			handPhase2A.add(cardToWin);
 			handPhase2B.add(coveredCard);
 			game.setRoundWinner(game.getPlayerA().getAccount().getUsername());
-		} else {
+		} else if (!ruleKnight(game, playedCardA, playedCardB)){
 			handPhase2B.add(cardToWin);
 			handPhase2A.add(coveredCard);
 			game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
@@ -503,7 +494,7 @@ public class GameService {
 		 * being set with the Cards of "pointsUndead".
 		 */
 
-		if (playedCardA.isWinner(playedCardB)
+		if (isWinner(game, playedCardA, playedCardB)
 				&& (playedCardA.getFraction().name() == "UNDEAD" && playedCardB.getFraction().name() == "UNDEAD")) {
 			pointsUndead.add(playedCardA);
 			pointsUndead.add(playedCardB);
@@ -514,7 +505,7 @@ public class GameService {
 			 * directly into the List "pointsUndead". Then the "pointStack" of Player B is
 			 * being set with the Cards of "pointsUndead".
 			 */
-		} else if (playedCardB.isWinner(playedCardA)
+		} else if (isWinner(game, playedCardA, playedCardB)
 				&& (playedCardA.getFraction().name() == "UNDEAD" && playedCardB.getFraction().name() == "UNDEAD")) {
 			pointsUndead.add(playedCardA);
 			pointsUndead.add(playedCardA);
@@ -536,22 +527,22 @@ public class GameService {
 
 				case (0):
 					/** Player A wins */
-					if (playedCardA.isWinner(playedCardB) && c.getFraction().name() == "UNDEAD") {
+					if (isWinner(game, playedCardA, playedCardB) && c.getFraction().name() == "UNDEAD") {
 						pointsUndead.add(playedCards.get(0));
 						pA.setPointStack(pointsUndead);
 						/** Player B wins */
-					} else if (playedCardB.isWinner(playedCardA) && c.getFraction().name() == "UNDEAD") {
+					} else if (isWinner(game, playedCardA, playedCardB) && c.getFraction().name() == "UNDEAD") {
 						pointsUndead.add(playedCards.get(0));
 						pB.setPointStack(pointsUndead);
 					}
 					break;
 				case (1):
 					/** Player A wins */
-					if (playedCardA.isWinner(playedCardB) && c.getFraction().name() == "UNDEAD") {
+					if (isWinner(game, playedCardA, playedCardB) && c.getFraction().name() == "UNDEAD") {
 						pointsUndead.add(playedCards.get(1));
 						pA.setPointStack(pointsUndead);
 						/** Player B wins */
-					} else if (playedCardB.isWinner(playedCardA) && c.getFraction().name() == "UNDEAD") {
+					} else if (isWinner(game, playedCardA, playedCardB) && c.getFraction().name() == "UNDEAD") {
 						pointsUndead.add(playedCards.get(1));
 						pB.setPointStack(pointsUndead);
 					}
@@ -591,14 +582,12 @@ public class GameService {
 			 * List for pointStack per Player (List was already initialized in phase 1 for
 			 * UNDEAD logic)
 			 */
-		
 		  List<Card> pointStackPlayerA = pA.getPointStack(); 
 		  List<Card> pointStackPlayerB = pB.getPointStack();
 		  
 		 /**
 			 * Get the playedCards List and store the Cards into objects.
 			 */
-		
 		  ArrayList<Card> playedCards = new ArrayList<Card>();
 		  playedCards.add(playerACard);
 		  playedCards.add(playerBCard);
@@ -607,7 +596,6 @@ public class GameService {
 			 * Iteration through List playedCards for following switch, which defines rules
 			 * of phase 2:
 			 */
-		
 		  int i = playedCards.size() - 2; 
 		  for (Card c : playedCards) { 
 			  
@@ -619,7 +607,7 @@ public class GameService {
 			 * pointsStack of Player B (loosers pointStack).
 			 */
 		
-		  if ((playerACard.isWinner(playerBCard) == true) 
+		  if ((isWinner(game, playerACard, playerBCard) == true)
 				  && c.getFraction().name() == "DWARF") { 
 			  c = playedCards.get(0); 
 			  pointStackPlayerB.add(c);
@@ -632,7 +620,7 @@ public class GameService {
 			 * Case: Player A looses & plays DWARF DWARF-Card (at List-position 0) goes into
 			 * pointsStack of Player A (loosers pointStack).
 			 */
-		  } else if ((playerACard.isWinner(playerBCard) == false) 
+		  } else if ((isWinner(game, playerACard, playerBCard) == false) 
 				  && c.getFraction().name() == "DWARF"){ 
 			  c = playedCards.get(0); 
 			  pointStackPlayerA.add(c);
@@ -645,67 +633,63 @@ public class GameService {
 		  break; 
 		  
 		  case (1):
-		  
-		 /**
-			 * Case: Player A wins & plays DWARF, DWARF-Card (at List-position 1) goes into
-			 * pointsStack of Player B (loosers pointStack).
-			 */
+					 /**
+					  * Case: Player A wins & plays DWARF, DWARF-Card (at List-position 1) goes into
+					  * pointsStack of Player B (loosers pointStack).
+					  */
 		
-		  if ((playerACard.isWinner(playerBCard) == true) 
-				  && c.getFraction().name() == "DWARF") { 
-			  c = playedCards.get(1); 
-			  pointStackPlayerB.add(c);
-			  game.setRoundWinner(game.getPlayerA().getAccount().getUsername());		  
-			  pB.setPointStack(pointStackPlayerB);
-			  
-			  //set RoundWinner
-			  game.setRoundWinner(game.getPlayerA().getAccount().getUsername());
+			  		if ((isWinner(game, playerACard, playerBCard) == true) 
+				  		&& c.getFraction().name() == "DWARF") { 
+						c = playedCards.get(1); 
+						pointStackPlayerB.add(c);
+						game.setRoundWinner(game.getPlayerA().getAccount().getUsername());		  
+						pB.setPointStack(pointStackPlayerB);
+						  
+						//set RoundWinner
+						game.setRoundWinner(game.getPlayerA().getAccount().getUsername());
 		  
-		 /**
-			 * Case: Player A looses & plays DWARF, DWARF-Card (at List-position 1) goes
-			 * into pointsStack of Player A (loosers pointStack).
-			 */
-		
-		  } else if ((playerACard.isWinner(playerBCard) == false) 
-				  && c.getFraction().name() == "DWARF"){ 
-			  c = playedCards.get(1); 
-			  pointStackPlayerA.add(c);
-			  game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
-		  pA.setPointStack(pointStackPlayerA); 
+					/**
+					 * Case: Player A looses & plays DWARF, DWARF-Card (at List-position 1) goes
+					 * into pointsStack of Player A (loosers pointStack).
+					 */
+		  			} else if ((isWinner(game, playerACard, playerBCard) == false) 
+				  		&& c.getFraction().name() == "DWARF"){ 
+			  			c = playedCards.get(1); 
+			  			pointStackPlayerA.add(c);
+			  			game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
+			  			pA.setPointStack(pointStackPlayerA); 
 		  
-		  //set RoundWinner
-		  game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
+		  				//set RoundWinner
+		  				game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
 		  
 		  } 
 		  break; 
 		  
 		  case (2): 
-			  if (playerACard.isWinner(playerBCard)) { 
-				  pointStackPlayerA.addAll(playedCards);
-				  pA.setPointStack(pointStackPlayerA); 
+			  		if (isWinner(game, playerACard, playerBCard) 
+			  				&& !ruleKnight(game, playerACard, playerBCard)) { 
+			  			pointStackPlayerA.addAll(playedCards);
+			  			pA.setPointStack(pointStackPlayerA); 
 				  
-				  //set RoundWinner
-				  game.setRoundWinner(game.getPlayerA().getAccount().getUsername());
-				  
-				  
-		  } else {
-			  
-		  pointStackPlayerB.addAll(playedCards); 	
-		  pB.setPointStack(pointStackPlayerB); 
+			  			//set RoundWinner
+			  			game.setRoundWinner(game.getPlayerA().getAccount().getUsername());
+			  		} else if (!ruleKnight(game, playerACard, playerBCard)) {
+			  			pointStackPlayerB.addAll(playedCards); 	
+			  			pB.setPointStack(pointStackPlayerB); 
 		  
-		  //set RoundWinner
-		  game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
+			  			//set RoundWinner
+			  			game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
 		  
+			  			}
+		  
+		  break; 
 		  }
-		  
-		  break; }
 		  
 		 /**
 			 * This part handles the increment of "i" after every break and checks if both
 			 * Cards are NOT DWARFS! -> Goes case (0), then i++ & if, goes case (1), then
 			 * i++ & if, goes case (2)
 			 */
-
 		  i++; 
 		  
 		  if (playedCards.get(0).getFraction().name() != "DWARF" &&
@@ -718,15 +702,188 @@ public class GameService {
 		  playerRepository.save(pA); 
 		  playerRepository.save(pB);
 		  
-		 /**
-			 * Get List of playedCards from database and remove its cards in Card objects
-			 * (List should be empty per round)
-			 */
-				
-			pA.setPlayedCards(new ArrayList<Card>());
-			pB.setPlayedCards(new ArrayList<Card>());
+		List<Card> depositedCardA = new ArrayList<Card>();
+		List<Card> depositedCardB = new ArrayList<Card>();
+			
+		depositedCardA.add(playerACard);
+		depositedCardB.add(playerBCard);
+			
+		pA.setDepositedCardPhase2(depositedCardA);
+		pB.setDepositedCardPhase2(depositedCardB);
+		  
+		/**
+		 * Get List of playedCards from database and remove its cards in Card objects
+		 * (List should be empty per round)
+		 */
+		pA.setPlayedCards(new ArrayList<Card>());
+		pB.setPlayedCards(new ArrayList<Card>());
 
 		return game;
 	}
+	
+	
+	// ------ SPIELLOGIK ------- //
+	
+	/**@Support methods (see private): */
+	/**Compares 2 cards by "Fraction" */
+	
+	private boolean compareFraction(Card playerACard, Card playerBCard) {
+		boolean bo = false;
+		if (playerACard.getFraction().name() == playerBCard.getFraction().name()) {
+			bo = true;
+		}
+		return bo;
+	}
+	
+	/**Method compares Card values and returns true
+	 * for the higher value  */
+	private boolean compareValue(Card playerACard, Card playerBCard) {
+		boolean bo = false;
+		if (playerACard.getValue() > playerBCard.getValue()) {
+			bo = true;
+		}
+		return bo;
+	}
+	
+	/**Knight-Fraction has to beat Goblin-Fraction
+	 * Method returns true if a Knight-Card meets a
+	 * Goblin-Card  */
+	private boolean ruleKnight(Game game, Card playerACard, Card playerBCard) {
+		boolean bo = false;
+		
+		if (game.getCurrentPlayer().getId() == game.getPlayerA().getId()) {
+			if (playerACard.getFraction().name() == "KNIGHT" && playerBCard.getFraction().name() == "GOBLIN") {
+				game.setRoundWinner(game.getPlayerA().getAccount().getUsername());
+				bo = true;
+			}
+			
+			if (playerBCard.getFraction().name() == "KNIGHT" && playerACard.getFraction().name() == "GOBLIN") {
+				game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
+				bo = true;
+			}
+		}
+		
+		if (game.getCurrentPlayer().getId() == game.getPlayerB().getId()) {
+			if (playerBCard.getFraction().name() == "KNIGHT" && playerACard.getFraction().name() == "GOBLIN") {
+				game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
+				bo = true;
+			}
+			if (playerACard.getFraction().name() == "KNIGHT" && playerBCard.getFraction().name() == "GOBLIN") {
+				game.setRoundWinner(game.getPlayerA().getAccount().getUsername());
+				bo = true;
+			}
+		}
+		
+		return bo;
+	}
+	
+	/**Doppelganger clones the opponents Fraction
+	 * Method returns true when the combination of
+	 * Doppelganger with every other Fraction
+	 * (including Doppelganger itself) occurs */
+	private boolean doppelgangerCloneRule(Game game, Card playerACard, Card playerBCard) {
+		boolean bo = false;
 
+		if (game.getCurrentPlayer().getId() == game.getPlayerA().getId()) {
+			if (playerACard.getFraction().name() == "DOPPELGANGER" && (playerBCard.getFraction().name() == "GOBLIN"
+					|| playerBCard.getFraction().name() == "KNIGHT" || playerBCard.getFraction().name() == "DOPPELGANGER"
+					|| playerBCard.getFraction().name() == "UNDEAD" || playerBCard.getFraction().name() == "DWARF")) {
+				bo = true;
+			} 
+			
+			if (playerBCard.getFraction().name() == "DOPPELGANGER" && (playerACard.getFraction().name() == "GOBLIN"
+				|| playerACard.getFraction().name() == "KNIGHT" || playerACard.getFraction().name() == "DOPPELGANGER"
+				|| playerACard.getFraction().name() == "UNDEAD" || playerACard.getFraction().name() == "DWARF")) {
+				bo = true;
+			}
+				
+		}
+		
+		if (game.getCurrentPlayer().getId() == game.getPlayerB().getId()) {
+			if (playerBCard.getFraction().name() == "DOPPELGANGER" && (playerACard.getFraction().name() == "GOBLIN"
+					|| playerACard.getFraction().name() == "KNIGHT" || playerACard.getFraction().name() == "DOPPELGANGER"
+					|| playerACard.getFraction().name() == "UNDEAD" || playerACard.getFraction().name() == "DWARF")) {
+				bo = true;
+			} 
+			
+			if (playerACard.getFraction().name() == "DOPPELGANGER" && (playerBCard.getFraction().name() == "GOBLIN"
+				|| playerBCard.getFraction().name() == "KNIGHT" || playerBCard.getFraction().name() == "DOPPELGANGER"
+				|| playerBCard.getFraction().name() == "UNDEAD" || playerBCard.getFraction().name() == "DWARF")) {
+				bo = true;
+			}
+		}
+		return bo;
+	}
+	
+	/**Doppelganger clones the opponents Fraction:
+	 * Method returns true for higher Card value
+	 * and for a Doppelganger-Card in combination with
+	 * any other fraction.
+	 * Because Doppelganger-Fraction can only win with a higher
+	 * Card value */
+	public boolean doppelgangerValueRule(Game game, Card playerACard, Card playerBCard) {
+		boolean bo = false;
+		if (doppelgangerCloneRule(game, playerACard, playerBCard) && compareValue(playerACard, playerBCard)) {
+			bo = true;
+		}
+		return bo;
+	}
+	
+	/**In case of draw:
+	 * Method returns true with same Fraction and
+	 * Card value */
+	public boolean draw(Card playerACard, Card playerBCard) {
+		boolean bo = false;
+		if (playerACard.getValue() == playerBCard.getValue() 
+				&& playerACard.getFraction().name() == playerBCard.getFraction().name()) {
+			return bo = true;
+		}
+		return bo;
+	}
+	
+	/**Method returns true if...
+	 * -two Cards have different Fractions
+	 * -Knight-Rule does not occur
+	 * -Doppelganger-Rule does not occur
+	 *
+	 * Because this would mean the opponent
+	 * had no other choice than making a
+	 * "random" move, which would
+	 * automatically cause him to lose */
+	public boolean effectlessMoveRule(Game game, Card playerACard, Card playerBCard) {
+		boolean bo = false;
+		if (!compareFraction(playerACard, playerBCard) 
+				&& !doppelgangerCloneRule(game, playerACard, playerBCard)) {
+			bo = true;
+		}
+		return bo;
+	}
+	
+	/**Method returns true for the higher
+	 * Card value and if both Cards have
+	 * the same Fraction type */
+	public boolean isHigherValueBySameFraction(Card playerACard, Card playerBCard) {
+		boolean bo = false;
+		if (compareFraction(playerACard, playerBCard) && compareValue(playerACard, playerBCard)) {
+			bo = true;
+		}
+		return bo;
+	}
+	
+	/**Method describes requirements for a winner*/
+	public boolean isWinner(Game game, Card playerACard, Card playerBCard) {
+		boolean bo = false;
+		if (doppelgangerValueRule(game, playerACard, playerBCard)
+				|| effectlessMoveRule(game, playerACard, playerBCard)
+					|| draw(playerACard, playerBCard)
+						|| isHigherValueBySameFraction(playerACard, playerBCard)) {
+			bo = true;
+		}
+		return bo;
+	}
+	
+	
+	
+	
+	
 }
