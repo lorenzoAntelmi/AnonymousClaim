@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import com.claim.database.PlayerRepository;
 import com.claim.model.Account;
 import com.claim.model.Card;
 import com.claim.model.CardDeck;
+import com.claim.model.Fraction;
 import com.claim.model.Game;
 import com.claim.model.Player;
 
@@ -321,16 +323,166 @@ public class GameService {
 		return gameRepository.save(game);
 	}
 
-	public void removeAllGames() {
-		gameRepository.deleteAll();
-
-	}
-
 	// holt ein aktueller Game
 	public Game getCurrentGame(String username) {
-		var game = playerRepository.findByAccount_Email(username)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)).getGame();
+		var game = playerRepository.findFirstByAccount_Email(username)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
+				.getGame();
 		return game;
+	}
+	
+	// in dieser Methode werden die erlaubten Schritte definiert
+	public boolean isValidMove(String username, Integer cardId) {
+		boolean bo = false;
+		var game = getCurrentGame(username);
+		
+		var currentPlayer = game.getCurrentPlayer();
+		var oppositPlayer = game.getCurrentPlayer().getId() == game.getPlayerA().getId() ? game.getPlayerB(): game.getPlayerA();
+		
+		if(!game.getCurrentPlayer().getAccount().getEmail().equals(username)) {
+			return  false;
+		}
+		
+		if (!currentPlayer.getHand().isEmpty()) {
+			if(currentPlayer.getDepositedCard().size() == oppositPlayer.getDepositedCard().size()) {
+				return true;
+			}
+		}
+		
+		var cardIdsPhase1 = currentPlayer
+				.getHand()
+				.stream()
+				.map(el -> el.getId())
+				.collect(Collectors.toList());
+		
+		var cardIdsPhase2 = currentPlayer
+				.getCardsPhase2()
+				.stream()
+				.map(el -> el.getId())
+				.collect(Collectors.toList());
+		
+		if (!currentPlayer.getHand().isEmpty()) {
+			// kontrolliert ob Karte in Hand vorhanden ist
+			if (!cardIdsPhase1.contains(cardId)) {
+				return false;
+			}
+		}
+		
+		// kontrolliert ob Karte in Hand von Phase2 vorhanden ist
+		if (currentPlayer.getHand().isEmpty()) {
+			if (!cardIdsPhase2.contains(cardId)) {
+				return  false;
+			}
+		}
+		
+		// kontrolliert ob Karte in Hand von Phase2 vorhanden ist
+		if (currentPlayer.getHand().isEmpty()) {
+			if(currentPlayer.getDepositedCardPhase2().size() == oppositPlayer.getDepositedCardPhase2().size()) {
+				return true;
+			}
+		}
+		
+		// validierung Phase1
+		if (!currentPlayer.getHand().isEmpty()) {
+		var ownCardPhase1 = currentPlayer
+				.getHand()
+				.stream()
+				.filter(el-> el.getId().equals(cardId))
+				.findFirst()
+				.orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+		
+		var oppositeCardPhase1 = oppositPlayer.getDepositedCard().get( oppositPlayer.getDepositedCard().size()-1);
+		
+		var ownCardFractionsPhase1 = currentPlayer
+				.getHand()
+				.stream()
+				.map(el -> el.getFraction())
+				.collect(Collectors.toSet());
+		
+		switch (oppositeCardPhase1.getFraction()) {
+		case DOPPELGANGER:
+			return  true;
+		case DWARF:
+				if (ownCardPhase1.getFraction() == Fraction.DWARF || ownCardPhase1.getFraction() == Fraction.DOPPELGANGER) {
+					return true;
+				} else {
+					return !ownCardFractionsPhase1.contains(Fraction.DWARF) || !ownCardFractionsPhase1.contains(Fraction.DOPPELGANGER);
+				}
+		case GOBLIN:
+			if (ownCardPhase1.getFraction() == Fraction.GOBLIN || ownCardPhase1.getFraction() == Fraction.DOPPELGANGER || 
+					ownCardPhase1.getFraction() == Fraction.KNIGHT) {
+				return  true;
+			} else {
+				return !ownCardFractionsPhase1.contains(Fraction.GOBLIN) || !ownCardFractionsPhase1.contains(Fraction.DOPPELGANGER) ||
+						!ownCardFractionsPhase1.contains(Fraction.KNIGHT);
+			}
+		case KNIGHT:
+			if (ownCardPhase1.getFraction() == Fraction.KNIGHT || ownCardPhase1.getFraction() == Fraction.DOPPELGANGER) {
+				return  true;
+			} else {
+				return !ownCardFractionsPhase1.contains(Fraction.KNIGHT) || !ownCardFractionsPhase1.contains(Fraction.DOPPELGANGER);
+			}
+		case UNDEAD:
+			if (ownCardPhase1.getFraction() == Fraction.UNDEAD || ownCardPhase1.getFraction() == Fraction.DOPPELGANGER) {
+				return  true;
+			} else {
+				return !ownCardFractionsPhase1.contains(Fraction.UNDEAD) || !ownCardFractionsPhase1.contains(Fraction.DOPPELGANGER);
+			}
+		default: 
+			return false;
+		}
+	}
+		//validierung Phase2
+		if (!currentPlayer.getHand().isEmpty()) {
+			var ownCardPhase2 = currentPlayer
+					.getCardsPhase2()
+					.stream()
+					.filter(el-> el.getId().equals(cardId))
+					.findFirst()
+					.orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+			
+			var oppositeCardPhase2 = oppositPlayer.getDepositedCardPhase2().get( oppositPlayer.getDepositedCardPhase2().size()-1);
+			
+			var ownCardFractionsPhase2 = currentPlayer
+					.getCardsPhase2()
+					.stream()
+					.map(el -> el.getFraction())
+					.collect(Collectors.toSet());
+			
+			switch (oppositeCardPhase2.getFraction()) {
+			case DOPPELGANGER:
+				return true;
+			case DWARF:
+					if (ownCardPhase2.getFraction() == Fraction.DWARF || ownCardPhase2.getFraction() == Fraction.DOPPELGANGER) {
+						return true;
+					} else {
+						return !ownCardFractionsPhase2.contains(Fraction.DWARF) || !ownCardFractionsPhase2.contains(Fraction.DOPPELGANGER);
+					}
+			case GOBLIN:
+				if (ownCardPhase2.getFraction() == Fraction.GOBLIN || ownCardPhase2.getFraction() == Fraction.DOPPELGANGER || 
+						ownCardPhase2.getFraction() == Fraction.KNIGHT) {
+					return true;
+				} else {
+					return !ownCardFractionsPhase2.contains(Fraction.GOBLIN) || !ownCardFractionsPhase2.contains(Fraction.DOPPELGANGER) ||
+							!ownCardFractionsPhase2.contains(Fraction.KNIGHT);
+				}
+			case KNIGHT:
+				if (ownCardPhase2.getFraction() == Fraction.KNIGHT || ownCardPhase2.getFraction() == Fraction.DOPPELGANGER) {
+					return true;
+				} else {
+					return !ownCardFractionsPhase2.contains(Fraction.KNIGHT) || !ownCardFractionsPhase2.contains(Fraction.DOPPELGANGER);
+				}
+			case UNDEAD:
+				if (ownCardPhase2.getFraction() == Fraction.UNDEAD || ownCardPhase2.getFraction() == Fraction.DOPPELGANGER) {
+					return true;
+				} else {
+					return !ownCardFractionsPhase2.contains(Fraction.UNDEAD) || !ownCardFractionsPhase2.contains(Fraction.DOPPELGANGER);
+				}
+			default: 
+				return  false;
+			}
+		}
+		return bo;
 	}
 
 	// logik für ein ganzer Spielzug bis zur festnahme wer gwonnen hat Phase 1
@@ -338,8 +490,8 @@ public class GameService {
 		// hier passiert die ganze spiellogik
 		Game game = getCurrentGame(username);
 		
-		if(!game.getCurrentPlayer().getAccount().getEmail().equals(username)) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+		if(!isValidMove(username,cardId)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 		
 		game = pickCard(game, cardId, username);
@@ -360,12 +512,13 @@ public class GameService {
 			
 			game = phase1(game,playerACard,playerBCard);
 			
-			if (game.getPlayerA().getAccount().getUsername().equals(game.getRoundWinner())) {
+			if (game.getCurrentPlayer().getId().equals(game.getPlayerA().getId())) {
+				game.setCurrentPlayer(game.getPlayerB());
+				
+			} else if (game.getCurrentPlayer().getId().equals(game.getPlayerB().getId())){
 				game.setCurrentPlayer(game.getPlayerA());
 				
-			} else if (game.getPlayerB().getAccount().getUsername().equals(game.getRoundWinner())) {
-				game.setCurrentPlayer(game.getPlayerB());
-			} 
+			}
 			
 			return gameRepository.save(game);
 		} else {
@@ -377,8 +530,8 @@ public class GameService {
 		// hier passiert die ganze spiellogik
 		Game game = getCurrentGame(username);
 		
-		if(!game.getCurrentPlayer().getAccount().getEmail().equals(username)) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+		if(!isValidMove(username,cardId)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 		
 		game = pickCard(game, cardId, username);
@@ -399,15 +552,12 @@ public class GameService {
 			
 			game = phase2(game,playerACard,playerBCard);
 			
-			if (game.getPlayerA().getAccount().getUsername().equals(game.getRoundWinner())) {
+			if (game.getCurrentPlayer().getId().equals(game.getPlayerA().getId())) {
+				game.setCurrentPlayer(game.getPlayerB());
+				
+			} else if (game.getCurrentPlayer().getId().equals(game.getPlayerB().getId())){
 				game.setCurrentPlayer(game.getPlayerA());
 				
-			} else if (game.getPlayerB().getAccount().getUsername().equals(game.getRoundWinner())) {
-				game.setCurrentPlayer(game.getPlayerB());
-			} 
-			
-			if (game.getPlayerA().getCardsPhase2().isEmpty() && game.getPlayerB().getCardsPhase2().isEmpty()) {
-				game = calcScore(game, username);
 			}
 			
 			return gameRepository.save(game);
@@ -552,11 +702,7 @@ public class GameService {
 			}
 		}
 
-		/**
-		 * Get List of playedCards from database and remove its cards in Card objects
-		 * (List should be empty per round)
-		 */
-
+		// Karten werden in einen Separaten Stack deponiert
 		List<Card> depositedCardA = new ArrayList<Card>();
 		List<Card> depositedCardB = new ArrayList<Card>();
 		
@@ -565,7 +711,8 @@ public class GameService {
 		
 		pA.setDepositedCard(depositedCardA);
 		pB.setDepositedCard(depositedCardB);
-			
+		
+		// played card werden auf null gesetzt
 		pA.setPlayedCards(new ArrayList<Card>());
 		pB.setPlayedCards(new ArrayList<Card>());
 		
@@ -696,7 +843,6 @@ public class GameService {
 		  playedCards.get(1).getFraction().name() != "DWARF") { 
 			  i = 2; 
 		  	} 
-		  
 		  }
 		  
 		  playerRepository.save(pA); 
@@ -722,7 +868,7 @@ public class GameService {
 	}
 	
 	
-	// ------ SPIELLOGIK ------- //
+	// ------ SPIELLOGIK - RULES ------- //
 	
 	/**@Support methods (see private): */
 	/**Compares 2 cards by "Fraction" */
@@ -821,7 +967,7 @@ public class GameService {
 	 * any other fraction.
 	 * Because Doppelganger-Fraction can only win with a higher
 	 * Card value */
-	public boolean doppelgangerValueRule(Game game, Card playerACard, Card playerBCard) {
+	private boolean doppelgangerValueRule(Game game, Card playerACard, Card playerBCard) {
 		boolean bo = false;
 		if (doppelgangerCloneRule(game, playerACard, playerBCard) && compareValue(playerACard, playerBCard)) {
 			bo = true;
@@ -832,7 +978,7 @@ public class GameService {
 	/**In case of draw:
 	 * Method returns true with same Fraction and
 	 * Card value */
-	public boolean draw(Card playerACard, Card playerBCard) {
+	private boolean draw(Card playerACard, Card playerBCard) {
 		boolean bo = false;
 		if (playerACard.getValue() == playerBCard.getValue() 
 				&& playerACard.getFraction().name() == playerBCard.getFraction().name()) {
@@ -850,7 +996,7 @@ public class GameService {
 	 * had no other choice than making a
 	 * "random" move, which would
 	 * automatically cause him to lose */
-	public boolean effectlessMoveRule(Game game, Card playerACard, Card playerBCard) {
+	private boolean effectlessMoveRule(Game game, Card playerACard, Card playerBCard) {
 		boolean bo = false;
 		if (!compareFraction(playerACard, playerBCard) 
 				&& !doppelgangerCloneRule(game, playerACard, playerBCard)) {
@@ -862,7 +1008,7 @@ public class GameService {
 	/**Method returns true for the higher
 	 * Card value and if both Cards have
 	 * the same Fraction type */
-	public boolean isHigherValueBySameFraction(Card playerACard, Card playerBCard) {
+	private boolean isHigherValueBySameFraction(Card playerACard, Card playerBCard) {
 		boolean bo = false;
 		if (compareFraction(playerACard, playerBCard) && compareValue(playerACard, playerBCard)) {
 			bo = true;
@@ -871,7 +1017,7 @@ public class GameService {
 	}
 	
 	/**Method describes requirements for a winner*/
-	public boolean isWinner(Game game, Card playerACard, Card playerBCard) {
+	private boolean isWinner(Game game, Card playerACard, Card playerBCard) {
 		boolean bo = false;
 		if (doppelgangerValueRule(game, playerACard, playerBCard)
 				|| effectlessMoveRule(game, playerACard, playerBCard)
@@ -880,6 +1026,18 @@ public class GameService {
 			bo = true;
 		}
 		return bo;
+	}
+	
+	// ----- LÖSCHEN VON GAMES ---- //
+
+	/**Löschen von Games nach Username oder Email*/
+	public void removeUserGames(UserDetails user) {
+		this.gameRepository.deleteAllByPlayerA_Account_EmailOrPlayerB_Account_Email(user.getUsername(), user.getUsername());
+	}
+	
+	/**Löschen von allen Games*/
+	public void removeAllGames() {
+		gameRepository.deleteAll();
 	}
 	
 	

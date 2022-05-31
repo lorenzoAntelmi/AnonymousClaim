@@ -27,7 +27,7 @@ public class PlayerController {
 		@GetMapping("/getHand")
 		public List<Card> getHand(@AuthenticationPrincipal UserDetails account) {
 			return playerRepository
-					.findByAccount_Email(account.getUsername())
+					.findFirstByAccount_Email(account.getUsername())
 					.orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND))
 					.getHand();
 		}
@@ -35,7 +35,7 @@ public class PlayerController {
 		@GetMapping("/getPlayer")
 		public Player getPlayer(@AuthenticationPrincipal UserDetails account) {
 			return playerRepository
-					.findByAccount_Email(account.getUsername())
+					.findFirstByAccount_Email(account.getUsername())
 					.orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		}
 

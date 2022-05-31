@@ -12,9 +12,7 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   min-width: 1000px;
-  
-  
- 
+
 }
 
 .login-area {
@@ -34,8 +32,6 @@ body {
 .login-area {
 flex-flow: wrap;
 justify-content: center;
-
-
 	}
 }
 
@@ -192,6 +188,7 @@ li:not(:first-child)::after {
 	box-shadow: 0 5px 8px 0 rgba(0,0,0,0.2), 0 7px 20px 0 rgba(0,0,0,0.2);
 }
 
+/*nicht berühren*/
 .login-area .right .modal .content .img-rules{
 	width: 730px;
 	height: 2100px;
@@ -200,7 +197,6 @@ li:not(:first-child)::after {
  	background-size: cover;
   	background-repeat: no-repeat;  
   	border-radius: 10px;
-
 }
 
 .login-area .right .content .close{

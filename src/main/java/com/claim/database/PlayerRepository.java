@@ -17,5 +17,6 @@ import com.claim.model.Player;
 @Repository
 public interface PlayerRepository extends JpaRepository<Player, Integer> {
 	Player findByHand_Id(Player player);
-	Optional<Player> findByAccount_Email(String username);
+	Optional<Player> findFirstByAccount_Email(String username);
+	
 }

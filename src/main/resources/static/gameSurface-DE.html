@@ -31,8 +31,10 @@
 
 <!--container showing the deposit stack & container for labeling purposes
 	both will disappear in phase 2-->
-	<div class="depositStackTitle"><p>ANHÄNGERSTAPEL</p> </div>
+	<div class="depositStackTitle" id="depositStackTitle"><p>ANHÄNGERSTAPEL</p> </div>
 	<div class="depositStack"> </div>
+	
+	<button class="exitBtn" id="exit" onclick="deleteGame()">SPIEL ABBRECHEN</button><!-- sPIEL WIRD VERLASSEN UND GAME GELÖSCHT -->
 
 <!--containers showing the card deck, container for labeling purposes
 	& container showing the revealed card from the deck.
@@ -42,14 +44,16 @@
 	<div class="revealedCard" id="revealedCard"></div>
 
 <!--container showing the opponents card-->
-<div class="oponentsCard"> </div>
-  <script src="js/game.js">
-  </script>
-  <script>
+<div class="oponentsCard" id="opponentsCard"> </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+   <script src="js/game.js"> </script>
+ 
+  <script>
 	getPlayer();
  	getGameData();
-   
   </script>
+  
 </body>
 </html>

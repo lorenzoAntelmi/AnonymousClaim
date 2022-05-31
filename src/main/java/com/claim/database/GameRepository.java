@@ -21,6 +21,7 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
 	@Override
 	List<Game> findAll();
 
+	List<Game> deleteAllByPlayerA_Account_EmailOrPlayerB_Account_Email(String playerAUser, String playerBUser);
 	/**@Query of findByPhaseAndPlayerA would be:
 	 * ("select g from Game where g.phase = 0 and g.playerA = 1")
 	 * List<Game> testSearchOpen();

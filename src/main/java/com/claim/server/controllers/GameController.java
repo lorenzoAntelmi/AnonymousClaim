@@ -30,9 +30,6 @@ public class GameController {
 	@Autowired
 	private GameService gameService;
 
-
-	// Endpoint für das tatsächliche Game
-	
 	/**To make a move & update a game after every move
 	 * @author: Rocco Saracino*/
 	@GetMapping(path = "/phase1/{cardId}")
@@ -82,11 +79,17 @@ public class GameController {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 	}
 
-
-	/**To delete all games*/
+	/**To delete all games -- POSTMAN*/
 	@DeleteMapping(path = "/games")
 	public ResponseEntity<Void> deleteAllgames() {
 		gameService.removeAllGames();
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+	
+	/**löscht alle Spiele nach User oder Mail*/
+	@DeleteMapping("/games/") 
+	public ResponseEntity<Void> deleteGameByID(@AuthenticationPrincipal UserDetails user) {
+		gameService.removeUserGames(user);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 	

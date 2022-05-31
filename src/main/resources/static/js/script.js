@@ -273,7 +273,7 @@ function abort() {
   window.location.href='login-DE.html';
 }
 
-/** Modal Code */
+/** Modal Code -- funktioniert nicht */ 
 var modal = document.getElementById('loginModal');
 var modalBtn = document.getElementById('help');
 var closeBtn = document.getElemetByClassName('close')[0];
