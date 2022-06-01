@@ -316,7 +316,7 @@ top:10px;
 .oponentsCard{
 	width:220px;
 	height: 340px;
-	position: fixed; 
+	position: absolute; 
 	border-radius: 10px;
 	border: solid 3px black;
 	background-color: grey;	
@@ -341,7 +341,7 @@ left: 35%;
 	left:40%;
 	border-radius: 10px;
 	border: solid 3px black;
-	position: fixed;
+	position: absolute;
 	background-color: white;
 	text-align: center;
 	font-weight: 700;

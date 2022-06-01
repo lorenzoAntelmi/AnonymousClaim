@@ -81,13 +81,16 @@ function onMessageReceived(payload) {
 					if (message.sender !== ownPlayer.account.username) {
 						
 					let div = document.getElementById("opponentsCard");
-					var card = document.createElement("card");
-					div.appendChild(card);
+					
 			
 					/**Styling*/
+					div.style.backgroundColor= null;
 					div.style.backgroundImage= "url('/image/"+message.content+".png')";
-					card.style.width="220px";
-					card.style.height="340px";
+					div.style.backgroundSize="cover";
+					div.style.backgroundPosition="center";
+					div.style.backgroundRepeat="no-repeat";
+					div.style.width="220px";
+					div.style.height="340px";
 					
 					}
 					console.log("MOVE");
