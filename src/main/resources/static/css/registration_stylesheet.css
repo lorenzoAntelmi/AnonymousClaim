@@ -58,6 +58,7 @@ justify-content: center;
 @media (max-width: 1810px) {
   .registration-area .right {
     width: 100%;
+    height: 75vh;
   }
 }
 
@@ -87,7 +88,7 @@ justify-content: center;
   	justify-content: space-between;
   	margin: 0 auto;
   	position: relative;
-  	top: 20px;
+  	top: 35px;
   	
  
 }
@@ -189,12 +190,16 @@ justify-content: center;
 	}
 }
 
+.status-text {
+	display: none;
+	color: #ff0000;
+	position:relative;
+  	top: 87px;
+}
+
 .error {
 	display: none;
 	color: #ff0000;
 }
 
-
-/*TESTS MIT VERKLEINERUNG DER BROWSERSEITE DURCHF�HREN!!!
--Bei Minimierung soll die untere seite komplett mittig sein*/
 

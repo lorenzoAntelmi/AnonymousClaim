@@ -4,23 +4,6 @@
 * damit das Formular nicht über den Standardmechanismus von HTML abgeschickt wird. 
 */
 
-/** Modal Code -- funktioniert nicht */ 
-var modal = document.getElementById('loginModal');
-var modalBtn = document.getElementById('help');
-var closeBtn = document.getElementsByClassName('close')[0];
-
-modalBtn.addEventListener('click', openModal);
-closeBtn.addEventListener('click', closeModal);
-
-		function openModal() {
-			console.log("modal geöffnet");
-			  modal.style.display = 'block';
-			}
-			
-		function closeModal() {
-			  modal.style.display = 'none';
-			}
-
 let form = document.querySelector('form');
 let accessToken;
 
@@ -30,9 +13,7 @@ form.addEventListener('submit', (e) => {
   return false;
 });
 
-/**
-Author Lorenzo (für Captcha)
- */
+/**Captcha @Author Lorenzo Antelmi*/
  
 //Variablen für Captcha definieren
 
@@ -56,12 +37,17 @@ function getCaptcha(){
 	
   for (let i = 0; i < 6; i++) { //getting 6 random characters from the array
     let randomCharacter = allCharacters[Math.floor(Math.random() * allCharacters.length)];
+    
+  
     captchaText.innerText += ` ${randomCharacter}`; 
   }
 }
 
 //Funktionsaufruf
-getCaptcha(); 
+if (captchaText !== undefined) {
+	getCaptcha(); 
+}
+
 
 //Reload Button setzt zuerst inhalt auf null und generiert danach ein neues
 function reloadCaptcha(){
@@ -83,11 +69,11 @@ function reloadCaptcha(){
 //Diese Funktion schickt die Daten des Formulars über AJAX zur API
 function register(username, email, password, birthDate) {
 if(!validateCaptcha()){
-	    statusTxt.style.color = "#ff0000";
+	statusTxt.style.display ='block';
     statusTxt.innerText = "Captcha not matched. Please try again!";
     return;
 }
-statusTxt.innerText="";
+	statusTxt.style.display ='none';
 
 // ab hier ist der Code von Deborah Vanzin
 
@@ -187,61 +173,7 @@ function validateClientSide() {
 	return valid;
 }
 
-//Diese Funktion schickt E-Mail und Password an die API um ein Access-Token zu bekommen
-function login(email, password) {
-  const data = {
-      email: email,
-      password: password,
-  }
 
-  //const url ='http://localhost:8080/authenticate';
-  const url ='/authenticate';
-  
-  console.log("Fetching from " + url);
-  const json = JSON.stringify(data);
-	console.log("Senting data to login: " + json);
-  var request = new Request(url, {
-      method: 'POST',
-      body: json,
-      headers: new Headers({
-          'Content-Type': 'application/json',
-          
-        })
-  }); 
-
-  fetch(request).
-    then((response) => {
-    return new Promise((resolve) => response.json()
-      .then((json) => resolve({
-        status: response.status,
-        ok: response.ok,
-        json
-      })));
-    })
-    .then(({ status, json, ok }) => {
-      const message = json;
-    
-      switch (status) {
-        case 400:
-        case 401:
-          console.log("Bad Request: " + JSON.stringify(message));
-          const errorDiv = document.getElementById("loginError");
-          errorDiv.style.display = 'block';
-          errorDiv.innerText = "Login fehlgeschlagen!";
-          break;
-        case 201:
-        case 200:
-          console.log("JWT: " + JSON.stringify(message));
-          accessToken = json.token;
-          localStorage.setItem("accessToken", accessToken);
-          window.location.href='lobby-DE.html';
-          break;
-        case 500:
-        default:
-          console.log("Error 500: " + message);
-    }
-  })
-}
 // Diese Funktion schickt einen GET-Request an die API um eine Liste der Spiele zu erhalten
 function getGames() {
 
@@ -288,5 +220,8 @@ function abort() {
   console.log("Registrierung abgebrochen!");
   window.location.href='login-DE.html';
 }
+
+
+			
 
 
