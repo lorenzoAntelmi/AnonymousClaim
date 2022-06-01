@@ -4,6 +4,22 @@
 * damit das Formular nicht über den Standardmechanismus von HTML abgeschickt wird. 
 */
 
+/** Modal Code -- funktioniert nicht */ 
+var modal = document.getElementById('loginModal');
+var modalBtn = document.getElementById('help');
+var closeBtn = document.getElementsByClassName('close')[0];
+
+modalBtn.addEventListener('click', openModal);
+closeBtn.addEventListener('click', closeModal);
+
+		function openModal() {
+			console.log("modal geöffnet");
+			  modal.style.display = 'block';
+			}
+			
+		function closeModal() {
+			  modal.style.display = 'none';
+			}
 
 let form = document.querySelector('form');
 let accessToken;
@@ -273,19 +289,4 @@ function abort() {
   window.location.href='login-DE.html';
 }
 
-/** Modal Code -- funktioniert nicht */ 
-var modal = document.getElementById('loginModal');
-var modalBtn = document.getElementById('help');
-var closeBtn = document.getElemetByClassName('close')[0];
-
-		function openModal() {
-			  modal.style.display = 'block';
-			}
-			
-		function closeModal() {
-			  modal.style.display = 'none';
-			}
-			
-modalBtn.addEventListener('click', openModal);
-closeBtn.addEventListener('click', closeModal);
 

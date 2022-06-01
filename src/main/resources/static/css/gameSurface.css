@@ -1,5 +1,8 @@
 /*	authors: Valentina Caldana*/
 
+
+
+
 body {
 	
   /* only background-image (table) */
@@ -18,6 +21,14 @@ body {
   color: black; 
   font-size: 11px;
   
+  
+  
+}
+
+@media (max-width: 1900px) {
+body{
+overflow-x: scroll;
+	}	
 }
 
 .display-area{
@@ -32,6 +43,13 @@ body {
 	top:100px;
 	left: 38%;
 	margin: 0 0 0 -700px; /* left = -700px */
+}
+
+@media (max-width: 1900px) {
+ .display-area{
+top:44px;
+left: 60%;
+	}
 }
 
 .displayed-card{
@@ -69,7 +87,7 @@ body {
 
 .hand{
 	width: 1370px;
-	position: absolute; /*to overlap elements*/
+	position: absolute; 
 	top:64%;
 	left: 38%;
 	margin: 0 0 0 -700px; /* right = -700px */
@@ -77,20 +95,19 @@ body {
 	border-radius:20px;
 	height: 300px;
 	background-color:rgba(128,128,128,0.3);
-	
-	overflow: hidden;
+
+
+
 }
 
-/*ARBEITE HIER NOCH AN RESPONSIVE
-@media (max-width: 1590px) {
-.hand {
-	
-width: 600px ;
-height: 600px;
-	}
+
+@media (max-width: 1900px) {
+.hand{
+left: 60%;
+
+	}	
 }
 
-*/
 
 .hand .card{
 	width:150px;
@@ -105,12 +122,14 @@ height: 600px;
 	background-size: cover;
 	background-position: center;
  	background-repeat: no-repeat;
+
 }
 
  .hand .card:hover {
     transform: translateY(-20px);
  }
- 
+
+
 
 .pointStackTitle{
 	width:150px;
@@ -125,6 +144,12 @@ height: 600px;
 	text-align: center;
 	font-weight: 700;
 	font-size: 14px;
+}
+
+@media (max-width: 1900px) {
+ .pointStackTitle{
+top:590px;
+	}
 }
 
 .pointStack{
@@ -145,6 +170,12 @@ height: 600px;
  	
 }
 
+@media (max-width: 1900px) {
+ .pointStack{
+top:340px;
+	}
+}
+
 .depositStack{
 	width:150px;
 	height: 230px;
@@ -162,6 +193,12 @@ height: 600px;
  	background-repeat: no-repeat;
 }
 
+@media (max-width: 1900px) {
+ .depositStack{
+top:340px;
+	}
+}
+
 .depositStackTitle{
 	width:150px;
 	height: 43px;
@@ -177,14 +214,39 @@ height: 600px;
 	font-size: 14px;
 }
 
+@media (max-width: 1900px) {
+ .depositStackTitle{
+top:590px;
+	}
+}
+
 .exitBtn {
 	position: absolute;
 	top: 1000px;
-	right: 2cm;
+	right: 4.3cm;
+	width:220px;
+	height: 70px;
+	font-size: 18px;
+	font-weight: bold; 
+	
+	border-radius: 50px;
+	border: solid 3px black;
+	
+	color: white;
+	background-color: #c0392b;
+	box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+@media (max-width: 1900px) {
+ .exitBtn{
+top:1050px;
+left: 50%;
+
+	}
 }
 
 .exitBtn:hover{
-	  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+	  box-shadow: none;
 	  cursor: pointer;
 }
 
@@ -205,6 +267,12 @@ height: 600px;
  	background-repeat: no-repeat;
 }
 
+@media (max-width: 1900px) {
+ .deck{
+top:10px;
+	}
+}
+
 .deckTitle{
 	width:150px;
 	height: 43px;
@@ -220,6 +288,12 @@ height: 600px;
 	font-size: 14px;
 }
 
+@media (max-width: 1900px) {
+ .deckTitle{
+top:255px;
+	}
+}
+
 .revealedCard{
 	width:150px;
 	height: 230px;
@@ -230,20 +304,59 @@ height: 600px;
 	border: dashed 3px black;
 	position: absolute;
 	background-color: grey;
-	opacity:0.7;
 
+}
+
+@media (max-width: 1900px) {
+ .revealedCard{
+top:10px;
+	}
 }
 
 .oponentsCard{
 	width:220px;
 	height: 340px;
-	top:140px;
-	right:940px; /* border space of hand */
+	position: fixed; 
 	border-radius: 10px;
 	border: solid 3px black;
-	position: absolute; /*to overlap elements*/
 	background-color: grey;	
+	
+	top:100px;
+	left:40%; 
+	margin: 0 0 0 0px;
 }
+
+@media (max-width: 1600px) {
+ .oponentsCard{
+top:40px;
+left: 35%;
+
+	}
+}
+
+.oponentsCardTitle{
+	width:220px;
+	height: 43px;
+	top:470px;
+	left:40%;
+	border-radius: 10px;
+	border: solid 3px black;
+	position: fixed;
+	background-color: white;
+	text-align: center;
+	font-weight: 700;
+	font-size: 14px;
+}
+
+@media (max-width: 1600px) {
+ .oponentsCardTitle{
+top:411px;
+left: 35%;
+
+	}
+}
+
+
 
 
 
