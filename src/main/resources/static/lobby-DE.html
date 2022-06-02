@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<!--author: Hanna Kropf -- Hanna-->
+<!--author: Hanna Kropf -->
 	
 <html lang="DE" xmlns:th="http://www.thymeleaf.org"> 
 
@@ -10,22 +10,23 @@
   <link rel="stylesheet" type="text/css" href="/css/lobby_stylesheet.css"/>
 </head>
 
-
+	<!--Method to fill the ranking-table when opening the lobby-->
 	<body onload="buildRanking()"> 
 	
 	
-	<!-- Containers Lobby -->
+	<!-- Box which contains the whole Lobby content -->
 	<div class="lobby-area"> 
 
-		<!-- Container left -->
+		<!-- Container on the left -->
 		<div class="containerLeft">
 		<h3>Top 10 Spieler</h3>
 		
+		<!-- Table for ranking -->
 		<table>
-			<tr style="height:40px">
+			<tr>
 				<th>Rang</th>
 				<th>Benutzername</th>
-				<th>Score</th>
+				<th>Punkte</th>
 			</tr >
 			
 			<tr>
@@ -92,9 +93,8 @@
 		</table>
 		</div>
 				
-
 		
-		<!-- Container Center --> 
+	<!-- Container in the center --> 
 	<div class="containerMiddle">
 		
 		<h3>Claim - Duell um den Thron</h3>
@@ -105,19 +105,18 @@
 		Fraktionen und beanspruche den Thron!</p>
 		
 		
-		<h3>Einem laufenden Spiel beitreten</h3>
-		<div id="openGames">
+		<h3>Einem Spiel beitreten</h3>
 		
-		
- 
-		</div>
+		<!-- Container which contains Buttons (see creation in javaScript) --> 
+		<div id="openGames"></div>
 	</div>
 
 			
 		
-	<!--Containter right --> 
+	<!--Container on the right --> 
 	<div class="containerRight">
 	
+		<!--Change language--> 
 		<nav>
 		<ul> <!-- symbols instead of numbers -->
 		<li> <a hreflang="de" lang="de" href="/lobby-DE.html">DE</a></li> 
@@ -125,39 +124,24 @@
 		</ul>
 		</nav>
 		
+		<!--Logout-->
+		<button class="logoutBtn" id="logoutBtn">ABMELDEN</button>
 		
-		<button class="menuBtn" id="menuBtn"></button>
+		<!--Greeting-->
+		<h3 class="username">WILLKOMMEN<br><span id="username">BIST DU BEREIT?</span></h3>
 		
-		<!-- Modal content -->
-		<div class="modal" id="myModal" >
-			 <div class="modal-content">
-			 <span class="close">&times;</span>
-			 <button class="settingButton" id="btnPW">PASSWORT ÄNDERN</button>
-			 <button class="settingButton" id="btnLogout">LOGOUT</button>
-			 </div>
-		</div>
-		
-		<h3 class="username">WILLKOMMEN<br><span id="username">MusterName</span></h3>
-		
-		
+		<!--start/create a new game-->
 		<div class="btn newGame">
-   		<span input type="button" onclick="startGame()">NEUES <br> SPIEL STARTEN</div>
-		
-
-			
-			
-		
-
-		</div>
+   		<span onclick="startGame()">NEUES <br> SPIEL STARTEN</span>
+   		</div>
+	</div>
 </div>	
 			
-			
-		<script src="js/script-lobby.js"></script>
+		<script src="js/scriptLobby-DE.js"></script>
+		
 		<script>
 			showOpenGames();
 		</script>
-	
 		
-		
-		</body onload="buildRanking()" >
+		</body>
 	</html>		  

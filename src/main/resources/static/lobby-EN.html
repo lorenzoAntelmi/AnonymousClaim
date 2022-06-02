@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 
-<!--authors: Hanna Kropf -->
+<!--author: Hanna Kropf -->
 	
-<html lang="DE" xmlns:th="http://www.thymeleaf.org"> 
+<html lang="EN" xmlns:th="http://www.thymeleaf.org"> 
 
 <head>
   <meta charset="UTF-8">
@@ -10,149 +10,113 @@
   <link rel="stylesheet" type="text/css" href="/css/lobby_stylesheet.css"/>
 </head>
 
-
-	<body > 
+	<!--Method to fill the ranking-table when opening the lobby-->
+	<body onload="buildRanking()"> 
 	
 	
-	<!-- Containers Lobby -->
+	<!-- Box which contains the whole Lobby content -->
 	<div class="lobby-area"> 
 
-		<!-- Container left -->
+		<!-- Container on the left -->
 		<div class="containerLeft">
-		<h3>Top 10 Player</h3>
+		<h3>Top 10 Players</h3>
 		
+		<!-- Table for ranking -->
 		<table>
-			<tr style="height:40px">
-				<th>Rang</th>
+			<tr>
+				<th>Rank</th>
 				<th>Username</th>
 				<th>Score</th>
 			</tr >
 			
 			<tr>
-				<td id="rangId">1</td>
-				<td id="username"></td>
-				<td id="score"></td>
+				<td class="rangId">1</td>
+				<td class="username" id="username0"></td>
+				<td class="score" id="score0"></td>
 			</tr>
 			
 			<tr>
-				<td id="rangId">2</td>
-				<td id="username"></td>
-				<td id="score"></td>
+				<td class="rangId">2</td>
+				<td class="username" id="username1"></td>
+				<td class="score" id="score1"></td>
 			</tr>
 			
 			<tr>
-				<td id="rangId">3</td>
-				<td id="username"></td>
-				<td id="score"></td>
+				<td class="rangId">3</td>
+				<td class="username" id="username2"></td>
+				<td class="score" id="score2"></td>
 			</tr>
 			
 			<tr>
-				<td id="rangId">4</td>
-				<td id="username"></td>
-				<td id="score"></td>
+				<td class="rangId">4</td>
+				<td class="username" id="username3"></td>
+				<td class="score" id="score3"></td>
 			</tr>
 			
 			<tr>
-				<td id="rangId">5</td>
-				<td id="username"></td>
-				<td id="score"></td>
+				<td class="rangId">5</td>
+				<td class="username" id="username4"></td>
+				<td class="score" id="score4"></td>
 			</tr>
 			
 			<tr>
-				<td id="rangId">6</td>
-				<td id="username"></td>
-				<td id="score"></td>
+				<td class="rangId">6</td>
+				<td class="username" id="username5"></td>
+				<td class="score" id="score5"></td>
 			</tr>
 			
 			<tr>
-				<td id="rangId">7</td>
-				<td id="username"></td>
-				<td id="score"></td>
+				<td class="rangId">7</td>
+				<td class="username" id="username6"></td>
+				<td class="score" id="score6"></td>
 			</tr>
 			
 			<tr>
-				<td id="rangId">8</td>
-				<td id="username"></td>
-				<td id="score"></td>
+				<td class="rangId">8</td>
+				<td class="username" id="username7"></td>
+				<td class="score" id="score7"></td>
 			</tr>
 			
 			<tr>
-				<td id="rangId">9</td>
-				<td id="username"></td>
-				<td id="score8"></td>
+				<td class="rangId">9</td>
+				<td class="username" id="username8"></td>
+				<td class="score" id="score8"></td>
 			</tr>
 			
 			<tr>
-				<td id="rangId">10</td>
-				<td id="username"></td>
-				<td id="score"></td>
+				<td class="rangId">10</td>
+				<td class="username" id="username9"></td>
+				<td class="score" id="score9"></td>
 			</tr>
-			
-			 <!-- macht fÃžr jedes Ranking eine neue Reihe mit den 3 Werten rank, username, score) --> 
-			 <!--
-			<tr th:each="ranking:"${href="/ranking}">    
-					<td th:text="${ranking.rank}/>
-					<td th:text="${ranking.username}"/>
-					<td th:text="${ranking.score}"/>
-			</tr>
-			--> 
+		
 						
 		</table>
 		</div>
 				
-
 		
-		<!-- Container Center --> 
+	<!-- Container in the center --> 
 	<div class="containerMiddle">
 		
-		<h3>Claim - Battle for the Throne</h3>
+		<h3>Claim - Duel for the Throne</h3>
 		<p>The king is dead and has no heir to the throne! 
-		Now the 5 fractions of the kingdom decide who is going to be  the new ruler: Is it you or is it your opponent? 
-		Gather followers from all fractions in this thrilling trick-taking game and claim the throne!</p>
+		Now the 5 factions of the kingdom decide who will be the 
+		new king: Is it you or is it your opponent? 
+		Collect followers from all factions in this thrilling game  
+		and claim the throne!</p>
 		
 		
-		<h3>Join a running game</h3>
-		<div id="openGames">
+		<h3>Join a game</h3>
 		
-		
- <!--		<div class="btn button1">
-   		<span input type= "button", onclick="joinGame(1,1)">RAUM A <br> SPIEL BEITRETEN</span>
-  		</div>
-
- 		<div class="btn button2">
-   		<span input type="button" onclick="joinGame(2,2)">RAUM B <br> SPIEL BEITRETEN</span>
-  		</div>
-
- 		<div class="btn button3">
-   		<span input type="button" onclick="joinGame(3,3)">RAUM C <br> SPIEL BEITRETEN</span>
-  		</div>
-  		
- 		<div class="btn button4">
-   		<span input type="button" onclick="joinGame(4,4)">RAUM D <br> SPIEL BEITRETEN</span>
-  		</div>
-  		
-  		<div class="btn button5">
-   		<span input type="button" onclick="joinGame(5,5)" >RAUM E <br> SPIEL BEITRETEN</span>
-  		</div>
-		-->
-		</div>
+		<!-- Container which contains Buttons (see creation in javaScript) --> 
+		<div id="openGames"></div>
 	</div>
-	
-			<!-- Auflistung der laufenden Spiele & MÃķglichkeit einem dieser Spiele beizutreten
-				List<Game> games = getOpenGames();
-				for(int i = 0; i++; i <5) {
-				gameId = games[i].game.id;
-				playerId = games[i].playerA.id;
-				// create <li><input ...> entry a la
-				// <li>Game ${game.id}<input type="button" onclick="joinGame(gameId, playerId)" ....
-}
-			-->  
-			
+
 			
 		
-	<!--Containter right --> 
+	<!--Container on the right --> 
 	<div class="containerRight">
 	
+		<!--Change language--> 
 		<nav>
 		<ul> <!-- symbols instead of numbers -->
 		<li> <a hreflang="de" lang="de" href="/lobby-DE.html">DE</a></li> 
@@ -160,41 +124,24 @@
 		</ul>
 		</nav>
 		
+		<!--Logout-->
+		<button class="logoutBtn" id="logoutBtn">LOGOUT</button>
 		
-		<button class="menuBtn" id="menuBtn"></button>
+		<!--Greeting-->
+		<h3 class="username">WELCOME<br><span id="username">ARE YOU READY?</span></h3>
 		
-		<!-- Modal content -->
-		<div class="modal" id="myModal" >
-			 <div class="modal-content">
-			 <span class="close">&times;</span>
-			 <button class="settingButton" id="btnPW">CHANGE PASSWORD</button>
-			 <button class="settingButton" id="btnDel">DELETE ACCOUNT</button>
-			 <button class="settingButton" id="btnLogout">LOGOUT</button>
-			 </div>
-		</div>
-		
-		<h3 class="username">WELCOME<br><span id="username">MusterName</span></h3>
-		
-		
+		<!--start/create a new game-->
 		<div class="btn newGame">
-   		<span input type="button" onclick="startGame()">START <br> NEW GAME</div>
-		
-
-			
-			
-		
-
-		</div>
+   		<span onclick="startGame()">START <br> NEW GAME</span>
+   		</div>
+	</div>
 </div>	
 			
-			
-		<script src="js/script-lobby.js"></script>
+		<script src="js/scriptLobby-EN.js"></script>
+		
 		<script>
-		console.log("Call showOpenGames()");
 			showOpenGames();
 		</script>
-	
 		
-		
-		</body >
+		</body>
 	</html>		  

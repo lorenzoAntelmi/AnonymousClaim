@@ -53,6 +53,4 @@ public class LoginController {
 	public String getPasswordResetDE() {
 		return "password-reset-DE";
 	}
-
-
 }

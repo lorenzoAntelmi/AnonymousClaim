@@ -36,6 +36,17 @@
 	
 	<button class="exitBtn" id="exit" onclick="deleteGame()">SPIEL ABBRECHEN</button><!-- sPIEL WIRD VERLASSEN UND GAME GELÖSCHT -->
 
+	<button class="helpButton" id = "help">?</button>
+	<span id="oppositePlayerInfo"></span>
+	
+	<!-- Modal -->
+		<div class="modal" id="gameModal">
+			<div class="content">
+				 <span class="close">&times;</span>
+				<div class="img-rules"><!-- Container for img rules --></div>
+			</div>
+		</div>
+	
 <!--containers showing the card deck, container for labeling purposes
 	& container showing the revealed card from the deck.
 	All of them will disappear in phase 2-->
@@ -49,7 +60,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-   <script src="js/game.js"> </script>
+   <script src="js/gameScript-DE.js"> </script>
  
   <script>
 	getPlayer();

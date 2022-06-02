@@ -1,5 +1,8 @@
 package com.claim.service;
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.WebSocket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,6 +11,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -21,6 +25,7 @@ import com.claim.database.PlayerRepository;
 import com.claim.model.Account;
 import com.claim.model.Card;
 import com.claim.model.CardDeck;
+import com.claim.model.ChatMessage;
 import com.claim.model.Fraction;
 import com.claim.model.Game;
 import com.claim.model.Player;
@@ -47,6 +52,9 @@ public class GameService {
 	private CardService cardService;
 	@Autowired
 	private AccountRepository accountRepository;
+	
+	@Autowired
+	private SimpMessageSendingOperations messagingTemplate;
 
 	public Game initializeGame() {
 		/**
@@ -319,6 +327,8 @@ public class GameService {
 		} else {
 			game.setCurrentPlayer(game.getPlayerB());
 		}
+		ChatMessage chatMessage = new ChatMessage(ChatMessage.MessageType.CURRENT_PLAYER, game.getCurrentPlayer().getAccount().getUsername(),"SERVER");
+		this.messagingTemplate.convertAndSend("/topic/game/"+game.getId(), chatMessage);
 
 		return gameRepository.save(game);
 	}

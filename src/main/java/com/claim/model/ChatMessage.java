@@ -19,7 +19,8 @@ public class ChatMessage {
         WAIT,
         BADREQUEST,
         ROUNDwinner,
-        PHASEwinner
+        GAMEWinner, 
+        CURRENT_PLAYER
         
     }
 
