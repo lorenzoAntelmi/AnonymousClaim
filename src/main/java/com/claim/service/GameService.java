@@ -112,18 +112,18 @@ public class GameService {
 		return game;
 	}
 
-	public Game pickCard(Game game, Integer cardId, String username) {
-		
+	public Game pickCardPhase1(Game game, Integer cardId, String username) {
 		Card card = removeCard(cardId, username);
-		
 		Player player = game.getCurrentPlayer();
-		
-		if (player.getHand().isEmpty()) {
-			player.getDepositedCardPhase2().add(card);	
-		} else {
-			player.getDepositedCard().add(card);
-		}
-		
+		player.getDepositedCard().add(card);
+		player.getPlayedCards().add(card);
+		return game;
+	}
+	
+	public Game pickCardPhase2(Game game, Integer cardId, String username) {
+		Card card = removeCard(cardId, username);
+		Player player = game.getCurrentPlayer();
+		player.getDepositedCardPhase2().add(card);
 		player.getPlayedCards().add(card);
 		return game;
 	}
@@ -182,20 +182,20 @@ public class GameService {
 		 * them into the corresponding Fraction-List
 		 */
 		for (Card c : pointStackPlayerA) {
-			switch (c.getFraction().name()) {
-			case ("GOBLIN"):
+			switch (c.getFraction()) {
+			case GOBLIN:
 				pAGoblin.add(c);
 				break;
-			case ("KNIGHT"):
+			case KNIGHT:
 				pAKnight.add(c);
 				break;
-			case ("UNDEAD"):
+			case UNDEAD:
 				pAUndead.add(c);
 				break;
-			case ("DOPPELGANGER"):
+			case DOPPELGANGER:
 				pADoppelganger.add(c);
 				break;
-			case ("DWARF"):
+			case DWARF:
 				pADwarf.add(c);
 				break;
 			}
@@ -213,20 +213,20 @@ public class GameService {
 		 * them into the corresponding Fraction-List
 		 */
 		for (Card c : pointStackPlayerB) {
-			switch (c.getFraction().name()) {
-			case ("GOBLIN"):
+			switch (c.getFraction()) {
+			case GOBLIN:
 				pBGoblin.add(c);
 				break;
-			case ("KNIGHT"):
+			case KNIGHT:
 				pBKnight.add(c);
 				break;
-			case ("UNDEAD"):
+			case UNDEAD:
 				pBUndead.add(c);
 				break;
-			case ("DOPPELGANGER"):
+			case DOPPELGANGER:
 				pBDoppelganger.add(c);
 				break;
-			case ("DWARF"):
+			case DWARF:
 				pBDwarf.add(c);
 				break;
 			}
@@ -331,9 +331,7 @@ public class GameService {
 		return game;
 	}
 	
-	// in dieser Methode werden die erlaubten Schritte definiert
-	public boolean isValidMove(String username, Integer cardId) {
-		boolean bo = false;
+	public boolean isValidMovePhase2(String username, Integer cardId) {
 		var game = getCurrentGame(username);
 		
 		var currentPlayer = game.getCurrentPlayer();
@@ -343,10 +341,83 @@ public class GameService {
 			return  false;
 		}
 		
-		if (!currentPlayer.getHand().isEmpty()) {
-			if(currentPlayer.getDepositedCard().size() == oppositPlayer.getDepositedCard().size()) {
+		if(currentPlayer.getDepositedCardPhase2().size() == oppositPlayer.getDepositedCardPhase2().size()) {
+			return true;
+		}
+		
+		var cardIdsPhase2 = currentPlayer
+				.getCardsPhase2()
+				.stream()
+				.map(el -> el.getId())
+				.collect(Collectors.toList());
+		
+		// kontrolliert ob Karte in Hand vorhanden ist
+		if (!cardIdsPhase2.contains(cardId)) {
+			return false;
+		}
+		
+		var ownCardPhase2 = currentPlayer
+				.getCardsPhase2()
+				.stream()
+				.filter(el-> el.getId().equals(cardId))
+				.findFirst()
+				.orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+		
+		var oppositeCardPhase2 = oppositPlayer.getDepositedCardPhase2().get( oppositPlayer.getDepositedCardPhase2().size()-1);
+		
+		var ownCardFractionsPhase2 = currentPlayer
+				.getCardsPhase2()
+				.stream()
+				.map(el -> el.getFraction())
+				.collect(Collectors.toSet());
+		
+		switch (oppositeCardPhase2.getFraction()) {
+		case DOPPELGANGER:
+			return true;
+		case DWARF:
+				if (ownCardPhase2.getFraction() == Fraction.DWARF || ownCardPhase2.getFraction() == Fraction.DOPPELGANGER) {
+					return true;
+				} else {
+					return !ownCardFractionsPhase2.contains(Fraction.DWARF) || !ownCardFractionsPhase2.contains(Fraction.DOPPELGANGER);
+				}
+		case GOBLIN:
+			if (ownCardPhase2.getFraction() == Fraction.GOBLIN || ownCardPhase2.getFraction() == Fraction.DOPPELGANGER || 
+					ownCardPhase2.getFraction() == Fraction.KNIGHT) {
 				return true;
+			} else {
+				return !ownCardFractionsPhase2.contains(Fraction.GOBLIN) || !ownCardFractionsPhase2.contains(Fraction.DOPPELGANGER) ||
+						!ownCardFractionsPhase2.contains(Fraction.KNIGHT);
 			}
+		case KNIGHT:
+			if (ownCardPhase2.getFraction() == Fraction.KNIGHT || ownCardPhase2.getFraction() == Fraction.DOPPELGANGER) {
+				return true;
+			} else {
+				return !ownCardFractionsPhase2.contains(Fraction.KNIGHT) || !ownCardFractionsPhase2.contains(Fraction.DOPPELGANGER);
+			}
+		case UNDEAD:
+			if (ownCardPhase2.getFraction() == Fraction.UNDEAD || ownCardPhase2.getFraction() == Fraction.DOPPELGANGER) {
+				return true;
+			} else {
+				return !ownCardFractionsPhase2.contains(Fraction.UNDEAD) || !ownCardFractionsPhase2.contains(Fraction.DOPPELGANGER);
+			}
+		default: 
+			return  false;
+		}
+	}
+	
+	// in dieser Methode werden die erlaubten Schritte definiert
+	public boolean isValidMovePhase1(String username, Integer cardId) {
+		var game = getCurrentGame(username);
+		
+		var currentPlayer = game.getCurrentPlayer();
+		var oppositPlayer = game.getCurrentPlayer().getId() == game.getPlayerA().getId() ? game.getPlayerB(): game.getPlayerA();
+		
+		if(!game.getCurrentPlayer().getAccount().getEmail().equals(username)) {
+			return  false;
+		}
+		
+		if(currentPlayer.getDepositedCard().size() == oppositPlayer.getDepositedCard().size()) {
+			return true;
 		}
 		
 		var cardIdsPhase1 = currentPlayer
@@ -355,35 +426,11 @@ public class GameService {
 				.map(el -> el.getId())
 				.collect(Collectors.toList());
 		
-		var cardIdsPhase2 = currentPlayer
-				.getCardsPhase2()
-				.stream()
-				.map(el -> el.getId())
-				.collect(Collectors.toList());
-		
-		if (!currentPlayer.getHand().isEmpty()) {
-			// kontrolliert ob Karte in Hand vorhanden ist
-			if (!cardIdsPhase1.contains(cardId)) {
-				return false;
-			}
+		// kontrolliert ob Karte in Hand vorhanden ist
+		if (!cardIdsPhase1.contains(cardId)) {
+			return false;
 		}
 		
-		// kontrolliert ob Karte in Hand von Phase2 vorhanden ist
-		if (currentPlayer.getHand().isEmpty()) {
-			if (!cardIdsPhase2.contains(cardId)) {
-				return  false;
-			}
-		}
-		
-		// kontrolliert ob Karte in Hand von Phase2 vorhanden ist
-		if (currentPlayer.getHand().isEmpty()) {
-			if(currentPlayer.getDepositedCardPhase2().size() == oppositPlayer.getDepositedCardPhase2().size()) {
-				return true;
-			}
-		}
-		
-		// validierung Phase1
-		if (!currentPlayer.getHand().isEmpty()) {
 		var ownCardPhase1 = currentPlayer
 				.getHand()
 				.stream()
@@ -391,7 +438,7 @@ public class GameService {
 				.findFirst()
 				.orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 		
-		var oppositeCardPhase1 = oppositPlayer.getDepositedCard().get( oppositPlayer.getDepositedCard().size()-1);
+		var oppositeCardPhase1 = oppositPlayer.getDepositedCard().get(oppositPlayer.getDepositedCard().size()-1);
 		
 		var ownCardFractionsPhase1 = currentPlayer
 				.getHand()
@@ -432,76 +479,24 @@ public class GameService {
 			return false;
 		}
 	}
-		//validierung Phase2
-		if (!currentPlayer.getHand().isEmpty()) {
-			var ownCardPhase2 = currentPlayer
-					.getCardsPhase2()
-					.stream()
-					.filter(el-> el.getId().equals(cardId))
-					.findFirst()
-					.orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST));
-			
-			var oppositeCardPhase2 = oppositPlayer.getDepositedCardPhase2().get( oppositPlayer.getDepositedCardPhase2().size()-1);
-			
-			var ownCardFractionsPhase2 = currentPlayer
-					.getCardsPhase2()
-					.stream()
-					.map(el -> el.getFraction())
-					.collect(Collectors.toSet());
-			
-			switch (oppositeCardPhase2.getFraction()) {
-			case DOPPELGANGER:
-				return true;
-			case DWARF:
-					if (ownCardPhase2.getFraction() == Fraction.DWARF || ownCardPhase2.getFraction() == Fraction.DOPPELGANGER) {
-						return true;
-					} else {
-						return !ownCardFractionsPhase2.contains(Fraction.DWARF) || !ownCardFractionsPhase2.contains(Fraction.DOPPELGANGER);
-					}
-			case GOBLIN:
-				if (ownCardPhase2.getFraction() == Fraction.GOBLIN || ownCardPhase2.getFraction() == Fraction.DOPPELGANGER || 
-						ownCardPhase2.getFraction() == Fraction.KNIGHT) {
-					return true;
-				} else {
-					return !ownCardFractionsPhase2.contains(Fraction.GOBLIN) || !ownCardFractionsPhase2.contains(Fraction.DOPPELGANGER) ||
-							!ownCardFractionsPhase2.contains(Fraction.KNIGHT);
-				}
-			case KNIGHT:
-				if (ownCardPhase2.getFraction() == Fraction.KNIGHT || ownCardPhase2.getFraction() == Fraction.DOPPELGANGER) {
-					return true;
-				} else {
-					return !ownCardFractionsPhase2.contains(Fraction.KNIGHT) || !ownCardFractionsPhase2.contains(Fraction.DOPPELGANGER);
-				}
-			case UNDEAD:
-				if (ownCardPhase2.getFraction() == Fraction.UNDEAD || ownCardPhase2.getFraction() == Fraction.DOPPELGANGER) {
-					return true;
-				} else {
-					return !ownCardFractionsPhase2.contains(Fraction.UNDEAD) || !ownCardFractionsPhase2.contains(Fraction.DOPPELGANGER);
-				}
-			default: 
-				return  false;
-			}
-		}
-		return bo;
-	}
 
 	// logik für ein ganzer Spielzug bis zur festnahme wer gwonnen hat Phase 1
 	public Game makeMovePhase1(String username, Integer cardId) {
 		// hier passiert die ganze spiellogik
 		Game game = getCurrentGame(username);
-		
-		if(!isValidMove(username,cardId)) {
+
+		if(!isValidMovePhase1(username,cardId)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 		
-		game = pickCard(game, cardId, username);
+		game = pickCardPhase1(game, cardId, username);
 		
 		if (game.getCurrentPlayer().getId().equals(game.getPlayerA().getId())) {
 			game.setCurrentPlayer(game.getPlayerB());
 			
 		} else if (game.getCurrentPlayer().getId().equals(game.getPlayerB().getId())){
 			game.setCurrentPlayer(game.getPlayerA());
-			
+		
 		}
 		
 		game.setRoundWinner(null);
@@ -512,15 +507,16 @@ public class GameService {
 			
 			game = phase1(game,playerACard,playerBCard);
 			
-			if (game.getCurrentPlayer().getId().equals(game.getPlayerA().getId())) {
-				game.setCurrentPlayer(game.getPlayerB());
-				
-			} else if (game.getCurrentPlayer().getId().equals(game.getPlayerB().getId())){
+			if (game.getRoundWinner().equals(game.getPlayerA().getAccount().getUsername())) {
 				game.setCurrentPlayer(game.getPlayerA());
-				
+			} else if (game.getRoundWinner().equals(game.getPlayerB().getAccount().getUsername())) {
+				game.setCurrentPlayer(game.getPlayerB());
 			}
+			game.getPlayerA().setDepositedCard(new ArrayList<Card>());
+			game.getPlayerB().setDepositedCard(new ArrayList<Card>());
 			
 			return gameRepository.save(game);
+			
 		} else {
 			return gameRepository.save(game);
 		}	
@@ -530,11 +526,11 @@ public class GameService {
 		// hier passiert die ganze spiellogik
 		Game game = getCurrentGame(username);
 		
-		if(!isValidMove(username,cardId)) {
+		if(!isValidMovePhase2(username,cardId)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 		
-		game = pickCard(game, cardId, username);
+		game = pickCardPhase2(game, cardId, username);
 		
 		if (game.getCurrentPlayer().getId().equals(game.getPlayerA().getId())) {
 			game.setCurrentPlayer(game.getPlayerB());
@@ -552,12 +548,17 @@ public class GameService {
 			
 			game = phase2(game,playerACard,playerBCard);
 			
-			if (game.getCurrentPlayer().getId().equals(game.getPlayerA().getId())) {
-				game.setCurrentPlayer(game.getPlayerB());
-				
-			} else if (game.getCurrentPlayer().getId().equals(game.getPlayerB().getId())){
+			if (game.getRoundWinner().equals(game.getPlayerA().getAccount().getUsername())) {
 				game.setCurrentPlayer(game.getPlayerA());
-				
+			} else if (game.getRoundWinner().equals(game.getPlayerB().getAccount().getUsername())) {
+				game.setCurrentPlayer(game.getPlayerB());
+			}
+			
+			game.getPlayerA().setDepositedCardPhase2(new ArrayList<Card>());
+			game.getPlayerB().setDepositedCardPhase2(new ArrayList<Card>());
+			
+			if (game.getPlayerA().getCardsPhase2().size() == 0 && game.getPlayerB().getPlayedCards().size() == 00) {
+				game = calcScore(game, username);
 			}
 			
 			return gameRepository.save(game);
@@ -565,79 +566,17 @@ public class GameService {
 			return gameRepository.save(game);
 		}	
 	}
-
-	// Logik für 1 Phase des Spiels
-	public Game phase1(Game game, Card playedCardA, Card playedCardB) {
-		
-	 	var pA = game.getPlayerA();
-	 	var pB = game.getPlayerB();
-		/**
-		 * Get top card of Deck and store it into a Card object...
-		 * 
-		 * @cardToWin = revealed Card
-		 * @coveredCard = to pick a card from deck
-		 */
-		Card cardToWin = cardDeckService.topCard(game.getCardDeck().getId());
-		cardDeckService.removeCardFromDeck(game.getCardDeck().getId(), cardToWin.getId());
-		Card coveredCard = cardDeckService.topCard(game.getCardDeck().getId());
-		cardDeckService.removeCardFromDeck(game.getCardDeck().getId(), coveredCard.getId());
-
-		ArrayList<Card> handPhase2A;
-		ArrayList<Card> handPhase2B;
-		
-		/** PlayerA */
-		if (game.getPlayerA().getCardsPhase2().isEmpty()) {
-
-			/** Creates empty deposit stack in first round */
-			handPhase2A = new ArrayList<>();
-		} else {
-
-			/**
-			 * In following rounds it gets the empty created deposit stack
-			 */
-			handPhase2A = new ArrayList(game.getPlayerA().getCardsPhase2());
-		}
-
-		/** PlayerB */
-		if (game.getPlayerB().getCardsPhase2().isEmpty()) {
-
-			/** Creates empty deposit stack in first round */
-			handPhase2B = new ArrayList<>();
-		} else {
-
-			/**
-			 * In following rounds it gets the empty created deposit stack
-			 */
-			handPhase2B = new ArrayList(game.getPlayerB().getCardsPhase2());
-		}
-
-		/**
-		 * Finds out about who won a round & fills deposit stack("hand for phase 2")
-		 */
-		if (isWinner(game, playedCardA, playedCardB) 
-				&& !ruleKnight(game, playedCardA, playedCardB)) {
-			handPhase2A.add(cardToWin);
-			handPhase2B.add(coveredCard);
-			game.setRoundWinner(game.getPlayerA().getAccount().getUsername());
-		} else if (!ruleKnight(game, playedCardA, playedCardB)){
-			handPhase2B.add(cardToWin);
-			handPhase2A.add(coveredCard);
-			game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
-		}
-
-		game.getPlayerA().setCardsPhase2(handPhase2A);
-		playerRepository.save(pA);
-
-		game.getPlayerB().setCardsPhase2(handPhase2B);
-		playerRepository.save(pB);
-
+	
+	private boolean ruleUndead(Game game, Card playedCardA, Card playedCardB) {
+	 	
 		/**
 		 * This part handles UNDEAD logic, in which won Cards have to be put into the
 		 * final pointStack of phase 2. For this purpose a temp List "pointsUndead" is
 		 * created.
 		 */
-		List<Card> pointsUndead = new ArrayList<Card>();
-
+		var pA = game.getPlayerA();
+	 	var pB = game.getPlayerB();
+		
 		/**
 		 * If Player A wins and both played Cards are UNDEAD the played Cards go
 		 * directly into the List "pointsUndead". Then the "pointStack" of Player A is
@@ -645,21 +584,21 @@ public class GameService {
 		 */
 
 		if (isWinner(game, playedCardA, playedCardB)
-				&& (playedCardA.getFraction().name() == "UNDEAD" && playedCardB.getFraction().name() == "UNDEAD")) {
-			pointsUndead.add(playedCardA);
-			pointsUndead.add(playedCardB);
-			pA.setPointStack(pointsUndead);
+				&& (playedCardA.getFraction() == Fraction.UNDEAD && playedCardB.getFraction() == Fraction.UNDEAD)) {
+			pA.getPointStack().add(playedCardB);
+			pA.getPointStack().add(playedCardA);
+			return true;
 
 			/**
 			 * If Player B wins and both played Cards are UNDEAD the played Cards go
 			 * directly into the List "pointsUndead". Then the "pointStack" of Player B is
 			 * being set with the Cards of "pointsUndead".
 			 */
-		} else if (isWinner(game, playedCardA, playedCardB)
-				&& (playedCardA.getFraction().name() == "UNDEAD" && playedCardB.getFraction().name() == "UNDEAD")) {
-			pointsUndead.add(playedCardA);
-			pointsUndead.add(playedCardA);
-			pB.setPointStack(pointsUndead);
+		} else if (isWinner(game, playedCardB, playedCardA)
+				&& (playedCardA.getFraction() == Fraction.UNDEAD && playedCardB.getFraction() == Fraction.UNDEAD)) {
+			pB.getPointStack().add(playedCardB);
+			pB.getPointStack().add(playedCardA);
+			return true;
 		} else {
 
 			/**
@@ -677,41 +616,132 @@ public class GameService {
 
 				case (0):
 					/** Player A wins */
-					if (isWinner(game, playedCardA, playedCardB) && c.getFraction().name() == "UNDEAD") {
-						pointsUndead.add(playedCards.get(0));
-						pA.setPointStack(pointsUndead);
+					if (isWinner(game, playedCardA, playedCardB) && c.getFraction() == Fraction.UNDEAD) {
+						pA.getPointStack().add(playedCards.get(0));
+						return true;
 						/** Player B wins */
-					} else if (isWinner(game, playedCardA, playedCardB) && c.getFraction().name() == "UNDEAD") {
-						pointsUndead.add(playedCards.get(0));
-						pB.setPointStack(pointsUndead);
+					} else if (isWinner(game, playedCardA, playedCardB) && c.getFraction() == Fraction.UNDEAD) {
+						pB.getPointStack().add(playedCards.get(0));
+						return true;
 					}
 					break;
 				case (1):
 					/** Player A wins */
-					if (isWinner(game, playedCardA, playedCardB) && c.getFraction().name() == "UNDEAD") {
-						pointsUndead.add(playedCards.get(1));
-						pA.setPointStack(pointsUndead);
+					if (isWinner(game, playedCardA, playedCardB) && c.getFraction() == Fraction.UNDEAD) {
+						pA.getPointStack().add(playedCards.get(1));
+						return true;
 						/** Player B wins */
-					} else if (isWinner(game, playedCardA, playedCardB) && c.getFraction().name() == "UNDEAD") {
-						pointsUndead.add(playedCards.get(1));
-						pB.setPointStack(pointsUndead);
+					} else if (isWinner(game, playedCardA, playedCardB) && c.getFraction() == Fraction.UNDEAD) {
+						pB.getPointStack().add(playedCards.get(1));					
+						return true;
 					}
 					break;
 				}
 				i++;
-			}
+			}	
 		}
+		return false;
+	}
 
-		// Karten werden in einen Separaten Stack deponiert
-		List<Card> depositedCardA = new ArrayList<Card>();
-		List<Card> depositedCardB = new ArrayList<Card>();
+	// Logik für 1 Phase des Spiels
+	public Game phase1(Game game, Card playedCardA, Card playedCardB) {
 		
-		depositedCardA.add(playedCardA);
-		depositedCardB.add(playedCardB);
-		
-		pA.setDepositedCard(depositedCardA);
-		pB.setDepositedCard(depositedCardB);
-		
+	 	var pA = game.getPlayerA();
+	 	var pB = game.getPlayerB();
+		/**
+		 * Get top card of Deck and store it into a Card object...
+		 * 
+		 * @cardToWin = revealed Card
+		 * @coveredCard = to pick a card from deck
+		 */
+	 		
+	 		Card cardToWin = cardDeckService.topCard(game.getCardDeck().getId());
+			cardDeckService.removeCardFromDeck(game.getCardDeck().getId(), cardToWin.getId());
+			Card coveredCard = cardDeckService.topCard(game.getCardDeck().getId());
+			cardDeckService.removeCardFromDeck(game.getCardDeck().getId(), coveredCard.getId());
+
+			ArrayList<Card> handPhase2A;
+			ArrayList<Card> handPhase2B;
+			
+			/** PlayerA */
+			if (game.getPlayerA().getCardsPhase2().isEmpty()) {
+
+				/** Creates empty deposit stack in first round */
+				handPhase2A = new ArrayList<>();
+			} else {
+
+				/**
+				 * In following rounds it gets the empty created deposit stack
+				 */
+				handPhase2A = new ArrayList(game.getPlayerA().getCardsPhase2());
+			}
+
+			/** PlayerB */
+			if (game.getPlayerB().getCardsPhase2().isEmpty()) {
+
+				/** Creates empty deposit stack in first round */
+				handPhase2B = new ArrayList<>();
+			} else {
+
+				/**
+				 * In following rounds it gets the empty created deposit stack
+				 */
+				handPhase2B = new ArrayList(game.getPlayerB().getCardsPhase2());
+			}
+
+			/**
+			 * Finds out about who won a round & fills deposit stack("hand for phase 2")
+			 */
+			
+			if (isWinner(game, playedCardA, playedCardB) 
+					&& !ruleKnight(game, playedCardA, playedCardB)) {
+				handPhase2A.add(cardToWin);
+				handPhase2B.add(coveredCard);
+				game.setRoundWinner(game.getPlayerA().getAccount().getUsername());
+			} else if (!ruleKnight(game, playedCardA, playedCardB)){
+				handPhase2B.add(cardToWin);
+				handPhase2A.add(coveredCard);
+				game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
+			}
+			
+			
+			if (game.getCurrentPlayer().getId() == game.getPlayerA().getId()) {
+				if (playedCardA.getFraction() == Fraction.KNIGHT && playedCardB.getFraction() == Fraction.GOBLIN) {
+					handPhase2A.add(cardToWin);
+					handPhase2B.add(coveredCard);
+					game.setRoundWinner(game.getPlayerA().getAccount().getUsername());
+				}
+				
+				if (playedCardB.getFraction() == Fraction.KNIGHT && playedCardA.getFraction() == Fraction.GOBLIN) {
+					game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
+					handPhase2A.add(coveredCard);
+					handPhase2B.add(cardToWin);
+					game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
+				}
+			}
+			
+			if (game.getCurrentPlayer().getId() == game.getPlayerB().getId()) {
+				if (playedCardB.getFraction() == Fraction.KNIGHT && playedCardA.getFraction() == Fraction.GOBLIN) {
+					handPhase2A.add(coveredCard);
+					handPhase2B.add(cardToWin);
+					game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
+				}
+				if (playedCardA.getFraction() == Fraction.KNIGHT && playedCardB.getFraction() == Fraction.GOBLIN) {
+					handPhase2A.add(cardToWin);
+					handPhase2B.add(coveredCard);
+					game.setRoundWinner(game.getPlayerA().getAccount().getUsername());
+				}
+			}
+			
+			ruleUndead(game, playedCardA, playedCardB);
+			
+			game.getPlayerA().setCardsPhase2(handPhase2A);
+			playerRepository.save(pA);
+
+			game.getPlayerB().setCardsPhase2(handPhase2B);
+			playerRepository.save(pB);
+	 	
+	 	
 		// played card werden auf null gesetzt
 		pA.setPlayedCards(new ArrayList<Card>());
 		pB.setPlayedCards(new ArrayList<Card>());
@@ -743,22 +773,16 @@ public class GameService {
 			 * Iteration through List playedCards for following switch, which defines rules
 			 * of phase 2:
 			 */
-		  int i = playedCards.size() - 2; 
-		  for (Card c : playedCards) { 
-			  
-			  switch (i) {
-		  case (0):
-		  
 		 /**
 			 * Case: Player A wins & plays DWARF DWARF-Card (at List-position 0) goes into
 			 * pointsStack of Player B (loosers pointStack).
 			 */
 		
 		  if ((isWinner(game, playerACard, playerBCard) == true)
-				  && c.getFraction().name() == "DWARF") { 
-			  c = playedCards.get(0); 
-			  pointStackPlayerB.add(c);
-			  pB.setPointStack(pointStackPlayerB);
+				  && (playerACard.getFraction() == Fraction.DWARF || 
+						  playerBCard.getFraction() == Fraction.DWARF)) { 
+			  pointStackPlayerB.add(playedCards.get(0));
+			  pointStackPlayerA.add(playedCards.get(1));
 			  
 			  //set RoundWinner
 			  game.setRoundWinner(game.getPlayerA().getAccount().getUsername());
@@ -768,94 +792,36 @@ public class GameService {
 			 * pointsStack of Player A (loosers pointStack).
 			 */
 		  } else if ((isWinner(game, playerACard, playerBCard) == false) 
-				  && c.getFraction().name() == "DWARF"){ 
-			  c = playedCards.get(0); 
-			  pointStackPlayerA.add(c);
-		  pA.setPointStack(pointStackPlayerA); 
+				  && (playerACard.getFraction() == Fraction.DWARF || 
+				  playerBCard.getFraction() == Fraction.DWARF)){ 
+			  pointStackPlayerA.add(playedCards.get(0));
+			  pointStackPlayerB.add(playedCards.get(1));
 		  
 		  //set RoundWinner
 		  game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
 		  
 		  } 
-		  break; 
 		  
-		  case (1):
-					 /**
-					  * Case: Player A wins & plays DWARF, DWARF-Card (at List-position 1) goes into
-					  * pointsStack of Player B (loosers pointStack).
-					  */
-		
-			  		if ((isWinner(game, playerACard, playerBCard) == true) 
-				  		&& c.getFraction().name() == "DWARF") { 
-						c = playedCards.get(1); 
-						pointStackPlayerB.add(c);
-						game.setRoundWinner(game.getPlayerA().getAccount().getUsername());		  
-						pB.setPointStack(pointStackPlayerB);
-						  
-						//set RoundWinner
-						game.setRoundWinner(game.getPlayerA().getAccount().getUsername());
 		  
-					/**
-					 * Case: Player A looses & plays DWARF, DWARF-Card (at List-position 1) goes
-					 * into pointsStack of Player A (loosers pointStack).
-					 */
-		  			} else if ((isWinner(game, playerACard, playerBCard) == false) 
-				  		&& c.getFraction().name() == "DWARF"){ 
-			  			c = playedCards.get(1); 
-			  			pointStackPlayerA.add(c);
-			  			game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
-			  			pA.setPointStack(pointStackPlayerA); 
-		  
-		  				//set RoundWinner
-		  				game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
-		  
-		  } 
-		  break; 
-		  
-		  case (2): 
-			  		if (isWinner(game, playerACard, playerBCard) 
-			  				&& !ruleKnight(game, playerACard, playerBCard)) { 
-			  			pointStackPlayerA.addAll(playedCards);
-			  			pA.setPointStack(pointStackPlayerA); 
-				  
-			  			//set RoundWinner
-			  			game.setRoundWinner(game.getPlayerA().getAccount().getUsername());
-			  		} else if (!ruleKnight(game, playerACard, playerBCard)) {
-			  			pointStackPlayerB.addAll(playedCards); 	
-			  			pB.setPointStack(pointStackPlayerB); 
-		  
-			  			//set RoundWinner
-			  			game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
-		  
-			  			}
-		  
-		  break; 
-		  }
-		  
-		 /**
-			 * This part handles the increment of "i" after every break and checks if both
-			 * Cards are NOT DWARFS! -> Goes case (0), then i++ & if, goes case (1), then
-			 * i++ & if, goes case (2)
-			 */
-		  i++; 
-		  
-		  if (playedCards.get(0).getFraction().name() != "DWARF" &&
-		  playedCards.get(1).getFraction().name() != "DWARF") { 
-			  i = 2; 
-		  	} 
-		  }
+		  if (playerACard.getFraction() != Fraction.DWARF 
+				  && playerBCard.getFraction() != Fraction.DWARF){
+			if (isWinner(game, playerACard, playerBCard) 
+		  				&& !ruleKnight(game, playerACard, playerBCard)) { 
+		  			pointStackPlayerA.addAll(playedCards);
+			  
+		  			//set RoundWinner
+		  			game.setRoundWinner(game.getPlayerA().getAccount().getUsername());
+			} else if (!ruleKnight(game, playerACard, playerBCard)) {
+		  			pointStackPlayerB.addAll(playedCards); 	
+	  
+		  			//set RoundWinner
+		  			game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
+	  
+		  			}
+		  	}
 		  
 		  playerRepository.save(pA); 
 		  playerRepository.save(pB);
-		  
-		List<Card> depositedCardA = new ArrayList<Card>();
-		List<Card> depositedCardB = new ArrayList<Card>();
-			
-		depositedCardA.add(playerACard);
-		depositedCardB.add(playerBCard);
-			
-		pA.setDepositedCardPhase2(depositedCardA);
-		pB.setDepositedCardPhase2(depositedCardB);
 		  
 		/**
 		 * Get List of playedCards from database and remove its cards in Card objects
@@ -874,53 +840,19 @@ public class GameService {
 	/**Compares 2 cards by "Fraction" */
 	
 	private boolean compareFraction(Card playerACard, Card playerBCard) {
-		boolean bo = false;
 		if (playerACard.getFraction().name() == playerBCard.getFraction().name()) {
-			bo = true;
+			return true;
 		}
-		return bo;
+		return false;
 	}
 	
 	/**Method compares Card values and returns true
 	 * for the higher value  */
 	private boolean compareValue(Card playerACard, Card playerBCard) {
-		boolean bo = false;
 		if (playerACard.getValue() > playerBCard.getValue()) {
-			bo = true;
+			return true;
 		}
-		return bo;
-	}
-	
-	/**Knight-Fraction has to beat Goblin-Fraction
-	 * Method returns true if a Knight-Card meets a
-	 * Goblin-Card  */
-	private boolean ruleKnight(Game game, Card playerACard, Card playerBCard) {
-		boolean bo = false;
-		
-		if (game.getCurrentPlayer().getId() == game.getPlayerA().getId()) {
-			if (playerACard.getFraction().name() == "KNIGHT" && playerBCard.getFraction().name() == "GOBLIN") {
-				game.setRoundWinner(game.getPlayerA().getAccount().getUsername());
-				bo = true;
-			}
-			
-			if (playerBCard.getFraction().name() == "KNIGHT" && playerACard.getFraction().name() == "GOBLIN") {
-				game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
-				bo = true;
-			}
-		}
-		
-		if (game.getCurrentPlayer().getId() == game.getPlayerB().getId()) {
-			if (playerBCard.getFraction().name() == "KNIGHT" && playerACard.getFraction().name() == "GOBLIN") {
-				game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
-				bo = true;
-			}
-			if (playerACard.getFraction().name() == "KNIGHT" && playerBCard.getFraction().name() == "GOBLIN") {
-				game.setRoundWinner(game.getPlayerA().getAccount().getUsername());
-				bo = true;
-			}
-		}
-		
-		return bo;
+		return false;
 	}
 	
 	/**Doppelganger clones the opponents Fraction
@@ -928,19 +860,17 @@ public class GameService {
 	 * Doppelganger with every other Fraction
 	 * (including Doppelganger itself) occurs */
 	private boolean doppelgangerCloneRule(Game game, Card playerACard, Card playerBCard) {
-		boolean bo = false;
-
 		if (game.getCurrentPlayer().getId() == game.getPlayerA().getId()) {
 			if (playerACard.getFraction().name() == "DOPPELGANGER" && (playerBCard.getFraction().name() == "GOBLIN"
 					|| playerBCard.getFraction().name() == "KNIGHT" || playerBCard.getFraction().name() == "DOPPELGANGER"
 					|| playerBCard.getFraction().name() == "UNDEAD" || playerBCard.getFraction().name() == "DWARF")) {
-				bo = true;
+				return true;
 			} 
 			
 			if (playerBCard.getFraction().name() == "DOPPELGANGER" && (playerACard.getFraction().name() == "GOBLIN"
 				|| playerACard.getFraction().name() == "KNIGHT" || playerACard.getFraction().name() == "DOPPELGANGER"
 				|| playerACard.getFraction().name() == "UNDEAD" || playerACard.getFraction().name() == "DWARF")) {
-				bo = true;
+				return true;
 			}
 				
 		}
@@ -949,16 +879,16 @@ public class GameService {
 			if (playerBCard.getFraction().name() == "DOPPELGANGER" && (playerACard.getFraction().name() == "GOBLIN"
 					|| playerACard.getFraction().name() == "KNIGHT" || playerACard.getFraction().name() == "DOPPELGANGER"
 					|| playerACard.getFraction().name() == "UNDEAD" || playerACard.getFraction().name() == "DWARF")) {
-				bo = true;
+				return true;
 			} 
 			
 			if (playerACard.getFraction().name() == "DOPPELGANGER" && (playerBCard.getFraction().name() == "GOBLIN"
 				|| playerBCard.getFraction().name() == "KNIGHT" || playerBCard.getFraction().name() == "DOPPELGANGER"
 				|| playerBCard.getFraction().name() == "UNDEAD" || playerBCard.getFraction().name() == "DWARF")) {
-				bo = true;
+				return true;
 			}
 		}
-		return bo;
+		return false;
 	}
 	
 	/**Doppelganger clones the opponents Fraction:
@@ -968,23 +898,32 @@ public class GameService {
 	 * Because Doppelganger-Fraction can only win with a higher
 	 * Card value */
 	private boolean doppelgangerValueRule(Game game, Card playerACard, Card playerBCard) {
-		boolean bo = false;
 		if (doppelgangerCloneRule(game, playerACard, playerBCard) && compareValue(playerACard, playerBCard)) {
-			bo = true;
+			return true;
 		}
-		return bo;
+		return false;
 	}
 	
 	/**In case of draw:
 	 * Method returns true with same Fraction and
 	 * Card value */
-	private boolean draw(Card playerACard, Card playerBCard) {
-		boolean bo = false;
+	private boolean draw(Game game, Card playerACard, Card playerBCard) {
+		
+		if (game.getCurrentPlayer().getId() == game.getPlayerA().getId()) {
 		if (playerACard.getValue() == playerBCard.getValue() 
 				&& playerACard.getFraction().name() == playerBCard.getFraction().name()) {
-			return bo = true;
+			return true;
+			}
 		}
-		return bo;
+		
+		if (game.getCurrentPlayer().getId() == game.getPlayerA().getId()) {
+			if (playerACard.getValue() == playerBCard.getValue() 
+					&& doppelgangerCloneRule(game, playerACard, playerBCard)) {
+				return true;
+				}
+			}
+		
+		return false;
 	}
 	
 	/**Method returns true if...
@@ -997,35 +936,65 @@ public class GameService {
 	 * "random" move, which would
 	 * automatically cause him to lose */
 	private boolean effectlessMoveRule(Game game, Card playerACard, Card playerBCard) {
-		boolean bo = false;
-		if (!compareFraction(playerACard, playerBCard) 
+		if (game.getCurrentPlayer().getId() == game.getPlayerA().getId()) {
+			if (!compareFraction(playerACard, playerBCard) 
 				&& !doppelgangerCloneRule(game, playerACard, playerBCard)) {
-			bo = true;
+			return true;
+			}
 		}
-		return bo;
+		return false;
 	}
 	
 	/**Method returns true for the higher
 	 * Card value and if both Cards have
 	 * the same Fraction type */
 	private boolean isHigherValueBySameFraction(Card playerACard, Card playerBCard) {
-		boolean bo = false;
 		if (compareFraction(playerACard, playerBCard) && compareValue(playerACard, playerBCard)) {
-			bo = true;
+			return true;
 		}
-		return bo;
+		return false;
 	}
 	
 	/**Method describes requirements for a winner*/
 	private boolean isWinner(Game game, Card playerACard, Card playerBCard) {
-		boolean bo = false;
 		if (doppelgangerValueRule(game, playerACard, playerBCard)
 				|| effectlessMoveRule(game, playerACard, playerBCard)
-					|| draw(playerACard, playerBCard)
+					|| draw(game, playerACard, playerBCard)
 						|| isHigherValueBySameFraction(playerACard, playerBCard)) {
-			bo = true;
+			return true;
 		}
-		return bo;
+		return false;
+	}
+	
+	/**Knight-Fraction has to beat Goblin-Fraction
+	 * Method returns true if a Knight-Card meets a
+	 * Goblin-Card  */
+	private boolean ruleKnight(Game game, Card playerACard, Card playerBCard) {
+		
+		if (game.getCurrentPlayer().getId() == game.getPlayerA().getId()) {
+			if (playerACard.getFraction().name() == "KNIGHT" && playerBCard.getFraction().name() == "GOBLIN") {
+				game.setRoundWinner(game.getPlayerA().getAccount().getUsername());
+				return true;
+			}
+			
+			if (playerBCard.getFraction().name() == "KNIGHT" && playerACard.getFraction().name() == "GOBLIN") {
+				game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
+				return true;
+			}
+		}
+		
+		if (game.getCurrentPlayer().getId() == game.getPlayerB().getId()) {
+			if (playerBCard.getFraction().name() == "KNIGHT" && playerACard.getFraction().name() == "GOBLIN") {
+				game.setRoundWinner(game.getPlayerB().getAccount().getUsername());
+				return true;
+			}
+			if (playerACard.getFraction().name() == "KNIGHT" && playerBCard.getFraction().name() == "GOBLIN") {
+				game.setRoundWinner(game.getPlayerA().getAccount().getUsername());
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	// ----- LÖSCHEN VON GAMES ---- //
@@ -1039,9 +1008,4 @@ public class GameService {
 	public void removeAllGames() {
 		gameRepository.deleteAll();
 	}
-	
-	
-	
-	
-	
 }

@@ -1,7 +1,5 @@
 package com.claim.server.controllers;
 
-import java.util.Date;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;

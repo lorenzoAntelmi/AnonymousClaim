@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!--authors: Valentina Caldana & Lorenzo Antelmi -->
+<!--authors: Valentina Caldana & Lorenzo Antelmi - Haupt-->
 	
 <html lang="DE" xmlns:th="http://www.thymeleaf.org">
 
@@ -15,7 +15,7 @@
 <!--Container which displays a chosen handCard and has a button to play the chosen card-->
 <div class="display-area"> 
 
-	<div class="displayed-card" id = "displayed-card"><!-- should be bind with the users card choice in hand--></div>
+	<div class="displayed-card" id="displayed-card"><!-- should be bind with the users card choice in hand--></div>
 	<button class="make-move" id="makeMove" onclick="playCard()">KARTE SPIELEN</button><!--makes a move and empties the container "displayed-card" when clicked -->
 
 </div>
@@ -32,15 +32,15 @@
 <!--container showing the deposit stack & container for labeling purposes
 	both will disappear in phase 2-->
 	<div class="depositStackTitle" id="depositStackTitle"><p>ANHÄNGERSTAPEL</p> </div>
-	<div class="depositStack"> </div>
+	<div class="depositStack" id="depositStack"> </div>
 	
 	<button class="exitBtn" id="exit" onclick="deleteGame()">SPIEL ABBRECHEN</button><!-- sPIEL WIRD VERLASSEN UND GAME GELÖSCHT -->
 
 <!--containers showing the card deck, container for labeling purposes
 	& container showing the revealed card from the deck.
 	All of them will disappear in phase 2-->
-	<div class="deck"> </div>
-	<div class="deckTitle"> <p>KARTENDECK</p> </div>
+	<div class="deck" id="deck"> </div>
+	<div class="deckTitle" id="deckTitle"> <p>KARTENDECK</p> </div>
 	<div class="revealedCard" id="revealedCard"></div>
 
 <!--container showing the opponents card-->
@@ -53,7 +53,7 @@
  
   <script>
 	getPlayer();
- 	getGameData();
+ 	getCurrentGame();
   </script>
   
 </body>

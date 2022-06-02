@@ -5,6 +5,8 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -88,6 +90,7 @@ public class GameController {
 	
 	/**löscht alle Spiele nach User oder Mail*/
 	@DeleteMapping("/games/") 
+	@Transactional
 	public ResponseEntity<Void> deleteGameByID(@AuthenticationPrincipal UserDetails user) {
 		gameService.removeUserGames(user);
 		return ResponseEntity.status(HttpStatus.OK).build();

@@ -49,7 +49,6 @@ function onError(error) {
     connectingElement.style.color = 'red';
 }
 
-
 function sendMessage(sender, type, content) {
 	
     if(stompClient) {
@@ -71,7 +70,7 @@ function onMessageReceived(payload) {
 	
 	// OK
 	case("JOIN"): 	if (message.sender !== ownPlayer.account.username) {
-					alert("Gegenspieler gefunden "+ message.sender);	
+					alert("Gegenspieler gefunden "+ message.sender);
 					}
 					console.log("JOIN");
 	break;
@@ -81,8 +80,6 @@ function onMessageReceived(payload) {
 					if (message.sender !== ownPlayer.account.username) {
 						
 					let div = document.getElementById("opponentsCard");
-					
-			
 					/**Styling*/
 					div.style.backgroundColor= null;
 					div.style.backgroundImage= "url('/image/"+message.content+".png')";
@@ -91,37 +88,46 @@ function onMessageReceived(payload) {
 					div.style.backgroundRepeat="no-repeat";
 					div.style.width="220px";
 					div.style.height="340px";
-					
+
 					}
 					console.log("MOVE");
 	break;
 	
 	// testen
 	case("BADREQUEST"):
+					if (message.sender !== ownPlayer.account.username) {
 					alert("Lieber Spieler, falls du diesen Nachricht erhalten hast gibt es zwei Möglichkeiten" +
-					"/n 1. Du hast bereits eine Karte gespielt" + 
-					"/n 2. Du hast eine invalide Karte gespielt");
+					"\n1. Du bist aktuell nicht dran" + 
+					"\n2. Du hast eine invalide Karte gespielt");
 					console.log("BADREQUEST");
+					}
 	break;
 	
 	// OK
 	case("ROUNDwinner"):
 					alert("Runden gewonnen von: "+ message.content);
-					renderTopCard();
+					getCurrentGame();
 					console.log("ROUNDwinner");
 	break;
 	
 	case("LEAVE"):
-					alert(message.sender + " hat das Spiel verlassen.");
-					console.log("LEAVE");
+					alert(message.sender + " hat das Spiel verlassen. Das Spiel wird gelöscht");
+					window.location.href='lobby-DE.html';
 	break;
 	
 	case("STARTPHASE2"):
-					renderHandCardsPhase2();
 					alert("Phase 2 wird initialisiert!");
 	break;
+	
+	case("PHASEWinner"):
+					alert("Game gewonnen von: " + message.content + 
+					"\nDu kehrst in der Lobby zurück!");
+	break;
+	
+	case("WAIT"):
+					alert("Warte, dass ein Spieler sich einloggt!")
+	break;
 	}
-
 }
 
 // ---- Spiel-Logik ----- //
@@ -152,7 +158,7 @@ function getPlayer(){
     .then(({ status, serverResponse}) => {
       switch (status) {   
         case 200:
-          	ownPlayer= serverResponse;      	
+          	ownPlayer= serverResponse;  	
         	break;
         default:
           console.log("Error" + serverResponse);
@@ -307,37 +313,36 @@ function getCurrentGame(){
     .then(({ status, game}) => {
       switch (status) {
         case 400:
-          //sendMessage(currentOwnPlayer.account.username, "BADREQUEST", oppositePlayer.account.username);
+          	sendMessage(ownPlayer.account.username, "BADREQUEST", "");
           break;
         case 201:
         case 200:
           currentGame = game;
-
-       		let currentOwnPlayer;
-       		let oppositePlayer; 
-       		
-       		if (ownPlayer.id === currentGame.playerA.id) {
-					oppositePlayer = currentGame.playerB;
-					currentOwnPlayer= currentGame.playerA;
-			} else {
-					oppositePlayer = currentGame.playerA;
-					currentOwnPlayer= currentGame.playerB;
-			}
-
 			// wenn der stompClient definiert ist
 			// dann verbinde dich
 			if(stompClient==undefined){
 				connect();
 			}
 			
-			// Wenn ein Round Winner gibt dann gebe ihn aus
-			if (currentGame.roundWinner !== null && stompClient !==null ) {
-				sendMessage(currentOwnPlayer.account.username, "ROUNDwinner", oppositePlayer.account.username);
-				//document.getElementById("oponentsCard.Opo").remove();
+			let oppositePlayer;
+       		let currentOwnPlayer;
+			       		
+			// dann identification welchen Player gegner ist
+			if (ownPlayer.id === currentGame.playerA.id) {
+				oppositePlayer = currentGame.playerB;
+				currentOwnPlayer = currentGame.playerA;
+			} else {
+				oppositePlayer = currentGame.playerA;
+				currentOwnPlayer= currentGame.playerB;
 			}
-
-			// wenn man keine Karte in die Hand hat, dann startet Phase2
-			if(currentOwnPlayer.hand.length === 0){
+			
+//			if (oppositePlayer.account === null) {
+//				sendMessage(currentOwnPlayer.account.username, "WAIT" , "");
+//			}
+          
+          	if(currentOwnPlayer.hand.length === 0 && oppositePlayer.hand.length === 0
+			&& currentOwnPlayer.cardsPhase2.length == 13 & oppositePlayer.cardsPhase2.length == 13){
+				sendMessage(currentOwnPlayer.account.username, "STARTPHASE2", "");
 				phase2started = true;
 				// Stapler und CardDeck muss gelöscht werden
 				document.getElementById("depositStackTitle").remove();
@@ -346,6 +351,7 @@ function getCurrentGame(){
 				document.getElementById("deckTitle").remove();
 				document.getElementById("revealedCard").remove();
 			}
+			console.log(phase2started);
 			
 			if(!phase2started){
 				renderHandCards();
@@ -353,7 +359,20 @@ function getCurrentGame(){
 			}else{
 				renderHandCardsPhase2();
 			}
-          break;
+			
+			// wenn Phasen Gewinner gibt dann gebe ihn aus
+			if (currentGame.phaseWinner !== null) {
+						sendMessage(currentOwnPlayer.account.username, "PHASEWinner", currentGame.phaseWinner);
+					window.location.href='lobby-DE.html';
+					//deleteGame ---> noch einbauen
+			}
+			
+			if (deletedGame) {
+          		window.location.href='lobby-DE.html';
+			}
+			break;
+			case 500:
+			default:
     }
   })	
 }
@@ -385,12 +404,13 @@ function phase1(){
     .then(({ status, game}) => {
       switch (status) {
         case 400:
-          //sendMessage(currentGame.account.username, "BADREQUEST", oppositePlayer.account.username);
+	       sendMessage("", "BADREQUEST", "");
           break;
         case 201:
         case 200:
           currentGame= game;
           renderHandCards();
+          renderTopCard();
 
        		let oppositePlayer;
        		let currentOwnPlayer;
@@ -406,29 +426,18 @@ function phase1(){
 
 			// message für den MOVE (Karte wird dem gegenspieler angezeigt)
 			sendMessage(currentOwnPlayer.account.username, "MOVE" , selectedCard.fraction + "_" + selectedCard.value );
-					
+			
+			
 			// Wenn ein Round Winner gibt dann gebe ihn aus
        		if (currentGame.roundWinner !== null && stompClient !== null ) {
-				sendMessage(currentOwnPlayer.account.username, "ROUNDwinner", oppositePlayer.account.username);
+				sendMessage(currentOwnPlayer.account.username, "ROUNDwinner", currentGame.roundWinner);
 			}
 			
 			clearSelectedCardAndTopCard();
 
-			// Wenn die Handcard 0 sind
-			if(currentOwnPlayer.hand.length ===0){
-				sendMessage(currentOwnPlayer.account.username, "STARTPHASE2", "");
-				phase2started = true;
-				phase2()
-				// Stapler und CardDeck muss gelöscht werden
-				document.getElementById("depositStackTitle").remove();
-				document.getElementById("depositStack").remove();
-				document.getElementById("deck").remove();
-				document.getElementById("deckTitle").remove();
-				document.getElementById("revealedCard").remove();
-			}
           break;
-        case 500: 
         default: 
+        sendMessage(ownPlayer.account.username, "WAIT", "");
     }
   })
 }
@@ -462,34 +471,29 @@ function phase2(){
     .then(({ status, game}) => {
       switch (status) {
         case 400:
-          //sendMessage(currentOwnPlayer.account.username, "BADREQUEST", oppositePlayer.account.username);
+          sendMessage("", "BADREQUEST", "");
           break;
         case 201:
         case 200:
           currentGame= game;
           renderHandCardsPhase2();
-              
-          	let oppositePlayer;
-
-				// dann identification welchen Player gegner ist
-				if (ownPlayer.id === currentGame.playerA.id) {
-					oppositePlayer = currentGame.playerB;			
+          
+              	if (ownPlayer.id === currentGame.playerA.id) {
+					currentOwnPlayer = currentGame.playerA;
 				} else {
-					oppositePlayer = currentGame.playerA;
+					currentOwnPlayer= currentGame.playerB;
 				}
+				
+				// message für den MOVE (Karte wird dem gegenspieler angezeigt)
+				sendMessage(currentOwnPlayer.account.username, "MOVE" , selectedCard.fraction + "_" + selectedCard.value );
 				
 				// Wenn ein Round Winner gibt dann
 				if(currentGame.roundWinner !== null){
-					sendMessage(currentOwnPlayer.account.username, "ROUNDwinner", oppositePlayer.account.username);
+					sendMessage(currentOwnPlayer.account.username, "ROUNDwinner", currentGame.roundWinner);
 				}
-				// Karte 
+				// Karte top entfernen
 				clearSelectedCardAndTopCard();
 				
-       	// wenn Phasen Gewinner gibt dann gebe ihn aus
-		if (currentGame.phaseWinner !== null) {
-			// Message
-				window.location.href='lobby-DE.html';
-		}
           break;
         case 500:
         default:
@@ -502,22 +506,11 @@ function phase2(){
 // überprüft immer ob der die 2Phase angefangen hat und 
 // adressiert die entsprechenden Methoden
 function playCard(){
-	
 	if (phase2started){
 		phase2();
 	} else {
 		phase1();
 	}
-}
-
-// interval setzung damit game sich refresht nach xxx Sekunden
-let interval = undefined;
-function getGameData(){
-	getCurrentGame();
-	interval = setInterval(function b(){
-		getCurrentGame();
-	}, 300000);
-
 }
 
 // leert selected card bzw displyed Card und top card nach Runde
@@ -577,6 +570,7 @@ function renderHandCardsPhase2(){
 			
 }}
 
+// ----- Game Löschen ----- //
 // Funktion für den Exitbutton
 // Playern kehren in der Lobby zurück und das Game wird gelöscht
 function deleteGame() {
@@ -594,16 +588,10 @@ function deleteGame() {
 	fetch(request)
     .then((response) => {
       switch (response.status) {
-        case 400: 
-        			//sendMessage(currentOwnPlayer.account.username, "BADREQUEST", oppositePlayer.account.username);
-          break;
         case 200:
-          			alert("Das Spiel wird verlassen und du kehrst in der Lobby zurück");
-          			window.location.href='lobby-DE.html';	
+          			sendMessage(ownPlayer.account.username ,"LEAVE","");
           break;
-        case 500:
         default:
-          console.log("Error 500: " + message);
     }
   })
 }

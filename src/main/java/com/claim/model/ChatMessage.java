@@ -15,7 +15,8 @@ public class ChatMessage {
     public enum MessageType {
         JOIN,
         LEAVE,
-        MOVE, 
+        MOVE,
+        WAIT,
         BADREQUEST,
         ROUNDwinner,
         PHASEwinner
