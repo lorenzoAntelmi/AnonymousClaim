@@ -37,6 +37,8 @@ var messageDisplayed=false;
 /**represents the user who is currently receiving a message*/
 var stompClient;
 
+var currentPlayerForMessage;
+
 // ---- MESSAGING ----- //
 
 
@@ -92,14 +94,21 @@ function onMessageReceived(payload) {
 	case("JOIN"): 	if (message.sender !== ownPlayer.account.username) {
 					alert("Gegenspieler gefunden: "+ message.sender);
 					}
-					console.log("JOIN");
 	break;
 	
 	/**Same message in case other player is current player*/
 	case("CURRENT_PLAYER"): 
 							let p =	document.getElementById("oppositePlayerInfo");
-							p.textContent = message.content;	
-	
+							p.textContent = '"'+ message.content + '" spielt gerade!';
+							
+							/**Styling*/
+							p.style.fontWeight = 'bold';
+							p.style.fontStyle = 'italic';
+							p.style.color = '#c0392b';
+							p.style.fontSize = '30px';
+							p.style.position = 'absolute';
+							p.style.top = '58%';
+							p.style.left = '9%';	
 	break;
 	
 	/**Gets and shows the opponentsCard in View*/
@@ -115,26 +124,27 @@ function onMessageReceived(payload) {
 					div.style.backgroundRepeat="no-repeat";
 					div.style.width="220px";
 					div.style.height="340px";
-
+					
 					}
-					console.log("MOVE");
 	break;
 	
 	/**Message handling illegal moves and wrong turn*/
 	case("BADREQUEST"):
 					if (message.sender !== ownPlayer.account.username) {
-					alert("Lieber Spieler, falls du diesen Nachricht erhalten hast gibt es zwei Möglichkeiten:" +
+					alert("Lieber Spieler, falls du diese Nachricht erhalten hast, gibt es zwei Möglichkeiten:" +
 					"\n1. Du bist aktuell nicht dran" + 
-					"\n2. Du hast eine invalide Karte gespielt");
-					console.log("BADREQUEST");
+					"\n2. Du hast eine invalide Karte gespielt, sieh dir die Regeln im Help-Button an.");
 					}
 	break;
 	
 	/**Message telling the round winner*/
 	case("ROUNDwinner"):
-					alert("Runden gewonnen von: "+ message.content);
+					alert("Runde gewonnen von: "+ message.content);
 					getCurrentGame();
-					console.log("ROUNDwinner");
+					
+					if (message.sender === ownPlayer.account.username) {
+					clearOpponentsCard();
+					}
 	break;
 	
 	/**Message handling when the opponent leaves the game*/
@@ -396,7 +406,7 @@ function getCurrentGame(){
     
    /**status contains the response code of the server (i.e. 200).
 	game is the actual response data (in the body).*/
-    .then(({ status, game}) => {
+    .then(({status, game}) => {
 	
 	/**We switch to the response code and handle accordingly.
 	   If the response code is 200, we get a game. */
@@ -431,29 +441,29 @@ function getCurrentGame(){
 				alert("Warte auf einen Gegner");
 				messageDisplayed=true;
 			}
-			
-			// FIXME
-//			if(currentGame.currentPlayer!==null){
-//				sendMessage(currentOwnPlayer.account.username, "CURRENT_PLAYER", game.currentPlayer.account.username);
-//			}
 
-			console.log("---------------------");
-			console.log(currentGame.currentPlayer);
-			console.log(currentGame.currentPlayer !==undefined)
-			if(currentGame.currentPlayer!==null){
-				let p =	document.getElementById("oppositePlayerInfo");
+			/**This "if" is needed for the beginning of a game, when a player is alone in 
+			a room and waiting for an opponent. As soon as the status is "CONNECTED"...*/	
+			if(currentGame.currentPlayer!==null && stompClient.status === "CONNECTED"){
+				
+			/**Message tells who entered the room (which user joined)*/
+			sendMessage(currentOwnPlayer.account.username, "CURRENT_PLAYER", currentGame.currentPlayer.account.username);
+			
+			/**The else part refers to the following rounds (we assume it is connected)*/	
+			} else if (currentGame.currentPlayer!==null){
+				
+			/**Text appears, which tells who's turn it is, meaning it shows the current player*/
+			let p =	document.getElementById("oppositePlayerInfo");
 				p.textContent = '"'+ game.currentPlayer.account.username + '" spielt gerade!';
-				console.log(game.currentPlayer);
 				
 				/**Styling*/
 				p.style.fontWeight = 'bold';
+				p.style.color = '#c0392b';
 				p.style.fontStyle = 'italic';
 				p.style.fontSize = '30px';
 				p.style.position = 'absolute';
 				p.style.top = '58%';
 				p.style.left = '9%';
-				
-				
 			}
           
           /**If the current player has no more cards in his hand and his opponent too
@@ -489,6 +499,7 @@ function getCurrentGame(){
 						sendMessage(currentOwnPlayer.account.username, "GAMEWinner", currentGame.phaseWinner);
 					window.location.href='lobby-DE.html';
 			}
+			
 			break;
 			case 500:
 			default:
@@ -551,26 +562,21 @@ function phase1(){
           renderTopCard();
 
 	/**Identify which Player is the current player*/
-       		let oppositePlayer;
+
        		let currentOwnPlayer;
 			       		
 			if (ownPlayer.id === currentGame.playerA.id) {
-				oppositePlayer = currentGame.playerB;
 				currentOwnPlayer = currentGame.playerA;
 			} else {
-				oppositePlayer = currentGame.playerA;
 				currentOwnPlayer= currentGame.playerB;
 			}			
 
-	/**Message to show the played card of the opponent*/
+			/**Message to show the played card of the opponent*/
 			sendMessage(currentOwnPlayer.account.username, "MOVE" , selectedCard.fraction + "_" + selectedCard.value );
-		
-		/**FIXME*/	
-			if(currentGame.CurrentPlayer!=null){
-				let p =	document.getElementById("oppositePlayerInfo");
-				p.textContent = game.CurrentPlayer.account.username;
-			}
 			
+			/**Message to switch the current player*/
+			sendMessage(currentOwnPlayer.account.username, "CURRENT_PLAYER", currentGame.currentPlayer.account.username);
+	
 			/**If there is a round winner send the corresponding message*/
        		if (currentGame.roundWinner !== null && stompClient !== null ) {
 				sendMessage(currentOwnPlayer.account.username, "ROUNDwinner", currentGame.roundWinner);
@@ -578,6 +584,7 @@ function phase1(){
 			
 			/**clears selectedCard and top card after every round*/
 			clearSelectedCardAndTopCard();
+			console.log("opponentscard funktioniert");
 			/**FIXME: same with opponent card*/
           break;
         default: 
@@ -651,6 +658,9 @@ function phase2(){
 				/**Message to show the played card of the opponent*/
 				sendMessage(currentOwnPlayer.account.username, "MOVE" , selectedCard.fraction + "_" + selectedCard.value );
 				
+				/**Message to switch the current player*/
+				sendMessage(currentOwnPlayer.account.username, "CURRENT_PLAYER", currentGame.currentPlayer.account.username);
+				
 				/**If there is a round winner send the corresponding message*/
 				if(currentGame.roundWinner !== null){
 					sendMessage(currentOwnPlayer.account.username, "ROUNDwinner", currentGame.roundWinner);
@@ -682,8 +692,22 @@ function clearSelectedCardAndTopCard() {
 	let div = document.getElementById("displayed-card");
           while (div.firstChild) {
   			div.removeChild(div.lastChild)
-			}
+			}			
 }
+
+/**clears opponentCard after every round*/
+function clearOpponentsCard() {
+	let div = document.getElementById("opponentsCard");
+	
+	div.style.backgroundImage= null;
+	div.style.backgroundColor= "grey";	
+	div.style.backgroundSize="cover";
+	div.style.backgroundPosition="center";
+	div.style.backgroundRepeat="no-repeat";
+	div.style.width="220px";
+	div.style.height="340px";		
+}
+
 
 /**@author Valentina Caldana*/
 
