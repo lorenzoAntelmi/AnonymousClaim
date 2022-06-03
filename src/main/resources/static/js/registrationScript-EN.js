@@ -88,7 +88,7 @@ if(!validateClientSide()){
       })));
   }).then(({ status, ok, json }) => {
     if(ok) {
-      window.location.href='login-DE.html'
+      window.location.href='login-EN.html'
       return
     }
     const message = json;
@@ -163,42 +163,42 @@ function validateClientSide() {
 	
 	/**Check username*/
 	if (username.value == '') {
-		errorUsername.innerText = "Benutzername darf nicht leer sein!";
+		errorUsername.innerText = "Username can't me empty!";
 		errorUsername.style.display = 'block';
 		valid = false;
 	}
 	
 	/**Check birthdate*/
 	if (birthdate.value == '') {
-		errorBirthDate.innerText = "Geburtsdatum darf nicht leer sein!";
+		errorBirthDate.innerText = "Birthdate can't me empty!";
 		errorBirthDate.style.display = 'block';
 		valid = false;
 	}
 	
 	/**Check email*/
 	if (email.value == '') {
-		errorEmail.innerText = "E-Mail darf nicht leer sein!";
+		errorEmail.innerText = "E-Mail can't me empty!";
 		errorEmail.style.display = 'block';
 		valid = false;
 	}
 	
 	/**Check password*/
 	if (password.value == '') {
-		errorPassword.innerText = "Passwort darf nicht leer sein!";
+		errorPassword.innerText = "Password can't me empty!";
 		errorPassword.style.display = 'block';
 		valid = false;
 	}
 	
 	/**Check email and confirmation*/
 		if (email.value !== emailConfirm.value) {
-		emailConfirmError.innerText = "Die beiden E-Mailadressen stimmen nicht überein!";
+		emailConfirmError.innerText = "The two e-mail addresses do not match!";
 		emailConfirmError.style.display = 'block';
 		valid = false;
 	}
 	
 	/**Check password and confirmation*/
 	if (password.value != passwordConfirm.value) {
-		passwordConfirmError.innerText = "Die beiden Passwörter stimmen nicht überein!";
+		passwordConfirmError.innerText = "The two passwords do not match!";
 		passwordConfirmError.style.display = 'block';
 		valid = false;
 	}
@@ -206,46 +206,12 @@ function validateClientSide() {
 	/**Check captcha*/
 	if(!validateCaptcha()){
 		statusTxt.style.display ='block';
-    	statusTxt.innerText = "Captcha stimmt nicht überein. Versuche es erneut!";
+    	statusTxt.innerText = "Captcha does not match. Try again!";
     	valid = false;
     	}
-    	
-    //	// check if right birthdate
-//if (!isValidDate(birthdate)) {
-//		errorBirthDate.innerText = "Geburtsdatum ist nicht korrekt!";
-//		errorBirthDate.style.display = 'block';
-//	valid = false;
-//	}
 	
 	return valid;
 }
-
-/**FIXME Validation of date formatted as "01.08.1996" 
-Source: https://stackoverflow.com/questions/6177975/how-to-validate-date-with-format-mm-dd-yyyy-in-javascript */
-function isValidDate(dateString) {
-	/**First check for the pattern*/
-	if(!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateString))
-       return false;
-
-	/**Parse the date parts to integers*/
-    var parts = dateString.split("-");
-    var day = parseInt(parts[1], 10);
-    var month = parseInt(parts[0], 10);
-    var year = parseInt(parts[2], 10);
-
-	/**Check the ranges of month and year*/
-    if(year < 1000 || year > 3000 || month == 0 || month > 12)
-        return false;
-
-	var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
-
-	/**Adjust for leap years*/
-    if(year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))
-        monthLength[1] = 29;
-
-    // Check the range of the day
-    return day > 0 && day <= monthLength[month - 1];
-};
 
 /**This function sends a GET request to the API to get a list of games.*/
 function getGames() {
@@ -290,7 +256,7 @@ function getGames() {
 
 function abort() {
   console.log("Registrierung abgebrochen!");
-  window.location.href='login-DE.html';
+  window.location.href='login-EN.html';
 }
 
 

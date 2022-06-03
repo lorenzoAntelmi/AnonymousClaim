@@ -46,7 +46,6 @@ function login(email, password) {
       body: json,
       headers: new Headers({
           'Content-Type': 'application/json',
-          
         })
   }); 
 
