@@ -1,3 +1,5 @@
+please read in preview mode
+
 Claim – Duel for the Throne
 
 Description
@@ -58,6 +60,13 @@ How to Use the Project (User Guide)
   •	Spring Tool Suite 4 
   •	Java Development Kit (JDK)
   •	Browser Chrome /Safari
+  
+  
+  
+<img width="619" alt="Bildschirmfoto 2022-06-03 um 17 38 01" src="https://user-images.githubusercontent.com/73060737/171958685-0a30d735-9da7-4ba1-b50e-d881bba8bbf9.png">
+
+
+  
   For installing the project and start the game follow these steps: 
     1.	Clone the Git Repository https://github.com/lorenzoAntelmi/ClaimAnonymous.git locally in a new spring tool suite workspace
     2.	Import the project from the Git repository into your local workspace 
@@ -67,3 +76,6 @@ How to Use the Project (User Guide)
     6.	To play the game, you have two options: 
         •	Option 1: You can start a new game (generate new game room) and then you have to wait until a second person with a separate client in the same  network has logged into this game room.
         •	Option 2: You can enter directly into a room that has already been opened and can start playing directly, provided that a second player is    present: ATTENTION: it is not possible to see from the lobby whether someone is already in the opened room. When you enter an opened room, you can find out by playing a first card. If someone is already there, you can play the card, otherwise you will receive a message when someone has joined the room and you can start the game.
+
+
+
