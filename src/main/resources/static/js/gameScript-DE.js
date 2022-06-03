@@ -442,8 +442,18 @@ function getCurrentGame(){
 			console.log(currentGame.currentPlayer !==undefined)
 			if(currentGame.currentPlayer!==null){
 				let p =	document.getElementById("oppositePlayerInfo");
-				p.textContent = game.currentPlayer.account.username;
+				p.textContent = '"'+ game.currentPlayer.account.username + '" spielt gerade!';
 				console.log(game.currentPlayer);
+				
+				/**Styling*/
+				p.style.fontWeight = 'bold';
+				p.style.fontStyle = 'italic';
+				p.style.fontSize = '30px';
+				p.style.position = 'absolute';
+				p.style.top = '58%';
+				p.style.left = '9%';
+				
+				
 			}
           
           /**If the current player has no more cards in his hand and his opponent too
