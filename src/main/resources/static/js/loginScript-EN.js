@@ -46,40 +46,38 @@ function login(email, password) {
       body: json,
       headers: new Headers({
           'Content-Type': 'application/json',
-          
         })
   }); 
 
-  fetch(request).
-    then((response) => {
-    return new Promise((resolve) => response.json()
-      .then((json) => resolve({
-        status: response.status,
-        ok: response.ok,
-        json
-      })));
-    })
-    .then(({ status, json, ok }) => {
-      const message = json;
+  fetch(request)
+    .then(response => {
+      const status = response.status;
     
       switch (status) {
         case 400:
         case 401:
-          console.log("Bad Request: " + JSON.stringify(message));
-          const errorDiv = document.getElementById("loginError");
-          errorDiv.style.display = 'block';
-          errorDiv.innerText = "Login failed!";
+         throw new Error("Login failed!");
           break;
         case 201:
         case 200:
-          console.log("JWT: " + JSON.stringify(message));
-          accessToken = json.token;
-          localStorage.setItem("accessToken", accessToken);
-          window.location.href='lobby-EN.html';
-          break;
+     		return response.json();
+          
         case 500:
         default:
-          console.log("Error 500: " + message);
+         throw new Error("Error 500 from Server!");
     }
   })
+  .then(json => {
+          accessToken = json.token;
+          console.log("JSON: " + json);
+          console.log("AccessToken: " + accessToken);
+          localStorage.setItem("accessToken", accessToken);
+          window.location.href='lobby-EN.html';
+})
+.catch(error => {
+	console.log(error);
+	 	const errorDiv = document.getElementById("loginError");
+          errorDiv.style.display = 'block';
+          errorDiv.innerText = "Login failed!";
+});
 }
