@@ -25,7 +25,7 @@ import com.claim.service.GameService;
 /**
  * Provides game-related endpoints.
  * 
- * @author Deborah Vanzin
+ * @author Deborah Vanzin und Rocco Saracino
  */
 @RestController
 public class GameController {
@@ -46,14 +46,13 @@ public class GameController {
 		return gameService.makeMovePhase1(user.getUsername(), cardId);
 	}
 
-	// neue Methode für Phase2
 	@GetMapping(path = "/phase2/{cardId}")
 	public Game makeMovePhase2(@AuthenticationPrincipal UserDetails user, @PathVariable("cardId") Integer cardId) {
 
 		return gameService.makeMovePhase2(user.getUsername(), cardId);
 	}
 
-	/**
+	/**@author Deborah Vanzin
 	 * Create a new game with the data passed in the request body
 	 * @throws URISyntaxException
 	 */
@@ -72,7 +71,6 @@ public class GameController {
 		return gameService.joinGame(gameId, user);
 	}
 
-	// Support Endpoints
 	/** Get a game with a specific id */
 	@GetMapping(path = "/games/{id}")
 	public ResponseEntity<Game> readGame(@PathVariable Integer id) {
@@ -90,6 +88,10 @@ public class GameController {
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
+	/**
+	 * @author Rocco Saracino
+	 */
+	
 	/** löscht alle Spiele nach User oder Mail */
 	@DeleteMapping("/games/")
 	@Transactional
@@ -98,12 +100,16 @@ public class GameController {
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
+
 	/** To get the currentGame */
 	@GetMapping("/getCurrentGame")
 	public Game getCurrentGame(@AuthenticationPrincipal UserDetails user) {
 		return gameService.getCurrentGame(user.getUsername());
 	}
 
+	/**
+	 * @author Deborah Vanzin
+	 */
 	/** Lists all open games */
 	@GetMapping(path = "/games/open")
 	public List<Game> getListOfOpenGames() {

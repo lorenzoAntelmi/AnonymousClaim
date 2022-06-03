@@ -13,10 +13,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Represents a card.
- *
- * @author Deborah Vanzin
- * -basic structure
- *
  * @author Rocco Saracino & Valentina Caldana
  * -rules for cards (all rule-related methods)
  */

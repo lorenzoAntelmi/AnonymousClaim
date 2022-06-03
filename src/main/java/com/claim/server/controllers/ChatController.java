@@ -9,6 +9,9 @@ import org.springframework.stereotype.Controller;
 
 import com.claim.model.ChatMessage;
 
+/**
+ * @author Rocco Saracino
+ */
 @Controller
 public class ChatController {
 

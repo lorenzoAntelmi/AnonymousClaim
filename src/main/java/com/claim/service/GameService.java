@@ -32,7 +32,7 @@ import com.claim.model.Player;
 
 /**
  * Represents services for Game
- * @author Rocco Saracino & Valentina Caldana
+ * @author Rocco Saracino & Lorenzo Antelmi (Security)
  */
 
 @Service
@@ -62,7 +62,7 @@ public class GameService {
 		 * wird das Principal (aka eingeloggter User) geholt. Mit dem Principal Objekt
 		 * können wir den Account aus der Datenbank laden.
 		 * 
-		 * @author Lorenzo Antelmi
+		 * @author Lorenzo Antelmi (for security)
 		 */
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String email;

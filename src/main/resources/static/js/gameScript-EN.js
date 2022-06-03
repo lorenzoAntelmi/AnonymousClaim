@@ -459,7 +459,7 @@ function getCurrentGame(){
 				
 			/**Text appears, which tells who's turn it is, meaning it shows the current player*/
 			let p =	document.getElementById("oppositePlayerInfo");
-				p.textContent = '"'+ game.currentPlayer.account.username + '" spielt gerade!';
+				p.textContent = '"'+ game.currentPlayer.account.username + '" is playing right now!';
 				
 				/**Styling*/
 				p.style.fontWeight = 'bold';

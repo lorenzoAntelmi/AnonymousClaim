@@ -1,5 +1,7 @@
 package com.claim.model;
-
+/**
+ * @author Rocco Saracino
+ */
 public class ChatMessage {
     public ChatMessage(MessageType type, String content, String sender) {
 		super();

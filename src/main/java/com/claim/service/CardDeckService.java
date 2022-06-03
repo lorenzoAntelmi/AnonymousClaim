@@ -14,8 +14,6 @@ import com.claim.model.CardDeck;
  * CardDeck refers to the initial game deck!
  * @author Deborah Vanzin
 */
-
-
 @Service
 public class CardDeckService {
 

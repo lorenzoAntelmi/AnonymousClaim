@@ -1,6 +1,8 @@
 /*	authors: Valentina Caldana
+	Responsive in Chrome for Windows (Browser zoom =< 80% )
 	source: https://www.codehim.com/collections/login-page-in-html-with-css-code/#google_vignette */
-
+	
+	
 html{
 	overflow-x: hidden;
 	/* no scroll from left to right*/

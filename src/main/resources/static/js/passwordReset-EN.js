@@ -1,3 +1,4 @@
+/** @author Deborah Vanzin und Lorenzo Antelmi*/ 
 function passwordReset(email) {
   const data = {
       email: email,
