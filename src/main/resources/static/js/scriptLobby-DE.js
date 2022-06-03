@@ -32,6 +32,7 @@
 		var request = new Request(url, {
 	      method: 'GET',
 	      headers: new Headers({
+			'Content-Type': 'application/json',
 	          'Authorization' : 'Bearer ' + jwt
 	        })
 	  	});
@@ -42,6 +43,15 @@
 	     We can configure the promise with a function, so the promise knows what to do, if it has completed
 	     its task. We do that with the .then-function.*/
 	  	fetch(request)
+	    .then((response) => {
+		
+	      return new Promise((resolve) => response.json()
+	      .then((json) => resolve({
+	        status: response.status,
+	        ok: response.ok,
+	        json
+	      })));
+	    })
 	    
 	    /**status contains the response code of the server (i.e. 200 for OK).
 	    Json is the actual response data (in the body).
