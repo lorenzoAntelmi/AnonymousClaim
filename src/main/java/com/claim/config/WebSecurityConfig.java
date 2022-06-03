@@ -66,12 +66,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		httpSecurity.csrf().disable()
 				// dont authenticate this particular request
 				.authorizeRequests().antMatchers("/authenticate").permitAll()
-				.antMatchers("/account/**").permitAll()
+				.antMatchers("/account").permitAll()
+				.antMatchers("/account/password").permitAll()
 				.antMatchers("/**.html").permitAll()
 				.antMatchers("/css/**").permitAll()
 				.antMatchers("/image/**").permitAll()
 				.antMatchers("/js/**").permitAll()
-				.antMatchers("/**").permitAll() // FIXME: remove this!
+				// .antMatchers("/**").permitAll() // FIXME: remove this!
 				// all other requests need to be authenticated
 				.anyRequest().authenticated().and().
 				// make sure we use stateless session; session won't be used to

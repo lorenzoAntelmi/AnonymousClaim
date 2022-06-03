@@ -22,8 +22,11 @@ import com.claim.database.GameRepository;
 import com.claim.model.Game;
 import com.claim.service.GameService;
 
-/**Provides game-related endpoints.
- * @author Deborah Vanzin */
+/**
+ * Provides game-related endpoints.
+ * 
+ * @author Deborah Vanzin
+ */
 @RestController
 public class GameController {
 
@@ -32,27 +35,28 @@ public class GameController {
 	@Autowired
 	private GameService gameService;
 
-	/**To make a move & update a game after every move
-	 * @author: Rocco Saracino*/
+	/**
+	 * To make a move & update a game after every move
+	 * 
+	 * @author: Rocco Saracino
+	 */
 	@GetMapping(path = "/phase1/{cardId}")
-	public Game makeMovePhase1(
-			@AuthenticationPrincipal UserDetails user,
-			 @PathVariable("cardId") Integer cardId) {
+	public Game makeMovePhase1(@AuthenticationPrincipal UserDetails user, @PathVariable("cardId") Integer cardId) {
 
-		return gameService.makeMovePhase1(user.getUsername(), cardId);	
+		return gameService.makeMovePhase1(user.getUsername(), cardId);
 	}
-	
+
 	// neue Methode für Phase2
 	@GetMapping(path = "/phase2/{cardId}")
-	public Game makeMovePhase2(
-			@AuthenticationPrincipal UserDetails user,
-			 @PathVariable("cardId") Integer cardId) {
+	public Game makeMovePhase2(@AuthenticationPrincipal UserDetails user, @PathVariable("cardId") Integer cardId) {
 
-		return gameService.makeMovePhase2(user.getUsername(), cardId);	
+		return gameService.makeMovePhase2(user.getUsername(), cardId);
 	}
 
-	/**Create a new game with the data passed in the request body
-	 * @throws URISyntaxException*/
+	/**
+	 * Create a new game with the data passed in the request body
+	 * @throws URISyntaxException
+	 */
 	@PostMapping(path = "/games")
 	public ResponseEntity<Game> createNewGame() throws URISyntaxException {
 
@@ -60,18 +64,16 @@ public class GameController {
 		URI location = new URI("http://localhost:8080/games/" + game.getId());
 		return ResponseEntity.created(location).body(game);
 	}
-	
-	/**To join an open game as Player B*/
+
+	/** To join an open game as Player B */
 	@GetMapping(path = "/games/{gameId}/join")
-	public Game joinGame(
-			@PathVariable int gameId, 
-			@AuthenticationPrincipal UserDetails user
-			) throws URISyntaxException {
-		return gameService.joinGame(gameId,user);
+	public Game joinGame(@PathVariable int gameId, @AuthenticationPrincipal UserDetails user)
+			throws URISyntaxException {
+		return gameService.joinGame(gameId, user);
 	}
-	
+
 	// Support Endpoints
-	/**Get a game with a specific id */
+	/** Get a game with a specific id */
 	@GetMapping(path = "/games/{id}")
 	public ResponseEntity<Game> readGame(@PathVariable Integer id) {
 		Optional<Game> optional = repository.findById(id);
@@ -81,40 +83,40 @@ public class GameController {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 	}
 
-	/**To delete all games -- POSTMAN*/
+	/** To delete all games -- POSTMAN */
 	@DeleteMapping(path = "/games")
 	public ResponseEntity<Void> deleteAllgames() {
 		gameService.removeAllGames();
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
-	
-	/**löscht alle Spiele nach User oder Mail*/
-	@DeleteMapping("/games/") 
+
+	/** löscht alle Spiele nach User oder Mail */
+	@DeleteMapping("/games/")
 	@Transactional
 	public ResponseEntity<Void> deleteGameByID(@AuthenticationPrincipal UserDetails user) {
 		gameService.removeUserGames(user);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
-	
-	/**To get the currentGame*/
+
+	/** To get the currentGame */
 	@GetMapping("/getCurrentGame")
 	public Game getCurrentGame(@AuthenticationPrincipal UserDetails user) {
 		return gameService.getCurrentGame(user.getUsername());
 	}
-	
-	/**Lists all open games*/
+
+	/** Lists all open games */
 	@GetMapping(path = "/games/open")
 	public List<Game> getListOfOpenGames() {
 		return repository.findByPhase(0);
 	}
 
-	/**Lists all games*/
+	/** Lists all games */
 	@GetMapping(path = "/games")
 	public List<Game> listAllGames() {
 		return repository.findAll();
 	}
 
-	/**Open games that have only one player waiting for an opponent*/
+	/** Open games that have only one player waiting for an opponent */
 	@GetMapping(path = "/opengames")
 	public List<Game> listAllOpenGames() {
 		return repository.findByPlayerBAccount(null);
