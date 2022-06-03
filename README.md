@@ -1,4 +1,4 @@
-please read in preview mode
+Please read in preview mode
 
 Claim – Duel for the Throne
 
