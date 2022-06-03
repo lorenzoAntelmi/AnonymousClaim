@@ -50,29 +50,21 @@ function login(email, password) {
         })
   }); 
 
-  fetch(request).
-    then((response) => {
-    return new Promise((resolve) => response.json()
-      .then((json) => resolve({
-        status: response.status,
-        ok: response.ok,
-        json
-      })));
-    })
-    .then(({ status, json, ok }) => {
-      const message = json;
+  fetch(request)
+    .then(response => {
+      const status = response.status;
     
       switch (status) {
         case 400:
         case 401:
-          console.log("Bad Request: " + JSON.stringify(message));
           const errorDiv = document.getElementById("loginError");
           errorDiv.style.display = 'block';
           errorDiv.innerText = "Login fehlgeschlagen!";
           break;
         case 201:
         case 200:
-          console.log("JWT: " + JSON.stringify(message));
+     
+          const json = response.json();
           accessToken = json.token;
           localStorage.setItem("accessToken", accessToken);
           window.location.href='lobby-DE.html';
