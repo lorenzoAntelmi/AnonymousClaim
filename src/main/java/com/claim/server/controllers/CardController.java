@@ -10,7 +10,7 @@ import com.claim.database.CardRepository;
 import com.claim.model.Card;
 
 /** Provides card-related endpoints.
- * @author Deborah Vanzin
+ * @author Valentina Caldana und Rocco Saracino
 */
 
 @RestController

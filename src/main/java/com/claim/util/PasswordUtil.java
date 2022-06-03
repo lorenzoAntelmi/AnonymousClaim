@@ -3,7 +3,7 @@ package com.claim.util;
 import java.util.Random;
 
 import com.claim.config.SendMail;
-
+/**@author Lorenzo Antelmi */
 public class PasswordUtil {
 
 	public static String generatePassword(int length) {
