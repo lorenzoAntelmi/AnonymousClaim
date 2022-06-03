@@ -9,7 +9,7 @@
 
 		function logout() {
 			localStorage.removeItem('accessToken');
-			 window.location.href='login-DE.html';
+			 window.location.href='login-EN.html';
 				}
 
 /**Ranking */

@@ -46,7 +46,6 @@ function login(email, password) {
       body: json,
       headers: new Headers({
           'Content-Type': 'application/json',
-          
         })
   }); 
 
@@ -57,21 +56,28 @@ function login(email, password) {
       switch (status) {
         case 400:
         case 401:
-          const errorDiv = document.getElementById("loginError");
-          errorDiv.style.display = 'block';
-          errorDiv.innerText = "Login fehlgeschlagen!";
+         throw new Error("Login fehlgeschlagen!");
           break;
         case 201:
         case 200:
-     
-          const json = response.json();
-          accessToken = json.token;
-          localStorage.setItem("accessToken", accessToken);
-          window.location.href='lobby-DE.html';
-          break;
+     		return response.json();
+          
         case 500:
         default:
-          console.log("Error 500: " + message);
+         throw new Error("Error 500 from Server!");
     }
   })
+  .then(json => {
+          accessToken = json.token;
+          console.log("JSON: " + json);
+          console.log("AccessToken: " + accessToken);
+          localStorage.setItem("accessToken", accessToken);
+          window.location.href='lobby-DE.html';
+})
+.catch(error => {
+	console.log(error);
+	 	const errorDiv = document.getElementById("loginError");
+          errorDiv.style.display = 'block';
+          errorDiv.innerText = "Login fehlgeschlagen!";
+});
 }

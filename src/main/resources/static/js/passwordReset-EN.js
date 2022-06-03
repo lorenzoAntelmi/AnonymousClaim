@@ -36,14 +36,14 @@ function passwordReset(email) {
           console.log("Bad Request: " + JSON.stringify(message));
           const errorDiv = document.getElementById("Error");
           errorDiv.style.display = 'block';
-          errorDiv.innerText = "Passwordreset fehlgeschlagen!";
+          errorDiv.innerText = "Password reset failed!";
           break;
         case 201:
         case 200:
             console.log("Bad Request: " + JSON.stringify(message));
           const successDiv = document.getElementById("resetSuccessfull");
           successDiv.style.display = 'block';
-          successDiv.innerText = "Password gesendet!";
+          successDiv.innerText = "Password sent!";
           break;
         case 500:
         default:

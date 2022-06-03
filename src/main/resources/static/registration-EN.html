@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!--authors: Valentina Caldana & Rocco Saracino
+<!--authors: Valentina Caldana
 	source: https://www.codehim.com/collections/login-page-in-html-with-css-code/#google_vignette -->
 	
 <html lang="EN" xmlns:th="http://www.thymeleaf.org">
@@ -7,7 +7,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Registration Claim</title>
-  <link rel="stylesheet" type="text/css" href="/css/registration_stylesheet.css"/>
+  <link rel="stylesheet" type="text/css" href="css/registration_stylesheet.css"/>
 </head>
 
 <body>
@@ -18,45 +18,51 @@
 	<!-- Container for registration-area (left) -->
 	</div>
 	
-		<div class="right">
-		<h5>Registration</h5>
+	<div class="right">
+	<h5>Registration</h5>
 		
 		<form>
 		<div class="inputs">
+			<div id="error-username" class="error"></div>
 			<input type="text" id="username" placeholder="USERNAME" />
 			<br>
-			<input type="date" id="birthDate" placeholder="BIRTH DATE" />
+			<div id="error-birthDate" class="error"></div>
+			<input type="date" id="birthDate" placeholder="BIRTHDATE" />
 			<br>
-			<input type="email" id= "email" placeholder="E-MAIL">
+			<div id="error-email" class="error"></div>
+			<input type="email" id="email" placeholder="E-MAIL" />
 			<br>
-			<input type="email" id="confirmMail" placeholder="CONFIRM E-MAIL" />
+			<div id="error-confirmEmail" class="error"></div>
+			<input type="email" id="confirmEmail" placeholder="CONFIRM E-MAIL" />
 			<br>
-			<input type="password" id="password" placeholder="PASSWORD">
+			<div id="error-password" class="error"></div>
+			<input type="password" id="password" placeholder="PASSWORD" />
 			<br>
-			<input type="password" id="confirmPassword"placeholder="CONFIRM PASSWORD" />
+			<div id="error-confirmPassword" class="error"></div>
+			<input type="password" id="confirmPassword" placeholder="CONFIRM PASSWORD" />
 			<br>
 		</div>
-			
-			<div class="captcha">
+		
+			 <div class="captcha">
 		 	  <p id="captchaText"></p >
 		      <button onclick="reloadCaptcha()" class="reload-btn" type="button"> </button>
 		      <input type="text" class="captchaField" id="captchaField" placeholder="ENTER CAPTCHA" maxlength="6" spellcheck="false" required/>
 		      <div class="status-text"></div>
 		    </div >
-		</form>
-		
-		<br><br><br>
-		
+		    </form>
+    		
+    		<br><br><br>
+			
 		<div class="buttons">
 			<button class="btn" onclick="abort()" type="button">Cancel</button>
-			<button class="btn" onclick="register(document.getElementById('username').value, document.getElementById('email').value, document.getElementById('password').value, document.getElementById('birthDate').value)">Confirm</button >
+			<button class="btn" onclick="register(document.getElementById('username').value, document.getElementById('email').value, document.getElementById('password').value, document.getElementById('birthDate').value)">Confirm</button>
 		</div>	
-	</div>
+    </div>	
 </div>
+			
+		
+		
+<script src="js/registrationScript-EN.js"></script>
 
-
-
-<script src="js/script-EN.js"></script>
-  
 </body>
 </html>

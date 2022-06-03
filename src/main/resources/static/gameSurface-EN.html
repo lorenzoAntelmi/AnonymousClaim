@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <!--authors: Valentina Caldana & Lorenzo Antelmi - Haupt-->
 	
-<html lang="DE" xmlns:th="http://www.thymeleaf.org">
+<html lang="EN" xmlns:th="http://www.thymeleaf.org">
 
 <head>
 
   <meta charset="UTF-8" >
-  <title>Spiel</title>
+  <title>Game</title>
   <link rel="stylesheet" type="text/css" href="/css/gameSurface.css"/>
 </head>
 
@@ -16,7 +16,7 @@
 <div class="display-area"> 
 
 	<div class="displayed-card" id="displayed-card"><!-- should be bind with the users card choice in hand--></div>
-	<button class="make-move" id="makeMove" onclick="playCard()">KARTE SPIELEN</button><!--makes a move and empties the container "displayed-card" when clicked -->
+	<button class="make-move" id="makeMove" onclick="playCard()">PLAY CARD</button><!--makes a move and empties the container "displayed-card" when clicked -->
 
 </div>
 
@@ -27,15 +27,15 @@
 
 <!--container showing the points stack & container for labeling purposes-->
 	<div class="pointStack"> </div>
-	<div class="pointStackTitle"><p>PUNKTESTAPEL</p> </div>
+	<div class="pointStackTitle"><p>POINT STACK</p> </div>
 
 <!--container showing the deposit stack & container for labeling purposes
 	both will disappear in phase 2-->
 	<div class="depositStack" id="depositStack"> </div>
-	<div class="depositStackTitle" id="depositStackTitle"><p>ANHÄNGERSTAPEL</p> </div>
+	<div class="depositStackTitle" id="depositStackTitle"><p>HANGER STACK</p> </div>
 
 	
-	<button class="exitBtn" id="exit" onclick="deleteGame()">SPIEL ABBRECHEN</button><!-- sPIEL WIRD VERLASSEN UND GAME GELÖSCHT -->
+	<button class="exitBtn" id="exit" onclick="deleteGame()">CANCEL GAME</button><!-- sPIEL WIRD VERLASSEN UND GAME GELÖSCHT -->
 
 	<button class="helpButton" id = "help">?</button>
 	<span id="oppositePlayerInfo"> </span>
@@ -44,7 +44,7 @@
 		<div class="modal" id="gameModal">
 			<div class="content">
 				 <span class="close">&times;</span>
-				<div class="img-rules" style="background-image: url('/image/rules-DE.png');"><!-- Container for img rules --></div>
+				<div class="img-rules" style="background-image: url('/image/rules-EN.png');"><!-- Container for img rules --></div>
 			</div>
 		</div>
 	
@@ -52,16 +52,16 @@
 	& container showing the revealed card from the deck.
 	All of them will disappear in phase 2-->
 	<div class="deck" id="deck"> </div>
-	<div class="deckTitle" id="deckTitle"> <p>KARTENDECK</p> </div>
+	<div class="deckTitle" id="deckTitle"> <p>CARD DECK</p> </div>
 	<div class="revealedCard" id="revealedCard"></div>
 
 <!--container showing the opponents card-->
 <div class="oponentsCard" id="opponentsCard"> </div>
-<div class="oponentsCardTitle"><p>GEGNERKARTE</p> </div>
+<div class="oponentsCardTitle"><p>OPPOSITE CARD</p> </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-   <script src="js/gameScript-DE.js"> </script>
+   <script src="js/gameScript-EN.js"> </script>
  
   <script>
 	getPlayer();
