@@ -200,6 +200,6 @@ justify-content: center;
 .error {
 	display: none;
 	color: #ff0000;
+	position:relative;
+	top: 87px;
 }
-
-

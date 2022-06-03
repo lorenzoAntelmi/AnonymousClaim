@@ -192,7 +192,6 @@ li:not(:first-child)::after {
 .login-area .right .modal .content .img-rules{
 	width: 730px;
 	height: 2100px;
-	background-image: url("/image/rules.png");
  	background-position: center;
  	background-size: cover;
   	background-repeat: no-repeat;  
@@ -217,4 +216,3 @@ li:not(:first-child)::after {
 	display: none;
 	color: #ff0000;
 }
-

@@ -68,14 +68,14 @@ function login(email, password) {
           console.log("Bad Request: " + JSON.stringify(message));
           const errorDiv = document.getElementById("loginError");
           errorDiv.style.display = 'block';
-          errorDiv.innerText = "Login fehlgeschlagen!";
+          errorDiv.innerText = "Login failed!";
           break;
         case 201:
         case 200:
           console.log("JWT: " + JSON.stringify(message));
           accessToken = json.token;
           localStorage.setItem("accessToken", accessToken);
-          window.location.href='lobby-DE.html';
+          window.location.href='lobby-EN.html';
           break;
         case 500:
         default:

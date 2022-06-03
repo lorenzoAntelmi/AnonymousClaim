@@ -37,7 +37,7 @@ var messageDisplayed=false;
 /**represents the user who is currently receiving a message*/
 var stompClient;
 
-var currentPlayerForMessage;
+var endedGame = false;
 
 // ---- MESSAGING ----- //
 
@@ -130,7 +130,7 @@ function onMessageReceived(payload) {
 	
 	/**Message handling illegal moves and wrong turn*/
 	case("BADREQUEST"):
-					if (message.sender !== ownPlayer.account.username) {
+					if (message.sender === ownPlayer.account.username) {
 					alert("Lieber Spieler, falls du diese Nachricht erhalten hast, gibt es zwei Möglichkeiten:" +
 					"\n1. Du bist aktuell nicht dran" + 
 					"\n2. Du hast eine invalide Karte gespielt, sieh dir die Regeln im Help-Button an.");
@@ -149,8 +149,13 @@ function onMessageReceived(payload) {
 	
 	/**Message handling when the opponent leaves the game*/
 	case("LEAVE"):
-					alert(message.sender + " hat das Spiel verlassen. Das Spiel wird gelöscht.");
-					window.location.href='lobby-DE.html';
+					if (endedGame) {
+						alert(message.sender + "Spiel beendet, du kehrst in der Lobby zurück.");
+						window.location.href='lobby-DE.html';
+					} else {
+						alert(message.sender + "hat das Spiel verlassen. Das Spiel wird gelöscht.");
+						window.location.href='lobby-DE.html';
+					}
 	break;
 	
 	/**Message when starting phase 2*/
@@ -496,8 +501,8 @@ function getCurrentGame(){
 			/**if there is a game winner, send the corresponding message and
 			relocate to lobby */
 			if (currentGame.phaseWinner !== null) {
-						sendMessage(currentOwnPlayer.account.username, "GAMEWinner", currentGame.phaseWinner);
-					window.location.href='lobby-DE.html';
+					endedGame = true;
+					sendMessage(currentOwnPlayer.account.username, "GAMEWinner", currentGame.phaseWinner);
 			}
 			
 			break;
@@ -553,7 +558,7 @@ function phase1(){
     .then(({ status, game}) => {
       switch (status) {
         case 400:
-	       sendMessage("", "BADREQUEST", "");
+	       sendMessage(ownPlayer.account.username, "BADREQUEST", "");
           break;
         case 201:
         case 200:
@@ -641,7 +646,7 @@ function phase2(){
     .then(({ status, game}) => {
       switch (status) {
         case 400:
-          sendMessage("", "BADREQUEST", "");
+          sendMessage(ownPlayer.account.username, "BADREQUEST", "");
           break;
         case 201:
         case 200:
