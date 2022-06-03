@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @author Lorenzo Antelmi
  * storing the username and password we recieve from the client
  *
- * Source: https://www.javainuse.com/spring/boot-jwt
+ * 
  *
  */
 

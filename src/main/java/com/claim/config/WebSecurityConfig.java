@@ -22,7 +22,7 @@ import com.claim.model.JwtUserDetailServices;
  * This class extends the WebSecurityConfigurerAdapter is a convenience class
  * that allows customization to both WebSecurity and HttpSecurity.
  *
- * source: https://www.javainuse.com/spring/boot-jwt
+ * 
  *
  */
 

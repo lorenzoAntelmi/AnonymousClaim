@@ -28,7 +28,7 @@ import com.claim.model.JwtUserDetailServices;
  *         username and password.If the credentials are valid, a JWT token is
  *         created using the JWTTokenUtil and provided to the client.
  *
- *         Source: https://www.javainuse.com/spring/boot-jwt
+ *        
  *
  */
 

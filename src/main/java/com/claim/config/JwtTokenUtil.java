@@ -20,7 +20,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
  * This Class is responsible for performing JWT operations
  * like creation and validation.
  *
- * source: https://www.javainuse.com/spring/boot-jwt
+ * 
  */
 
 @Component

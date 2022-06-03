@@ -28,7 +28,7 @@ import io.jsonwebtoken.ExpiredJwtException;
  * If it has a valid JWT Token then it sets the Authentication in the context,
  * to specify that the current user is authenticated.
  *
- * source: https://www.javainuse.com/spring/boot-jwt
+ * 
  *
  */
 
